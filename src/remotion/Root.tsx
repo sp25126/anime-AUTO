@@ -2,8 +2,10 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { RankingShort, RankingShortProps } from './formats/RankingShort';
 import { AestheticShort, AestheticShortProps } from './formats/AestheticShort';
+import { HorizontalRotateEdit, HorizontalRotateEditProps } from './formats/HorizontalRotateEdit';
 
 export const RemotionRoot: React.FC = () => {
+  // 1. RankingShort: Pure vertical 9:16 format with left sidebar countdown & blur-clone BG
   const defaultRankingProps: RankingShortProps = {
     topTitleLine1: "RANKING THE BEST",
     topTitleLine2: "JJK EDITS",
@@ -11,7 +13,6 @@ export const RemotionRoot: React.FC = () => {
     accentColor: "#FF0000",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
     backgroundMode: "blur-clone",
-    painterlyArtBgPath: "public/backgrounds/aesthetic_sky_sample.jpg",
     clips: [
       {
         videoPath: "public/clips/gojo.mp4",
@@ -66,6 +67,7 @@ export const RemotionRoot: React.FC = () => {
     ]
   };
 
+  // 2. AestheticShort: Dynamic video-reactive blurred background in clean vertical orientation
   const defaultAestheticProps: AestheticShortProps = {
     videoPath: "public/clips/gojo.mp4",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
@@ -75,11 +77,21 @@ export const RemotionRoot: React.FC = () => {
     creatorCredit: "@akivfx"
   };
 
+  // 3. HorizontalRotateEdit: "ROTATE PHONE" animated HUD -> Smooth 90deg rotation to full horizontal cinema edit
+  const defaultRotateProps: HorizontalRotateEditProps = {
+    videoPath: "public/clips/gojo.mp4",
+    audioPath: "public/audio/stems/versus_phonk_bed.mp3",
+    channelHandle: "@animefandom0_0",
+    channelDisplayName: "Anime Fandom",
+    creatorCredit: "@akivfx",
+    tiltPromptDurationFrames: 60 // 2 seconds tilt prompt
+  };
+
   const totalRankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);
 
   return (
     <>
-      {/* 1. Core Format 1: RankingShort (Snlper & TopBringer 19M style) */}
+      {/* Format 1: RankingShort (Vertical only, 5-to-1 ranking countdown) */}
       <Composition
         id="RankingShort"
         component={RankingShort as unknown as React.ComponentType<Record<string, unknown>>}
@@ -90,7 +102,7 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={defaultRankingProps as unknown as Record<string, unknown>}
       />
 
-      {/* 2. Core Format 2: AestheticShort (HIKARI & My_Love-SD style with painterly background) */}
+      {/* Format 2: AestheticShort (Vertical with dynamic video-reactive background) */}
       <Composition
         id="AestheticShort"
         component={AestheticShort as unknown as React.ComponentType<Record<string, unknown>>}
@@ -99,6 +111,17 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={defaultAestheticProps as unknown as Record<string, unknown>}
+      />
+
+      {/* Format 3: HorizontalRotateEdit ("ROTATE PHONE" animation -> 90deg full landscape cinema edit) */}
+      <Composition
+        id="HorizontalRotateEdit"
+        component={HorizontalRotateEdit as unknown as React.ComponentType<Record<string, unknown>>}
+        durationInFrames={240} // 8 seconds sample (2s prompt + 6s full horizontal cinema)
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultRotateProps as unknown as Record<string, unknown>}
       />
     </>
   );
