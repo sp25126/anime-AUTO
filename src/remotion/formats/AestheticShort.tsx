@@ -14,30 +14,34 @@ export interface KineticCaption {
   word: string;
   startFrame: number;
   endFrame: number;
-  color?: string; // e.g. '#39FF14' (green) or '#FF2A85' (pink) or '#FFFFFF'
+  color?: string; // e.g. '#39FF14' (neon green) or '#FF69B4' (pink) or '#FFFFFF'
 }
 
 export interface AestheticShortProps {
   videoPath: string;
   captions?: KineticCaption[];
   audioPath?: string;
-  backgroundMode?: 'blur-clone' | 'painterly-art' | 'color-stripes';
+  backgroundMode?: 'blur-clone' | 'painterly-art';
   painterlyArtBgPath?: string;
-  watermarkText?: string; // e.g. "@My_Love-SD" or "hikariedits"
-  colorTheme?: 'warm-sunset' | 'cool-night' | 'neutral';
+  channelHandle?: string; // Default to user's official channel: @animefandom0_0
+  channelDisplayName?: string; // e.g. "Anime Fandom"
+  creatorCredit?: string; // e.g. "@creator"
+  colorTheme?: 'warm-sunset' | 'cool-night';
 }
 
 export const AestheticShort: React.FC<AestheticShortProps> = ({
   videoPath = "public/clips/gojo.mp4",
   captions = [
-    { word: "so you", startFrame: 0, endFrame: 30, color: "#39FF14" },
-    { word: "just stay with me...", startFrame: 30, endFrame: 75, color: "#FF69B4" },
-    { word: "forever.", startFrame: 75, endFrame: 120, color: "#FFFFFF" }
+    { word: "the way she looked at him...", startFrame: 0, endFrame: 60, color: "#39FF14" },
+    { word: "nothing else mattered.", startFrame: 60, endFrame: 130, color: "#FF69B4" },
+    { word: "pure aesthetic bliss ✨", startFrame: 130, endFrame: 210, color: "#FFFFFF" }
   ],
   audioPath = "public/audio/stems/versus_phonk_bed.mp3",
   backgroundMode = "painterly-art",
-  painterlyArtBgPath = "public/backgrounds/aesthetic_sky_sample.jpg",
-  watermarkText = "@My_Love-SD",
+  painterlyArtBgPath = "public/backgrounds/golden_hour_sky.jpg",
+  channelHandle = "@animefandom0_0",
+  channelDisplayName = "Anime Fandom",
+  creatorCredit = "@akivfx",
   colorTheme = "warm-sunset"
 }) => {
   const frame = useCurrentFrame();
@@ -60,7 +64,7 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
   // Find active caption
   const activeCaption = captions.find(c => frame >= c.startFrame && frame < c.endFrame);
 
-  // Subtle breathing zoom on main video
+  // Subtle breathing zoom on main video for high retention
   const scale = interpolate(frame, [0, durationInFrames], [1.0, 1.05], { extrapolateRight: 'clamp' });
 
   return (
@@ -68,31 +72,26 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
       {/* Audio bed */}
       {audioPath && <Audio src={resolvePath(audioPath)} volume={0.85} />}
 
-      {/* 1. Background Handling */}
+      {/* 1. Atmospheric Painterly Anime Background (No phone UI / screenshots) */}
       {backgroundMode === 'painterly-art' && painterlyArtBgPath ? (
         <AbsoluteFill style={{ overflow: 'hidden' }}>
           <img
             src={resolvePath(painterlyArtBgPath)}
-            alt="Aesthetic Background"
+            alt="Painterly Anime Background"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
               filter: colorTheme === 'warm-sunset' 
-                ? 'saturate(1.2) contrast(1.05) brightness(0.85)'
-                : 'brightness(0.8)'
+                ? 'saturate(1.25) contrast(1.05) brightness(0.9)'
+                : 'brightness(0.85)'
             }}
           />
-        </AbsoluteFill>
-      ) : backgroundMode === 'color-stripes' ? (
-        /* HIKARI style vertical color bars (e.g. orange & pink gradient stripes) */
-        <AbsoluteFill style={{ display: 'flex', flexDirection: 'row' }}>
-          <div style={{ flex: 1, background: 'linear-gradient(180deg, #FF7E5F, #FEB47B)' }} />
-          <div style={{ width: '1080px' }} />
-          <div style={{ flex: 1, background: 'linear-gradient(180deg, #00C9FF, #92FE9D)' }} />
+          {/* Subtle soft vignette overlay */}
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 50%, rgba(0,0,0,0.5) 100%)' }} />
         </AbsoluteFill>
       ) : (
-        /* Blur-clone mode */
+        /* Blur-clone fallback */
         <AbsoluteFill style={{ overflow: 'hidden' }}>
           <OffthreadVideo
             src={resolvePath(videoPath)}
@@ -107,7 +106,7 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         </AbsoluteFill>
       )}
 
-      {/* 2. Main Anime Moment (Centered with soft shadow) */}
+      {/* 2. Main Anime Moment (Centered with soft cinema drop shadow) */}
       <div
         style={{
           position: 'absolute',
@@ -115,7 +114,7 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
           left: 0,
           width: '1080px',
           transform: 'translateY(-50%)',
-          boxShadow: '0 0 60px rgba(0,0,0,0.9)',
+          boxShadow: '0 0 65px rgba(0,0,0,0.92)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -148,9 +147,9 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         >
           <span
             style={{
-              fontSize: '64px',
+              fontSize: '66px',
               color: activeCaption.color || '#FFFFFF',
-              textShadow: '0 0 20px rgba(0,0,0,0.9), 3px 3px 0 #000, -3px -3px 0 #000',
+              textShadow: '0 0 25px rgba(0,0,0,0.95), 3px 3px 0 #000, -3px -3px 0 #000',
               letterSpacing: '2px',
               textTransform: 'uppercase'
             }}
@@ -160,24 +159,56 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         </div>
       )}
 
-      {/* 4. Elegant Minimal Watermark (Bottom Center) */}
-      {watermarkText && (
+      {/* 4. User's Channel Branding & Creator Credit (Bottom Section) */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '50px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          textAlign: 'center',
+          zIndex: 100
+        }}
+      >
+        {/* Channel Name */}
         <div
           style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontSize: '32px',
-            color: 'rgba(255,255,255,0.7)',
-            textShadow: '1px 1px 3px #000',
-            letterSpacing: '1px',
-            zIndex: 100
+            fontSize: '44px',
+            color: '#FFFFFF',
+            fontWeight: 900,
+            letterSpacing: '2px',
+            textShadow: '0 2px 10px rgba(0,0,0,0.9), 2px 2px 0 #000'
           }}
         >
-          {watermarkText}
+          {channelDisplayName}
         </div>
-      )}
+        {/* Channel Handle */}
+        <div
+          style={{
+            fontSize: '32px',
+            color: '#FFE600',
+            letterSpacing: '1px',
+            marginTop: '4px',
+            textShadow: '0 2px 8px rgba(0,0,0,0.8), 1px 1px 0 #000'
+          }}
+        >
+          {channelHandle}
+        </div>
+        {/* Creator Attribution */}
+        {creatorCredit && (
+          <div
+            style={{
+              fontSize: '26px',
+              color: 'rgba(255,255,255,0.7)',
+              letterSpacing: '1px',
+              marginTop: '4px',
+              textShadow: '1px 1px 3px #000'
+            }}
+          >
+            edit by: {creatorCredit}
+          </div>
+        )}
+      </div>
     </AbsoluteFill>
   );
 };

@@ -70,8 +70,10 @@ export const RemotionRoot: React.FC = () => {
     videoPath: "public/clips/gojo.mp4",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
     backgroundMode: "painterly-art",
-    painterlyArtBgPath: "public/backgrounds/aesthetic_sky_sample.jpg",
-    watermarkText: "@My_Love-SD",
+    painterlyArtBgPath: "public/backgrounds/golden_hour_sky.jpg",
+    channelHandle: "@animefandom0_0",
+    channelDisplayName: "Anime Fandom",
+    creatorCredit: "@akivfx",
     colorTheme: "warm-sunset",
     captions: [
       { word: "the way she looked at him...", startFrame: 0, endFrame: 60, color: "#39FF14" },
