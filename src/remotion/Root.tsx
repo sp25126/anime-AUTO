@@ -69,13 +69,10 @@ export const RemotionRoot: React.FC = () => {
   const defaultAestheticProps: AestheticShortProps = {
     videoPath: "public/clips/gojo.mp4",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
-    backgroundMode: "painterly-art",
-    painterlyArtBgPath: "public/backgrounds/golden_hour_sky.jpg",
+    backgroundType: "dynamic-blur",
     channelHandle: "@animefandom0_0",
     channelDisplayName: "Anime Fandom",
-    creatorCredit: "@akivfx",
-    colorTheme: "warm-sunset",
-    captions: []
+    creatorCredit: "@akivfx"
   };
 
   const totalRankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);

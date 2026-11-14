@@ -3,45 +3,35 @@ import {
   AbsoluteFill,
   OffthreadVideo,
   Audio,
-  Sequence,
   useCurrentFrame,
   useVideoConfig,
   staticFile,
   interpolate,
 } from 'remotion';
 
-export interface KineticCaption {
-  word: string;
-  startFrame: number;
-  endFrame: number;
-  color?: string; // e.g. '#39FF14' (neon green) or '#FF69B4' (pink) or '#FFFFFF'
-}
-
-export interface AestheticShortProps {
+export interface DynamicAestheticShortProps {
   videoPath: string;
-  captions?: KineticCaption[];
   audioPath?: string;
-  backgroundMode?: 'blur-clone' | 'painterly-art';
-  painterlyArtBgPath?: string;
-  channelHandle?: string; // Default to user's official channel: @animefandom0_0
+  channelHandle?: string; // e.g. "@animefandom0_0"
   channelDisplayName?: string; // e.g. "Anime Fandom"
   creatorCredit?: string; // e.g. "@creator"
-  colorTheme?: 'warm-sunset' | 'cool-night';
+  backgroundType?: 'dynamic-blur' | 'painterly-art';
+  painterlyArtBgPath?: string;
 }
+
+export type AestheticShortProps = DynamicAestheticShortProps;
 
 export const AestheticShort: React.FC<AestheticShortProps> = ({
   videoPath = "public/clips/gojo.mp4",
-  captions = [],
   audioPath = "public/audio/stems/versus_phonk_bed.mp3",
-  backgroundMode = "painterly-art",
-  painterlyArtBgPath = "public/backgrounds/golden_hour_sky.jpg",
   channelHandle = "@animefandom0_0",
   channelDisplayName = "Anime Fandom",
   creatorCredit = "@akivfx",
-  colorTheme = "warm-sunset"
+  backgroundType = "dynamic-blur",
+  painterlyArtBgPath = "public/backgrounds/golden_hour_sky.jpg"
 }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { durationInFrames } = useVideoConfig();
 
   const resolvePath = (rawPath: string) => {
     if (!rawPath) return '';
@@ -57,52 +47,56 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
     return staticFile(rel);
   };
 
-  // Find active caption
-  const activeCaption = captions.find(c => frame >= c.startFrame && frame < c.endFrame);
-
-  // Subtle breathing zoom on main video for high retention
+  // Subtle breathing zoom on the foreground video for viral retention
   const scale = interpolate(frame, [0, durationInFrames], [1.0, 1.05], { extrapolateRight: 'clamp' });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0B0C10', fontFamily: "'Impact', 'Arial Black', sans-serif" }}>
-      {/* Audio bed */}
+    <AbsoluteFill style={{ backgroundColor: '#07080A', fontFamily: "'Impact', 'Arial Black', sans-serif" }}>
+      {/* 1. Audio Bed */}
       {audioPath && <Audio src={resolvePath(audioPath)} volume={0.85} />}
 
-      {/* 1. Atmospheric Painterly Anime Background (No phone UI / screenshots) */}
-      {backgroundMode === 'painterly-art' && painterlyArtBgPath ? (
+      {/* 2. DYNAMIC VIDEO-REACTIVE BACKGROUND */}
+      {backgroundType === 'dynamic-blur' ? (
         <AbsoluteFill style={{ overflow: 'hidden' }}>
-          <img
-            src={resolvePath(painterlyArtBgPath)}
-            alt="Painterly Anime Background"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              filter: colorTheme === 'warm-sunset' 
-                ? 'saturate(1.25) contrast(1.05) brightness(0.9)'
-                : 'brightness(0.85)'
-            }}
-          />
-          {/* Subtle soft vignette overlay */}
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 50%, rgba(0,0,0,0.5) 100%)' }} />
-        </AbsoluteFill>
-      ) : (
-        /* Blur-clone fallback */
-        <AbsoluteFill style={{ overflow: 'hidden' }}>
+          {/* Layer A: Scaled & heavily blurred clone of the exact same video playing in sync */}
           <OffthreadVideo
             src={resolvePath(videoPath)}
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              transform: 'scale(2.2)',
-              filter: 'blur(45px) brightness(0.65)'
+              transform: 'scale(2.4)',
+              filter: 'blur(50px) saturate(1.3) brightness(0.6)'
+            }}
+          />
+
+          {/* Layer B: Secondary painterly diffusion overlay with slow breathing motion */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 75%, rgba(7,8,10,0.85) 100%)',
+              mixBlendMode: 'multiply'
+            }}
+          />
+        </AbsoluteFill>
+      ) : (
+        /* Static painterly art fallback */
+        <AbsoluteFill style={{ overflow: 'hidden' }}>
+          <img
+            src={resolvePath(painterlyArtBgPath)}
+            alt="Anime Atmosphere"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              filter: 'saturate(1.2) brightness(0.85)'
             }}
           />
         </AbsoluteFill>
       )}
 
-      {/* 2. Main Anime Moment (Centered with soft cinema drop shadow) */}
+      {/* 3. FOREGROUND MAIN ANIME MOMENT */}
       <div
         style={{
           position: 'absolute',
@@ -110,7 +104,7 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
           left: 0,
           width: '1080px',
           transform: 'translateY(-50%)',
-          boxShadow: '0 0 65px rgba(0,0,0,0.92)',
+          boxShadow: '0 0 70px rgba(0,0,0,0.95), 0 20px 40px rgba(0,0,0,0.8)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -128,34 +122,7 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         />
       </div>
 
-      {/* 3. Floating Kinetic Captions (Mid-frame or lower center) */}
-      {activeCaption && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '260px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            textAlign: 'center',
-            width: '920px',
-            zIndex: 100
-          }}
-        >
-          <span
-            style={{
-              fontSize: '66px',
-              color: activeCaption.color || '#FFFFFF',
-              textShadow: '0 0 25px rgba(0,0,0,0.95), 3px 3px 0 #000, -3px -3px 0 #000',
-              letterSpacing: '2px',
-              textTransform: 'uppercase'
-            }}
-          >
-            {activeCaption.word}
-          </span>
-        </div>
-      )}
-
-      {/* 4. User's Channel Branding & Creator Credit (Bottom Section) */}
+      {/* 4. USER'S CHANNEL BRANDING & CREATOR ATTRIBUTION (BOTTOM) */}
       <div
         style={{
           position: 'absolute',
@@ -166,7 +133,6 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
           zIndex: 100
         }}
       >
-        {/* Channel Name */}
         <div
           style={{
             fontSize: '44px',
@@ -178,7 +144,6 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         >
           {channelDisplayName}
         </div>
-        {/* Channel Handle */}
         <div
           style={{
             fontSize: '32px',
@@ -190,7 +155,6 @@ export const AestheticShort: React.FC<AestheticShortProps> = ({
         >
           {channelHandle}
         </div>
-        {/* Creator Attribution */}
         {creatorCredit && (
           <div
             style={{
