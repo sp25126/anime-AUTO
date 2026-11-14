@@ -1,179 +1,109 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { AnimeShort, AnimeShortProps } from './AnimeShort';
-import { VersusShort, VersusShortProps } from './formats/VersusShort';
-import { ExplainerShort, ExplainerShortProps } from './formats/ExplainerShort';
-import { QuizShort, QuizShortProps } from './formats/QuizShort';
-import { SakugaShort, SakugaShortProps } from './formats/SakugaShort';
+import { RankingShort, RankingShortProps } from './formats/RankingShort';
+import { AestheticShort, AestheticShortProps } from './formats/AestheticShort';
 
 export const RemotionRoot: React.FC = () => {
-  const defaultRankingProps: AnimeShortProps = {
-    titleHeader: "Ranking Trending",
-    subjectHeader: "VIRAL ANIME EDITS",
-    versionTag: "(Peak Flow Edition)",
-    subCategoryId: "trending_anime_edits",
-    subCategoryName: "TRENDING ANIME EDITS",
-    globalAudioPath: "public/audio/stems/trending_anime_edits_bed.mp3",
+  const defaultRankingProps: RankingShortProps = {
+    topTitleLine1: "RANKING THE BEST",
+    topTitleLine2: "JJK EDITS",
+    accentWord: "JJK",
+    accentColor: "#FF0000",
+    audioPath: "public/audio/stems/versus_phonk_bed.mp3",
+    backgroundMode: "blur-clone",
+    painterlyArtBgPath: "public/backgrounds/aesthetic_sky_sample.jpg",
     clips: [
       {
-        videoPath: "public/clips/trending_anime_edits/rank_5.mp4",
-        durationInFrames: 120,
-        animeTitle: "Chainsaw Man",
-        studio: "MAPPA",
-        creatorCredit: "@akivfx (TikTok)",
-        punchlineText: "FOX DEVIL SUMMON",
-        impactFrameOffset: 45
-      },
-      {
-        videoPath: "public/clips/trending_anime_edits/rank_4.mp4",
+        videoPath: "public/clips/gojo.mp4",
         durationInFrames: 150,
-        animeTitle: "Bleach TYBW",
-        studio: "Studio Pierrot",
-        creatorCredit: "@ichigo_flow (YouTube)",
-        punchlineText: "ZANKA NO TACHI",
-        impactFrameOffset: 65
+        rankNumber: 5,
+        label: "Hollow Purple 200%",
+        viewCountText: "970K",
+        commentaryText: "TS AHH 🙏",
+        creatorCredit: "@bankaivzn",
+        animeTitle: "Jujutsu Kaisen"
       },
       {
-        videoPath: "public/clips/trending_anime_edits/rank_3.mp4",
-        durationInFrames: 156,
-        animeTitle: "Jujutsu Kaisen S2",
-        studio: "MAPPA",
-        creatorCredit: "@zenin_edits (Instagram)",
-        punchlineText: "ZERO CURSED ENERGY",
-        impactFrameOffset: 80
-      },
-      {
-        videoPath: "public/clips/trending_anime_edits/rank_2.mp4",
+        videoPath: "public/clips/sukuna.mp4",
         durationInFrames: 180,
-        animeTitle: "Demon Slayer S2",
-        studio: "ufotable",
-        creatorCredit: "@soundhashira (TikTok)",
-        punchlineText: "MUSICAL SCORE",
-        impactFrameOffset: 110
+        rankNumber: 4,
+        label: "Malevolent Shrine",
+        viewCountText: "1.8M",
+        commentaryText: "WATERMARK SO PEAK 🙏",
+        creatorCredit: "@waiyanchanmoe",
+        animeTitle: "Jujutsu Kaisen"
       },
       {
-        videoPath: "public/clips/trending_anime_edits/rank_1.mp4",
-        durationInFrames: 225,
-        animeTitle: "One Piece: Wano Arc",
-        studio: "Toei Animation",
-        creatorCredit: "@joyboy_vfx (YouTube)",
-        punchlineText: "GEAR 5 FREEDOM",
-        impactFrameOffset: 135
+        videoPath: "public/clips/gojo.mp4",
+        durationInFrames: 180,
+        rankNumber: 3,
+        label: "Limitless Void",
+        viewCountText: "2.9M",
+        commentaryText: "TRASH INTRO ✅",
+        creatorCredit: "@foryouamvv",
+        animeTitle: "Jujutsu Kaisen"
+      },
+      {
+        videoPath: "public/clips/sukuna.mp4",
+        durationInFrames: 210,
+        rankNumber: 2,
+        label: "World Cutting Slash",
+        viewCountText: "4.5M",
+        commentaryText: "CHILLS 🥶",
+        creatorCredit: "@otakyo_vfx",
+        animeTitle: "Jujutsu Kaisen"
+      },
+      {
+        videoPath: "public/clips/gojo.mp4",
+        durationInFrames: 240,
+        rankNumber: 1,
+        label: "Honored One Awakening",
+        viewCountText: "8.2M",
+        commentaryText: "PEAK FICTION 👑",
+        creatorCredit: "@zenin_edits",
+        animeTitle: "Jujutsu Kaisen"
       }
     ]
   };
 
-  const defaultVersusProps: VersusShortProps = {
-    char1Name: "SATORU GOJO",
-    char1Anime: "Jujutsu Kaisen",
-    char1VideoPath: "public/clips/gojo.mp4",
-    char2Name: "RYOMEN SUKUNA",
-    char2Anime: "Jujutsu Kaisen",
-    char2VideoPath: "public/clips/sukuna.mp4",
-    stats: [
-      { category: "STRENGTH", winner: "char2" },
-      { category: "SPEED", winner: "char1" },
-      { category: "DURABILITY", winner: "char2" },
-      { category: "BATTLE IQ", winner: "tie" },
-      { category: "HAX & ABILITIES", winner: "char1" },
-      { category: "COMBAT EXPERIENCE", winner: "char2" },
-      { category: "DOMAIN REFINEMENT", winner: "char2" }
-    ],
-    overallWinner: "RYOMEN SUKUNA (EXTREME DIFF)",
-    audioPath: "public/audio/stems/versus_phonk_bed.mp3"
-  };
-
-  const defaultExplainerProps: ExplainerShortProps = {
-    hookTitle: "WHY GOJO WEARS A BLINDFOLD",
-    topicSubject: "Jujutsu Kaisen Dark Lore",
-    videoPath: "public/clips/gojo_lore.mp4",
-    backgroundMusicPath: "public/audio/stems/explainer_ambient_bed.mp3",
+  const defaultAestheticProps: AestheticShortProps = {
+    videoPath: "public/clips/gojo.mp4",
+    audioPath: "public/audio/stems/versus_phonk_bed.mp3",
+    backgroundMode: "painterly-art",
+    painterlyArtBgPath: "public/backgrounds/aesthetic_sky_sample.jpg",
+    watermarkText: "@My_Love-SD",
+    colorTheme: "warm-sunset",
     captions: [
-      { word: "Most", startFrame: 0, endFrame: 10 },
-      { word: "fans", startFrame: 10, endFrame: 20 },
-      { word: "think", startFrame: 20, endFrame: 30 },
-      { word: "Gojo", startFrame: 30, endFrame: 45 },
-      { word: "is", startFrame: 45, endFrame: 55 },
-      { word: "blind...", startFrame: 55, endFrame: 75 }
+      { word: "the way she looked at him...", startFrame: 0, endFrame: 60, color: "#39FF14" },
+      { word: "nothing else mattered.", startFrame: 60, endFrame: 130, color: "#FF69B4" },
+      { word: "pure aesthetic bliss ✨", startFrame: 130, endFrame: 210, color: "#FFFFFF" }
     ]
   };
 
-  const defaultQuizProps: QuizShortProps = {
-    quizPrompt: "GUESS THE ANIME IN 3 SECONDS",
-    characterName: "Satoru Gojo",
-    animeAnswer: "JUJUTSU KAISEN",
-    revealVideoPath: "public/clips/gojo_reveal.mp4",
-    audioPath: "public/audio/stems/quiz_timer_bed.mp3",
-    timerSeconds: 3
-  };
-
-  const defaultSakugaProps: SakugaShortProps = {
-    animeTitle: "ATTACK ON TITAN S3",
-    sceneName: "Levi vs Beast Titan",
-    animatorName: "Arifumi Imai",
-    studioName: "Wit Studio",
-    videoPath: "public/clips/levi_sakuga.mp4",
-    audioPath: "public/audio/stems/sakuga_heavy_bed.mp3",
-    breakdownNote: "3D Maneuver Kinematics & Smear Frames"
-  };
-
-  const rankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);
+  const totalRankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);
 
   return (
     <>
-      {/* 1. Ranking & Countdowns */}
+      {/* 1. Core Format 1: RankingShort (Snlper & TopBringer 19M style) */}
       <Composition
-        id="AnimeShort"
-        component={AnimeShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={rankingFrames}
+        id="RankingShort"
+        component={RankingShort as unknown as React.ComponentType<Record<string, unknown>>}
+        durationInFrames={totalRankingFrames}
         fps={30}
         width={1080}
         height={1920}
         defaultProps={defaultRankingProps as unknown as Record<string, unknown>}
       />
 
-      {/* 2. 1v1 Versus Battles & Power Scaling (600 frames = 20s @ 30fps) */}
+      {/* 2. Core Format 2: AestheticShort (HIKARI & My_Love-SD style with painterly background) */}
       <Composition
-        id="VersusShort"
-        component={VersusShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={600}
+        id="AestheticShort"
+        component={AestheticShort as unknown as React.ComponentType<Record<string, unknown>>}
+        durationInFrames={210}
         fps={30}
         width={1080}
         height={1920}
-        defaultProps={defaultVersusProps as unknown as Record<string, unknown>}
-      />
-
-      {/* 3. Lore & Theory Explainers (750 frames = 25s @ 30fps) */}
-      <Composition
-        id="ExplainerShort"
-        component={ExplainerShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={750}
-        fps={30}
-        width={1080}
-        height={1920}
-        defaultProps={defaultExplainerProps as unknown as Record<string, unknown>}
-      />
-
-      {/* 4. Interactive Quizzes & Challenges (270 frames = 9s @ 30fps) */}
-      <Composition
-        id="QuizShort"
-        component={QuizShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={270}
-        fps={30}
-        width={1080}
-        height={1920}
-        defaultProps={defaultQuizProps as unknown as Record<string, unknown>}
-      />
-
-      {/* 5. Sakuga & Keyframe Breakdowns (360 frames = 12s @ 30fps) */}
-      <Composition
-        id="SakugaShort"
-        component={SakugaShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={360}
-        fps={30}
-        width={1080}
-        height={1920}
-        defaultProps={defaultSakugaProps as unknown as Record<string, unknown>}
+        defaultProps={defaultAestheticProps as unknown as Record<string, unknown>}
       />
     </>
   );
