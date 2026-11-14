@@ -100,6 +100,22 @@ def check_file_format(video_path: str) -> Tuple[bool, str, Dict[str, Any]]:
         "mean_volume": mean_vol
     }
 
+ANIME_KEYWORD_MAP = {
+    "Jujutsu Kaisen": ["jujutsu", "jjk", "gojo", "sukuna", "toji", "yuji", "megumi", "yuta", "geto", "nanami", "maki", "nobara", "shibuya"],
+    "Demon Slayer": ["demon slayer", "kimetsu", "tengen", "tanjiro", "nezuko", "zenitsu", "inosuke", "rengoku", "akaza", "kokushibo", "muichiro", "shinobu", "giyu", "hashira"],
+    "Attack on Titan": ["attack on titan", "aot", "shingeki", "eren", "levi", "mikasa", "armin", "erwin", "reiner", "zeke", "titan"],
+    "One Piece": ["one piece", "luffy", "zoro", "sanji", "nami", "gear 5", "gear5", "shanks", "kaido", "law", "ace", "whitebeard", "wano"],
+    "Bleach": ["bleach", "tybw", "ichigo", "aizen", "yamamoto", "yhwach", "kenpachi", "byakuya", "rukia", "urahara", "bankai"]
+}
+
+OTHER_MAJOR_ANIMES = {
+    "Jujutsu Kaisen": ["demon slayer", "naruto", "one piece", "dragon ball", "bleach", "attack on titan", "aot"],
+    "Demon Slayer": ["jujutsu kaisen", "jjk", "naruto", "one piece", "bleach", "attack on titan", "aot"],
+    "Attack on Titan": ["jujutsu kaisen", "jjk", "demon slayer", "naruto", "one piece", "dragon ball"],
+    "One Piece": ["jujutsu kaisen", "jjk", "demon slayer", "naruto", "bleach", "attack on titan"],
+    "Bleach": ["jujutsu kaisen", "jjk", "demon slayer", "naruto", "one piece", "attack on titan"]
+}
+
 class AnimeHarvester:
     def __init__(self, subcategory_id: str, temp_dir: str = "temp_harvest"):
         self.master_reg = load_master_registry()
@@ -112,6 +128,28 @@ class AnimeHarvester:
         os.makedirs(self.temp_dir, exist_ok=True)
         self.used_clips = set(load_used_registry())
         self.universal_negatives = self.master_reg.get("universal_negative_filters", [])
+        self.single_anime = self.sub_config.get("single_anime_only", False)
+        self.target_anime = self.sub_config.get("target_anime", "")
+
+    def is_valid_single_anime(self, title: str) -> bool:
+        """Strictly validates that a clip belongs only to the targeted single anime."""
+        if not self.single_anime or not self.target_anime:
+            return True
+            
+        title_lower = title.lower()
+        # 1. Must match target anime keywords
+        keywords = ANIME_KEYWORD_MAP.get(self.target_anime, [self.target_anime.lower()])
+        matches_target = any(kw in title_lower for kw in keywords)
+        if not matches_target:
+            return False
+            
+        # 2. Must not contain competing major anime titles (reject crossover / multi-anime edits)
+        forbidden = OTHER_MAJOR_ANIMES.get(self.target_anime, [])
+        for f in forbidden:
+            if f in title_lower:
+                return False
+                
+        return True
 
     def harvest_sakugabooru(self, count: int = 5) -> List[Dict[str, Any]]:
         """Direct REST API to SakugaBooru for pure 60fps fluid keyframe cuts."""
@@ -194,6 +232,10 @@ class AnimeHarvester:
                         if any(neg in title.lower() for neg in self.universal_negatives):
                             continue
                             
+                        # Single-anime isolation check
+                        if not self.is_valid_single_anime(title):
+                            continue
+                            
                         if is_video or "v.redd.it" in post.get("url", ""):
                             target_mp4 = os.path.join(self.temp_dir, f"reddit_{post_id}.mp4")
                             if not os.path.exists(target_mp4):
@@ -268,6 +310,10 @@ class AnimeHarvester:
                     webpage_url = item.get("webpage_url", f"https://youtube.com/watch?v={vid_id}")
                     
                     if any(neg in title.lower() for neg in self.universal_negatives):
+                        continue
+
+                    # Single-anime isolation check
+                    if not self.is_valid_single_anime(title):
                         continue
                         
                     target_mp4 = os.path.join(self.temp_dir, f"yt_{vid_id}.mp4")

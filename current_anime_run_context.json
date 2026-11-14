@@ -1,40 +1,11 @@
 {
-  "run_id": "anime_run_1794681046075",
-  "locked_at": "2026-11-14T18:30:46.075Z",
-  "sub_category_id": "best_anime_by_genre",
-  "sub_category_name": "BEST ANIME BY GENRE",
-  "focus": "Top 5 Definitive Champions Across Major Genres",
-  "banner": {
-    "title": "Ranking The Best Anime",
-    "subject": "IN EVERY SINGLE GENRE",
-    "version": "(Ultimate Tier)"
-  },
-  "audio": {
-    "track": "public/audio/stems/best_anime_by_genre_bed.mp3",
-    "genre": "Cinematic Orchestral Swell to Trap Drop",
-    "bpm": 128
-  },
-  "requires_creator_credit": false,
-  "harvester_config": {
-    "platforms": [
-      "youtube",
-      "reddit"
-    ],
-    "jikan_query": {
-      "type": "genre_top",
-      "genres": [
-        "Action",
-        "Romance",
-        "Fantasy",
-        "Sci-Fi",
-        "Suspense"
-      ]
-    },
-    "primary_queries": [
-      "best anime of every genre ranked",
-      "top shonen anime scene 1080p",
-      "top seinen masterpiece clip 1080p"
-    ]
-  },
-  "staging_dir": "C:\\Users\\saumy\\OneDrive\\Desktop\\anime compiation\\temp_harvest_best_anime_by_genre"
+  "locked_at": "2026-11-15T00:11:00Z",
+  "sub_category_id": "trending_anime_edits",
+  "discovery_query": "viral anime edit 4k shorts",
+  "trend_avg_views": 1251074,
+  "sample_titles": [
+    "Jujutsu Kaisen \"Toji\" - MONTAGEM RUGADA [Edit/AMV]!\ud83d\udd25",
+    "Toji - Fragment \u300cAMV/EDIT\u300d4k!",
+    "THIS IS 4K ANIME (Satoru Gojo)"
+  ]
 }

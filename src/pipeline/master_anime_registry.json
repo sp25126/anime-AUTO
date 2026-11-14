@@ -1,7 +1,7 @@
 {
   "channel_reference": "AnimeAscendant",
   "niche": "whole_anime",
-  "total_subcategories": 20,
+  "total_subcategories": 25,
   "branding": {
     "channel_name": "AnimeAscendant",
     "handle": "@AnimeAscendant",
@@ -11,7 +11,11 @@
     "default_disclaimer": "All footages, music, and edits used in this video belong to their respective creators and studios. Full credits are provided below. No copyright infringement intended."
   },
   "visual_archetype": {
-    "resolution": { "width": 1080, "height": 1920, "fps": 30 },
+    "resolution": {
+      "width": 1080,
+      "height": 1920,
+      "fps": 30
+    },
     "top_banner": {
       "height_px": 240,
       "background": "#0B0C10",
@@ -24,7 +28,13 @@
       "type": "level_climb",
       "direction": "bottom_to_top",
       "ranks_total": 5,
-      "levels": ["[Level 1]", "[Level 2]", "[Level 3]", "[Level 4]", "[Level 5]"],
+      "levels": [
+        "[Level 1]",
+        "[Level 2]",
+        "[Level 3]",
+        "[Level 4]",
+        "[Level 5]"
+      ],
       "colors": {
         "rank_1": "#FF2A85",
         "rank_2": "#00F0FF",
@@ -35,9 +45,23 @@
     }
   },
   "universal_negative_filters": [
-    "podcast", "interview", "commentary", "reaction", "facecam", "split screen", 
-    "green screen", "news report", "vlog", "gameplay", "genshin", "roblox",
-    "480p", "low quality", "cringe meme sound", "watermark banner", "du recorder"
+    "podcast",
+    "interview",
+    "commentary",
+    "reaction",
+    "facecam",
+    "split screen",
+    "green screen",
+    "news report",
+    "vlog",
+    "gameplay",
+    "genshin",
+    "roblox",
+    "480p",
+    "low quality",
+    "cringe meme sound",
+    "watermark banner",
+    "du recorder"
   ],
   "subcategories": {
     "trending_anime_edits": {
@@ -47,23 +71,50 @@
       "banner_title": "Ranking Trending",
       "banner_subject": "VIRAL ANIME EDITS",
       "banner_version": "(Peak Flow Edition)",
-      "hook_title": "Ranking Trending Viral Anime Edits 🔥⚡ #shorts #anime #animeedit",
-      "description_tags": ["#shorts", "#anime", "#animeedit", "#animetrend", "#amv", "#sakuga", "#phonk"],
+      "hook_title": "Ranking Trending Viral Anime Edits \ud83d\udd25\u26a1 #shorts #anime #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#anime",
+        "#animeedit",
+        "#animetrend",
+        "#amv",
+        "#sakuga",
+        "#phonk"
+      ],
       "requires_creator_credit": true,
       "audio_track": "public/audio/stems/trending_anime_edits_bed.mp3",
       "audio_genre": "Fast Phonk / Hardstyle Bass Drop",
       "bpm": 138,
       "harvester": {
-        "platforms": ["tiktok", "youtube", "instagram", "reddit"],
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
         "primary_queries": [
           "trending anime edit viral 4k",
           "anime edit phonk velocity shorts",
           "badass anime aura edit 60fps",
           "peak anime edit transition"
         ],
-        "tiktok_tags": ["animeedit", "animetrend", "animefyp", "alightmotionanime", "capcutanime"],
-        "instagram_tags": ["animeedits", "animeedit", "animereels"],
-        "reddit_subs": ["AnimeEdits", "anime", "sakuga"],
+        "tiktok_tags": [
+          "animeedit",
+          "animetrend",
+          "animefyp",
+          "alightmotionanime",
+          "capcutanime"
+        ],
+        "instagram_tags": [
+          "animeedits",
+          "animeedit",
+          "animereels"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "anime",
+          "sakuga"
+        ],
         "min_duration": 4.0,
         "max_duration": 30.0
       }
@@ -75,15 +126,34 @@
       "banner_title": "Ranking The Best Anime",
       "banner_subject": "IN EVERY SINGLE GENRE",
       "banner_version": "(Ultimate Tier)",
-      "hook_title": "Ranking The Undisputed Best Anime In Every Genre 🏆 #shorts #anime #animerecommendations",
-      "description_tags": ["#shorts", "#anime", "#animerecommendations", "#shonen", "#seinen", "#isekai"],
+      "hook_title": "Ranking The Undisputed Best Anime In Every Genre \ud83c\udfc6 #shorts #anime #animerecommendations",
+      "description_tags": [
+        "#shorts",
+        "#anime",
+        "#animerecommendations",
+        "#shonen",
+        "#seinen",
+        "#isekai"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/best_anime_by_genre_bed.mp3",
       "audio_genre": "Cinematic Orchestral Swell to Trap Drop",
       "bpm": 128,
       "harvester": {
-        "platforms": ["youtube", "reddit"],
-        "jikan_query": { "type": "genre_top", "genres": ["Action", "Romance", "Fantasy", "Sci-Fi", "Suspense"] },
+        "platforms": [
+          "youtube",
+          "reddit"
+        ],
+        "jikan_query": {
+          "type": "genre_top",
+          "genres": [
+            "Action",
+            "Romance",
+            "Fantasy",
+            "Sci-Fi",
+            "Suspense"
+          ]
+        },
         "primary_queries": [
           "best anime of every genre ranked",
           "top shonen anime scene 1080p",
@@ -98,14 +168,22 @@
       "banner_title": "The #1 Anime From",
       "banner_subject": "EVERY SINGLE YEAR",
       "banner_version": "(2015 - 2025)",
-      "hook_title": "The #1 Anime From Every Year (2015-2025) ⏳🔥 #shorts #anime #animeevolution",
-      "description_tags": ["#shorts", "#anime", "#animeevolution", "#classic", "#animereview"],
+      "hook_title": "The #1 Anime From Every Year (2015-2025) \u23f3\ud83d\udd25 #shorts #anime #animeevolution",
+      "description_tags": [
+        "#shorts",
+        "#anime",
+        "#animeevolution",
+        "#classic",
+        "#animereview"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/anime_by_year_bed.mp3",
       "audio_genre": "Synthwave Cyberpunk Time Riser",
       "bpm": 130,
       "harvester": {
-        "platforms": ["youtube"],
+        "platforms": [
+          "youtube"
+        ],
         "primary_queries": [
           "anime of the year clips 1080p",
           "best anime 2019 scene 1080p",
@@ -120,14 +198,23 @@
       "banner_title": "5 Masterpiece Anime",
       "banner_subject": "NOBODY EVER TALKED ABOUT",
       "banner_version": "(Hidden Gems)",
-      "hook_title": "5 Anime Masterpieces That Nobody Talked About 💎✨ #shorts #underratedanime #hiddengem",
-      "description_tags": ["#shorts", "#underratedanime", "#hiddengem", "#anime", "#mustwatch"],
+      "hook_title": "5 Anime Masterpieces That Nobody Talked About \ud83d\udc8e\u2728 #shorts #underratedanime #hiddengem",
+      "description_tags": [
+        "#shorts",
+        "#underratedanime",
+        "#hiddengem",
+        "#anime",
+        "#mustwatch"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/underrated_gems_bed.mp3",
       "audio_genre": "Moody Lofi Trap / Melancholic 808",
       "bpm": 120,
       "harvester": {
-        "platforms": ["youtube", "reddit"],
+        "platforms": [
+          "youtube",
+          "reddit"
+        ],
         "primary_queries": [
           "underrated anime masterpiece clips 1080p",
           "hidden gem anime scenes",
@@ -142,15 +229,25 @@
       "banner_title": "Best Isekai Anime",
       "banner_subject": "BY YEAR EVOLUTION",
       "banner_version": "(2018 - 2024)",
-      "hook_title": "Best Isekai Anime By Year (2018-2024) 👑 #shorts #isekai #anime",
-      "description_tags": ["#shorts", "#isekai", "#anime", "#animerecommendations"],
+      "hook_title": "Best Isekai Anime By Year (2018-2024) \ud83d\udc51 #shorts #isekai #anime",
+      "description_tags": [
+        "#shorts",
+        "#isekai",
+        "#anime",
+        "#animerecommendations"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/genre_year_bed.mp3",
       "audio_genre": "Fast J-Rock / Electronic Anthem",
       "bpm": 140,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["best isekai anime year by year clips 1080p", "top isekai of the year"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "best isekai anime year by year clips 1080p",
+          "top isekai of the year"
+        ]
       }
     },
     "anime_edits_sakuga_compilation": {
@@ -160,16 +257,29 @@
       "banner_title": "Moments Where The",
       "banner_subject": "ANIMATION BUDGET BROKE",
       "banner_version": "(Pure Sakuga)",
-      "hook_title": "Moments Where The Animation Budget Exploded 🤯💥 #shorts #sakuga #anime #animation",
-      "description_tags": ["#shorts", "#sakuga", "#animeanimation", "#ufotable", "#mappa"],
+      "hook_title": "Moments Where The Animation Budget Exploded \ud83e\udd2f\ud83d\udca5 #shorts #sakuga #anime #animation",
+      "description_tags": [
+        "#shorts",
+        "#sakuga",
+        "#animeanimation",
+        "#ufotable",
+        "#mappa"
+      ],
       "requires_creator_credit": true,
       "audio_track": "public/audio/stems/sakuga_compilation_bed.mp3",
       "audio_genre": "Heavy Brazilian Phonk / Sub Bass Impact",
       "bpm": 136,
       "harvester": {
-        "platforms": ["sakugabooru", "youtube", "reddit"],
+        "platforms": [
+          "sakugabooru",
+          "youtube",
+          "reddit"
+        ],
         "sakugabooru_tags": "fighting order:score",
-        "primary_queries": ["anime peak sakuga animation clips 1080p", "insane anime fight animation budget"]
+        "primary_queries": [
+          "anime peak sakuga animation clips 1080p",
+          "insane anime fight animation budget"
+        ]
       }
     },
     "best_upcoming_anime_hype": {
@@ -179,15 +289,26 @@
       "banner_title": "Ranking The Most",
       "banner_subject": "ANTICIPATED UPCOMING ANIME",
       "banner_version": "(2025 Hype Tier)",
-      "hook_title": "Most Anticipated Upcoming Anime Releasing In 2025 🚀🔥 #shorts #upcominganime #anime2025",
-      "description_tags": ["#shorts", "#upcominganime", "#anime2025", "#trailer", "#hype"],
+      "hook_title": "Most Anticipated Upcoming Anime Releasing In 2025 \ud83d\ude80\ud83d\udd25 #shorts #upcominganime #anime2025",
+      "description_tags": [
+        "#shorts",
+        "#upcominganime",
+        "#anime2025",
+        "#trailer",
+        "#hype"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/upcoming_hype_bed.mp3",
       "audio_genre": "Trailer Clock Ticking to Massive Hybrid Drop",
       "bpm": 132,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["upcoming anime trailer 2025 pv 1080p", "most anticipated anime announcement"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "upcoming anime trailer 2025 pv 1080p",
+          "most anticipated anime announcement"
+        ]
       }
     },
     "best_anime_openings_ost": {
@@ -197,15 +318,26 @@
       "banner_title": "Anime Openings That",
       "banner_subject": "ARE AN ABSOLUTE 10/10",
       "banner_version": "(Never Skip)",
-      "hook_title": "Anime Openings That Are Literal 10/10 Masterpieces 🎧🔥 #shorts #animeop #animeost",
-      "description_tags": ["#shorts", "#animeop", "#animeost", "#animesongs", "#jpop"],
+      "hook_title": "Anime Openings That Are Literal 10/10 Masterpieces \ud83c\udfa7\ud83d\udd25 #shorts #animeop #animeost",
+      "description_tags": [
+        "#shorts",
+        "#animeop",
+        "#animeost",
+        "#animesongs",
+        "#jpop"
+      ],
       "requires_creator_credit": true,
       "audio_track": "public/audio/stems/openings_ost_bed.mp3",
       "audio_genre": "Native Chorus Drop with Bass Sub-Swell",
       "bpm": 145,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["best anime openings creditless 1080p", "iconic anime opening chorus drop"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "best anime openings creditless 1080p",
+          "iconic anime opening chorus drop"
+        ]
       }
     },
     "iconic_transformations": {
@@ -215,15 +347,27 @@
       "banner_title": "Anime Transformations That",
       "banner_subject": "BROKE THE INTERNET",
       "banner_version": "(God Form Edition)",
-      "hook_title": "Anime Transformations That Broke The Entire Internet ⚡😱 #shorts #transformation #anime",
-      "description_tags": ["#shorts", "#transformation", "#gear5", "#ultrainstinct", "#powerup"],
+      "hook_title": "Anime Transformations That Broke The Entire Internet \u26a1\ud83d\ude31 #shorts #transformation #anime",
+      "description_tags": [
+        "#shorts",
+        "#transformation",
+        "#gear5",
+        "#ultrainstinct",
+        "#powerup"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/transformations_bed.mp3",
       "audio_genre": "Riser Scream to 0.4s Silence to Sonic Boom",
       "bpm": 142,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["anime legendary awakening transformation scene 1080p", "best anime transformations raw"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "anime legendary awakening transformation scene 1080p",
+          "best anime transformations raw"
+        ]
       }
     },
     "coldest_antagonist_moments": {
@@ -233,15 +377,29 @@
       "banner_title": "Anime Villains With",
       "banner_subject": "INFINITE NEGATIVE AURA",
       "banner_version": "(Coldest Disrespect)",
-      "hook_title": "Anime Villains With Literal Negative Aura 🥶💀 #shorts #animevillain #aura #cold",
-      "description_tags": ["#shorts", "#animevillain", "#sukuna", "#aizen", "#madara", "#aura"],
+      "hook_title": "Anime Villains With Literal Negative Aura \ud83e\udd76\ud83d\udc80 #shorts #animevillain #aura #cold",
+      "description_tags": [
+        "#shorts",
+        "#animevillain",
+        "#sukuna",
+        "#aizen",
+        "#madara",
+        "#aura"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/coldest_villains_bed.mp3",
       "audio_genre": "Dark Menacing Piano with Deep 808 Rumble",
       "bpm": 115,
       "harvester": {
-        "platforms": ["youtube", "tiktok", "instagram"],
-        "primary_queries": ["anime villain disrespect cold moment scene 1080p", "coldest anime villain walkout"]
+        "platforms": [
+          "youtube",
+          "tiktok",
+          "instagram"
+        ],
+        "primary_queries": [
+          "anime villain disrespect cold moment scene 1080p",
+          "coldest anime villain walkout"
+        ]
       }
     },
     "overpowered_mc_flexes": {
@@ -251,15 +409,27 @@
       "banner_title": "When The MC Stops",
       "banner_subject": "HOLDING BACK THEIR POWER",
       "banner_version": "(Absolute Domination)",
-      "hook_title": "When The Overpowered MC Stops Holding Back 😈⚡ #shorts #opmc #animeflex",
-      "description_tags": ["#shorts", "#opmc", "#animeflex", "#overpowered", "#badass"],
+      "hook_title": "When The Overpowered MC Stops Holding Back \ud83d\ude08\u26a1 #shorts #opmc #animeflex",
+      "description_tags": [
+        "#shorts",
+        "#opmc",
+        "#animeflex",
+        "#overpowered",
+        "#badass"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/op_mc_bed.mp3",
       "audio_genre": "Deadpan Speech Silence into Massive Distorted 808",
       "bpm": 125,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["overpowered mc reveals true power scene 1080p", "op mc humiliates arrogant enemy"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "overpowered mc reveals true power scene 1080p",
+          "op mc humiliates arrogant enemy"
+        ]
       }
     },
     "mind_game_tactical_battles": {
@@ -269,15 +439,26 @@
       "banner_title": "Anime Battles Where",
       "banner_subject": "BRUTE FORCE MEANT NOTHING",
       "banner_version": "(200 IQ Outplays)",
-      "hook_title": "Anime Battles Where Brute Force Meant Nothing 🧠⚡ #shorts #mindgames #anime",
-      "description_tags": ["#shorts", "#mindgames", "#deathnote", "#codegeass", "#animeiq"],
+      "hook_title": "Anime Battles Where Brute Force Meant Nothing \ud83e\udde0\u26a1 #shorts #mindgames #anime",
+      "description_tags": [
+        "#shorts",
+        "#mindgames",
+        "#deathnote",
+        "#codegeass",
+        "#animeiq"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/mind_games_bed.mp3",
       "audio_genre": "Ticking Clock Heartbeat into Glass Shatter",
       "bpm": 110,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["smartest anime outplay scene 1080p", "200 iq anime mind game moment"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "smartest anime outplay scene 1080p",
+          "200 iq anime mind game moment"
+        ]
       }
     },
     "saddest_backstories_tearjerkers": {
@@ -287,15 +468,27 @@
       "banner_title": "Anime Backstories That",
       "banner_subject": "PERMANENTLY DAMAGE YOU",
       "banner_version": "(Emotional Tears)",
-      "hook_title": "Anime Backstories That Will Emotionally Damage You 😭💔 #shorts #sadanime #tearjerker",
-      "description_tags": ["#shorts", "#sadanime", "#tearjerker", "#emotional", "#heartbreaking"],
+      "hook_title": "Anime Backstories That Will Emotionally Damage You \ud83d\ude2d\ud83d\udc94 #shorts #sadanime #tearjerker",
+      "description_tags": [
+        "#shorts",
+        "#sadanime",
+        "#tearjerker",
+        "#emotional",
+        "#heartbreaking"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/saddest_moments_bed.mp3",
       "audio_genre": "Acoustic Piano & Gentle Strings Swell",
       "bpm": 85,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["saddest anime backstory scene 1080p", "most heartbreaking anime death scene"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "saddest anime backstory scene 1080p",
+          "most heartbreaking anime death scene"
+        ]
       }
     },
     "insane_plot_twists": {
@@ -305,15 +498,26 @@
       "banner_title": "Anime Plot Twists That",
       "banner_subject": "LEFT EVERYONE SPEECHLESS",
       "banner_version": "(Total Shock)",
-      "hook_title": "Anime Plot Twists That Left The Entire World In Shock 😱🤯 #shorts #plottwist #anime",
-      "description_tags": ["#shorts", "#plottwist", "#aot", "#animereveal", "#shocking"],
+      "hook_title": "Anime Plot Twists That Left The Entire World In Shock \ud83d\ude31\ud83e\udd2f #shorts #plottwist #anime",
+      "description_tags": [
+        "#shorts",
+        "#plottwist",
+        "#aot",
+        "#animereveal",
+        "#shocking"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/plot_twists_bed.mp3",
       "audio_genre": "Dissonant Metal Rise to Dead Stop",
       "bpm": 118,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["craziest anime plot twist reveal scene 1080p", "anime betrayal scene"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "craziest anime plot twist reveal scene 1080p",
+          "anime betrayal scene"
+        ]
       }
     },
     "best_anime_duos_rivalries": {
@@ -323,15 +527,27 @@
       "banner_title": "Greatest Anime Rivalries",
       "banner_subject": "THAT DEFINED GENERATIONS",
       "banner_version": "(Legendary Duos)",
-      "hook_title": "Anime Rivalries That Literally Defined An Entire Generation ⚔️🔥 #shorts #animerivals #duo",
-      "description_tags": ["#shorts", "#animerivals", "#narutosasuke", "#gokuvegeta", "#brotherhood"],
+      "hook_title": "Anime Rivalries That Literally Defined An Entire Generation \u2694\ufe0f\ud83d\udd25 #shorts #animerivals #duo",
+      "description_tags": [
+        "#shorts",
+        "#animerivals",
+        "#narutosasuke",
+        "#gokuvegeta",
+        "#brotherhood"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/duos_rivalries_bed.mp3",
       "audio_genre": "Fast Rock Guitars & Driving Breakbeats",
       "bpm": 144,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["best anime rivalry clash scene 1080p", "legendary anime duo fighting together"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "best anime rivalry clash scene 1080p",
+          "legendary anime duo fighting together"
+        ]
       }
     },
     "studio_animation_showcases": {
@@ -341,15 +557,27 @@
       "banner_title": "Which Studio Rules Anime?",
       "banner_subject": "MAPPA VS UFOTABLE VS WIT",
       "banner_version": "(Studio Showcase)",
-      "hook_title": "Which Studio Truly Rules The Anime Industry? 🎨⚔️ #shorts #mappa #ufotable #witstudio",
-      "description_tags": ["#shorts", "#mappa", "#ufotable", "#witstudio", "#studiokey"],
+      "hook_title": "Which Studio Truly Rules The Anime Industry? \ud83c\udfa8\u2694\ufe0f #shorts #mappa #ufotable #witstudio",
+      "description_tags": [
+        "#shorts",
+        "#mappa",
+        "#ufotable",
+        "#witstudio",
+        "#studiokey"
+      ],
       "requires_creator_credit": true,
       "audio_track": "public/audio/stems/studio_showcase_bed.mp3",
       "audio_genre": "Hybrid Electronic Symphony",
       "bpm": 134,
       "harvester": {
-        "platforms": ["youtube", "sakugabooru"],
-        "primary_queries": ["mappa vs ufotable animation comparison 1080p", "wit studio odm gear sakuga"]
+        "platforms": [
+          "youtube",
+          "sakugabooru"
+        ],
+        "primary_queries": [
+          "mappa vs ufotable animation comparison 1080p",
+          "wit studio odm gear sakuga"
+        ]
       }
     },
     "first_season_peak_vs_continuous": {
@@ -359,15 +587,25 @@
       "banner_title": "Anime That Peaked In S1",
       "banner_subject": "VS GOT BETTER EVERY SEASON",
       "banner_version": "(Trajectory)",
-      "hook_title": "Anime That Peaked In Season 1 vs Anime That Got Even Better 📈📉 #shorts #animereview #anime",
-      "description_tags": ["#shorts", "#animereview", "#animeevolution", "#season1"],
+      "hook_title": "Anime That Peaked In Season 1 vs Anime That Got Even Better \ud83d\udcc8\ud83d\udcc9 #shorts #animereview #anime",
+      "description_tags": [
+        "#shorts",
+        "#animereview",
+        "#animeevolution",
+        "#season1"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/trajectory_bed.mp3",
       "audio_genre": "Upbeat Groovy Tech Bass",
       "bpm": 126,
       "harvester": {
-        "platforms": ["youtube"],
-        "primary_queries": ["anime that fell off after season 1", "anime that gets better every season"]
+        "platforms": [
+          "youtube"
+        ],
+        "primary_queries": [
+          "anime that fell off after season 1",
+          "anime that gets better every season"
+        ]
       }
     },
     "brutal_dark_psychological": {
@@ -377,15 +615,27 @@
       "banner_title": "Dark Anime That Are",
       "banner_subject": "NOT FOR THE FAINT OF HEART",
       "banner_version": "(Psychological Grimdark)",
-      "hook_title": "Dark Anime That Are DEFINITELY Not For The Weak 💀🩸 #shorts #darkanime #psychological",
-      "description_tags": ["#shorts", "#darkanime", "#berserk", "#rezero", "#psychological"],
+      "hook_title": "Dark Anime That Are DEFINITELY Not For The Weak \ud83d\udc80\ud83e\ude78 #shorts #darkanime #psychological",
+      "description_tags": [
+        "#shorts",
+        "#darkanime",
+        "#berserk",
+        "#rezero",
+        "#psychological"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/dark_psychological_bed.mp3",
       "audio_genre": "Eerie Low Drone with Industrial Sub Impact",
       "bpm": 95,
       "harvester": {
-        "platforms": ["youtube", "reddit"],
-        "primary_queries": ["darkest anime scenes 1080p", "psychological horror anime moments"]
+        "platforms": [
+          "youtube",
+          "reddit"
+        ],
+        "primary_queries": [
+          "darkest anime scenes 1080p",
+          "psychological horror anime moments"
+        ]
       }
     },
     "most_satisfying_beatdowns": {
@@ -395,15 +645,27 @@
       "banner_title": "Most Satisfying Moments",
       "banner_subject": "WHEN ARROGANCE GOT HUMBLED",
       "banner_version": "(Instant Regret)",
-      "hook_title": "Most Satisfying Anime Moments When Arrogance Got Destroyed 👊💥 #shorts #instantkarma #anime",
-      "description_tags": ["#shorts", "#instantkarma", "#beatdown", "#satisfying", "#animefight"],
+      "hook_title": "Most Satisfying Anime Moments When Arrogance Got Destroyed \ud83d\udc4a\ud83d\udca5 #shorts #instantkarma #anime",
+      "description_tags": [
+        "#shorts",
+        "#instantkarma",
+        "#beatdown",
+        "#satisfying",
+        "#animefight"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/satisfying_beatdowns_bed.mp3",
       "audio_genre": "Heavy Trap 808 with Ringing Tinnitus Tail",
       "bpm": 138,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["most satisfying anime beatdown scene 1080p", "bully gets humbled anime scene"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "most satisfying anime beatdown scene 1080p",
+          "bully gets humbled anime scene"
+        ]
       }
     },
     "legendary_speeches_quotes": {
@@ -413,15 +675,299 @@
       "banner_title": "Anime Speeches That",
       "banner_subject": "GIVE YOU ABSOLUTE CHILLS",
       "banner_version": "(Goosebumps Edition)",
-      "hook_title": "Anime Speeches That Give You Literal Goosebumps 🫡🔥 #shorts #animespeech #erwinsmith #quotes",
-      "description_tags": ["#shorts", "#animespeech", "#quotes", "#erwinsmith", "#goosebumps"],
+      "hook_title": "Anime Speeches That Give You Literal Goosebumps \ud83e\udee1\ud83d\udd25 #shorts #animespeech #erwinsmith #quotes",
+      "description_tags": [
+        "#shorts",
+        "#animespeech",
+        "#quotes",
+        "#erwinsmith",
+        "#goosebumps"
+      ],
       "requires_creator_credit": false,
       "audio_track": "public/audio/stems/speeches_quotes_bed.mp3",
       "audio_genre": "Inspiring Cinematic Orchestra with Deep Voice Isolation",
       "bpm": 105,
       "harvester": {
-        "platforms": ["youtube", "tiktok"],
-        "primary_queries": ["most iconic anime speech 1080p", "anime quotes that hit hard scene"]
+        "platforms": [
+          "youtube",
+          "tiktok"
+        ],
+        "primary_queries": [
+          "most iconic anime speech 1080p",
+          "anime quotes that hit hard scene"
+        ]
+      }
+    },
+    "jjk_viral_edits": {
+      "id": "jjk_viral_edits",
+      "name": "JUJUTSU KAISEN VIRAL EDITS",
+      "focus": "Strictly Jujutsu Kaisen Edits Only (Gojo, Sukuna, Toji, Yuta)",
+      "single_anime_only": true,
+      "target_anime": "Jujutsu Kaisen",
+      "banner_title": "Ranking The Best",
+      "banner_subject": "JUJUTSU KAISEN EDITS",
+      "banner_version": "(JJK Edition)",
+      "hook_title": "Ranking The Best Jujutsu Kaisen Edits Of All Time \ud83d\udd25\u26a1 #shorts #jjk #jujutsukaisen #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#jjk",
+        "#jujutsukaisen",
+        "#gojo",
+        "#sukuna",
+        "#toji",
+        "#animeedit"
+      ],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/jjk_edits_bed.mp3",
+      "audio_genre": "Aggressive Phonk / Montagem Rugada Drop",
+      "bpm": 140,
+      "harvester": {
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
+        "primary_queries": [
+          "jujutsu kaisen edit viral 4k shorts",
+          "satoru gojo edit phonk 60fps shorts",
+          "sukuna malevolent shrine edit 4k",
+          "toji fushiguro velocity edit shorts"
+        ],
+        "tiktok_tags": [
+          "jjkedit",
+          "jujutsukaisenedit",
+          "gojoedit",
+          "sukunaedit",
+          "tojiedit"
+        ],
+        "instagram_tags": [
+          "jjkedits",
+          "jujutsukaisenedits",
+          "gojosatoruedit"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "JuJutsuKaisen",
+          "Jujutsufolk"
+        ],
+        "min_duration": 4.0,
+        "max_duration": 30.0
+      }
+    },
+    "demon_slayer_viral_edits": {
+      "id": "demon_slayer_viral_edits",
+      "name": "DEMON SLAYER VIRAL EDITS",
+      "focus": "Strictly Demon Slayer Edits Only (Tengen, Kokushibo, Akaza, Muichiro)",
+      "single_anime_only": true,
+      "target_anime": "Demon Slayer",
+      "banner_title": "Ranking The Best",
+      "banner_subject": "DEMON SLAYER EDITS",
+      "banner_version": "(Kimetsu Edition)",
+      "hook_title": "Ranking The Cleanest Demon Slayer Edits \ud83d\udd25\u2694\ufe0f #shorts #demonslayer #kimetsunoyaiba #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#demonslayer",
+        "#kimetsunoyaiba",
+        "#tengen",
+        "#akaza",
+        "#animeedit"
+      ],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/demon_slayer_edits_bed.mp3",
+      "audio_genre": "High-Energy Japanese Traditional Trap / Phonk",
+      "bpm": 138,
+      "harvester": {
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
+        "primary_queries": [
+          "demon slayer edit 4k viral shorts",
+          "tengen uzui musical score edit shorts",
+          "kokushibo moon breathing edit 60fps",
+          "akaza vs rengoku edit 4k"
+        ],
+        "tiktok_tags": [
+          "demonslayeredit",
+          "knyedit",
+          "tengenedit",
+          "akazaedit"
+        ],
+        "instagram_tags": [
+          "demonslayeredits",
+          "knyedits"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "KimetsuNoYaiba"
+        ],
+        "min_duration": 4.0,
+        "max_duration": 30.0
+      }
+    },
+    "aot_viral_edits": {
+      "id": "aot_viral_edits",
+      "name": "ATTACK ON TITAN VIRAL EDITS",
+      "focus": "Strictly Attack on Titan Edits Only (Eren, Levi, Erwin, Reiner)",
+      "single_anime_only": true,
+      "target_anime": "Attack on Titan",
+      "banner_title": "Ranking The Best",
+      "banner_subject": "ATTACK ON TITAN EDITS",
+      "banner_version": "(Shingeki Edition)",
+      "hook_title": "Ranking The Coldest Attack On Titan Edits \u26a1\ud83d\udc80 #shorts #aot #attackontitan #shingeki #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#aot",
+        "#attackontitan",
+        "#eren",
+        "#levi",
+        "#animeedit"
+      ],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/aot_edits_bed.mp3",
+      "audio_genre": "Dark Epic Orchestral Phonk / Sawano Drop",
+      "bpm": 135,
+      "harvester": {
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
+        "primary_queries": [
+          "attack on titan edit viral 4k shorts",
+          "eren yeager founding titan edit phonk",
+          "levi ackerman beast titan edit 60fps",
+          "erwin smith charge edit 4k"
+        ],
+        "tiktok_tags": [
+          "aotedit",
+          "attackontitanedit",
+          "erenyeageredit",
+          "leviedit"
+        ],
+        "instagram_tags": [
+          "aotedits",
+          "attackontitanedits"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "ShingekiNoKyojin",
+          "titanfolk"
+        ],
+        "min_duration": 4.0,
+        "max_duration": 30.0
+      }
+    },
+    "one_piece_viral_edits": {
+      "id": "one_piece_viral_edits",
+      "name": "ONE PIECE VIRAL EDITS",
+      "focus": "Strictly One Piece Edits Only (Gear 5, Zoro, Shanks, Luffy)",
+      "single_anime_only": true,
+      "target_anime": "One Piece",
+      "banner_title": "Ranking The Best",
+      "banner_subject": "ONE PIECE EDITS",
+      "banner_version": "(Straw Hat Edition)",
+      "hook_title": "Ranking The Greatest One Piece Edits Ever Made \ud83c\udff4\u200d\u2620\ufe0f\ud83d\udd25 #shorts #onepiece #gear5 #zoro #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#onepiece",
+        "#gear5",
+        "#luffy",
+        "#zoro",
+        "#shanks",
+        "#animeedit"
+      ],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/one_piece_edits_bed.mp3",
+      "audio_genre": "Drums of Liberation Phonk / Horns Anthem",
+      "bpm": 142,
+      "harvester": {
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
+        "primary_queries": [
+          "one piece edit 4k viral shorts",
+          "luffy gear 5 edit phonk 60fps",
+          "roronoa zoro king of hell edit 4k",
+          "shanks divine departure edit shorts"
+        ],
+        "tiktok_tags": [
+          "onepieceedit",
+          "gear5edit",
+          "zoroedit",
+          "luffyedit"
+        ],
+        "instagram_tags": [
+          "onepieceedits",
+          "zoroedits"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "OnePiece"
+        ],
+        "min_duration": 4.0,
+        "max_duration": 30.0
+      }
+    },
+    "bleach_viral_edits": {
+      "id": "bleach_viral_edits",
+      "name": "BLEACH TYBW VIRAL EDITS",
+      "focus": "Strictly Bleach & TYBW Edits Only (Ichigo, Aizen, Yamamoto, Yhwach)",
+      "single_anime_only": true,
+      "target_anime": "Bleach",
+      "banner_title": "Ranking The Best",
+      "banner_subject": "BLEACH TYBW EDITS",
+      "banner_version": "(Bankai Edition)",
+      "hook_title": "Ranking The Coldest Bleach TYBW Edits \ud83d\udde1\ufe0f\u26a1 #shorts #bleach #tybw #ichigo #aizen #animeedit",
+      "description_tags": [
+        "#shorts",
+        "#bleach",
+        "#tybw",
+        "#ichigo",
+        "#aizen",
+        "#bankai",
+        "#animeedit"
+      ],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/bleach_edits_bed.mp3",
+      "audio_genre": "Dark Gothic Choir Trap / Phonk",
+      "bpm": 136,
+      "harvester": {
+        "platforms": [
+          "tiktok",
+          "youtube",
+          "instagram",
+          "reddit"
+        ],
+        "primary_queries": [
+          "bleach tybw edit 4k viral shorts",
+          "ichigo horn of salvation edit phonk",
+          "sosuke aizen edit negative aura 4k",
+          "yamamoto bankai flame edit 60fps"
+        ],
+        "tiktok_tags": [
+          "bleachedit",
+          "bleachtybwedit",
+          "ichigoedit",
+          "aizenedit"
+        ],
+        "instagram_tags": [
+          "bleachedits",
+          "tybwedits"
+        ],
+        "reddit_subs": [
+          "AnimeEdits",
+          "bleach"
+        ],
+        "min_duration": 4.0,
+        "max_duration": 30.0
       }
     }
   }
