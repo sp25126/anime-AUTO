@@ -1,6 +1,11 @@
 {
-  "system_version": "2.0.0-dual-format",
-  "last_updated": "2026-11-15T01:30:00Z",
+  "system_version": "2.1.0-expanded-moments-and-edits",
+  "last_updated": "2026-11-15T01:45:00Z",
+  "credit_policy": {
+    "mandatory": true,
+    "on_screen_hud": "CC:@creator or sc:@creator displayed in bold Cyan (#00F0FF) throughout each clip",
+    "description_format": "Timestamped clip title, original editor handle/channel link, studio name, source platform, and Fair Use Section 107 disclaimer"
+  },
   "core_niches": {
     "ranking_edits_and_moments": {
       "name": "Ranking Edits & Anime Moments",
@@ -10,7 +15,8 @@
         "title": "Top-pinned 2-line Impact with single colored accent word",
         "left_sidebar": "Left vertical rank countdown (5->1) with view count / title reveal",
         "bottom_commentary": "Neon green / cyan punchline reaction ('TS AHH 🙏', 'PEAK FICTION 👑')",
-        "background": "Blur-clone of source clip (scale 2.2, blur 45px, sat 0.8) or painterly art"
+        "background": "Blur-clone of source clip (scale 2.2, blur 45px, sat 0.8) or painterly art",
+        "credit_tag": "CC: @creator prominently in Cyan (#00F0FF) bottom center"
       }
     },
     "aesthetic_anime_moments": {
@@ -21,7 +27,7 @@
         "title": "None (clean full bleed visual focus)",
         "captions": "Minimal kinetic word-by-word captions (pink/green/white glow)",
         "background": "Painterly atmospheric anime art (sky/sunset/clouds) matching edit mood",
-        "watermark": "Subtle bottom center channel watermark"
+        "watermark": "Subtle bottom center channel watermark and creator credit tag"
       }
     }
   },
@@ -29,6 +35,7 @@
     "ranking_jjk_viral_edits": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Best JJK Edits",
+      "category_type": "single_anime_edits",
       "search_queries": ["ranking best jjk edits shorts", "jjk viral edits ranking shorts", "best jujutsu kaisen edits shorts"],
       "title_line1": "RANKING THE BEST",
       "title_line2": "JJK EDITS",
@@ -39,6 +46,7 @@
     "ranking_demon_slayer_edits": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Best Demon Slayer Edits",
+      "category_type": "single_anime_edits",
       "search_queries": ["ranking best demon slayer edits shorts", "demon slayer viral edits ranking shorts", "kimetsu no yaiba edits shorts"],
       "title_line1": "RANKING THE BEST",
       "title_line2": "DEMON SLAYER EDITS",
@@ -49,6 +57,7 @@
     "ranking_aot_peak_edits": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Best Attack on Titan Edits",
+      "category_type": "single_anime_edits",
       "search_queries": ["ranking best aot edits shorts", "attack on titan rumbling edits ranking", "shingeki no kyojin best edits shorts"],
       "title_line1": "RANKING THE BEST",
       "title_line2": "AOT EDITS",
@@ -56,9 +65,146 @@
       "accent_color": "#00F0FF",
       "franchise_isolation": "Attack on Titan"
     },
+    "ranking_one_piece_hype_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best One Piece Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best one piece edits shorts", "one piece gear 5 edits ranking shorts", "best luffy edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "ONE PIECE EDITS",
+      "accent_word": "ONE PIECE",
+      "accent_color": "#FFE600",
+      "franchise_isolation": "One Piece"
+    },
+    "ranking_bleach_tybw_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best Bleach TYBW Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best bleach tybw edits shorts", "bleach bankai edits ranking shorts", "best aizen ichigo edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "BLEACH TYBW EDITS",
+      "accent_word": "BLEACH",
+      "accent_color": "#FF2A85",
+      "franchise_isolation": "Bleach"
+    },
+    "ranking_chainsaw_man_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best Chainsaw Man Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best chainsaw man edits shorts", "chainsaw man viral edits ranking shorts", "makima denji edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "CHAINSAW MAN EDITS",
+      "accent_word": "CHAINSAW MAN",
+      "accent_color": "#FF3300",
+      "franchise_isolation": "Chainsaw Man"
+    },
+    "ranking_solo_leveling_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best Solo Leveling Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best solo leveling edits shorts", "sung jinwoo arise edits ranking shorts", "solo leveling viral edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "SOLO LEVELING EDITS",
+      "accent_word": "SOLO LEVELING",
+      "accent_color": "#00C9FF",
+      "franchise_isolation": "Solo Leveling"
+    },
+    "ranking_naruto_classic_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best Naruto & Shippuden Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best naruto edits shorts", "madara obito viral edits ranking shorts", "naruto shippuden best edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "NARUTO EDITS",
+      "accent_word": "NARUTO",
+      "accent_color": "#FF8C00",
+      "franchise_isolation": "Naruto"
+    },
+    "ranking_dragon_ball_hype_edits": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Ranking The Best Dragon Ball Edits",
+      "category_type": "single_anime_edits",
+      "search_queries": ["ranking best dragon ball edits shorts", "ultra instinct goku edits ranking shorts", "dragon ball super peak edits shorts"],
+      "title_line1": "RANKING THE BEST",
+      "title_line2": "DRAGON BALL EDITS",
+      "accent_word": "DRAGON BALL",
+      "accent_color": "#00E5FF",
+      "franchise_isolation": "Dragon Ball"
+    },
+    "ranking_best_fight_moments": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Top 5 Greatest Anime Fight Moments",
+      "category_type": "fight_moments",
+      "search_queries": ["top 5 greatest anime fight moments shorts", "best anime fights ranking shorts", "most insane anime fight scenes shorts"],
+      "title_line1": "TOP 5 GREATEST",
+      "title_line2": "ANIME FIGHT MOMENTS",
+      "accent_word": "FIGHT MOMENTS",
+      "accent_color": "#FF0000"
+    },
+    "ranking_hand_to_hand_combat": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Best Hand-To-Hand Martial Arts Fights",
+      "category_type": "fight_moments",
+      "search_queries": ["best hand to hand anime fights ranking shorts", "anime taijutsu close combat fight moments shorts", "cleanest hand to hand anime fights shorts"],
+      "title_line1": "BEST HAND-TO-HAND",
+      "title_line2": "ANIME FIGHT MOMENTS",
+      "accent_word": "HAND-TO-HAND",
+      "accent_color": "#FFE600"
+    },
+    "ranking_swordsman_clashes": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Greatest Anime Sword Fights & Clashes",
+      "category_type": "fight_moments",
+      "search_queries": ["best anime sword fights ranking shorts", "insane swordsman clashes in anime shorts", "legendary katana anime fight moments shorts"],
+      "title_line1": "GREATEST SWORD",
+      "title_line2": "FIGHT MOMENTS",
+      "accent_word": "SWORD",
+      "accent_color": "#00F0FF"
+    },
+    "ranking_satisfying_beatdowns": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Most Satisfying Villain Beatdowns",
+      "category_type": "action_moments",
+      "search_queries": ["most satisfying anime villain beatdowns shorts", "satisfying anime beatdowns ranking shorts", "anime moments villain gets destroyed shorts"],
+      "title_line1": "MOST SATISFYING",
+      "title_line2": "VILLAIN BEATDOWNS",
+      "accent_word": "BEATDOWNS",
+      "accent_color": "#39FF14"
+    },
+    "ranking_iconic_transformations": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Top 5 Iconic Anime Transformations",
+      "category_type": "action_moments",
+      "search_queries": ["top 5 iconic anime transformations shorts", "best anime transformation moments ranking shorts", "craziest anime power ups ranking shorts"],
+      "title_line1": "TOP 5 ICONIC",
+      "title_line2": "TRANSFORMATION MOMENTS",
+      "accent_word": "TRANSFORMATION",
+      "accent_color": "#FFD700"
+    },
+    "ranking_coldest_aura_moments": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Anime Characters With 1000000+ Aura Moments",
+      "category_type": "action_moments",
+      "search_queries": ["coldest anime aura moments ranking shorts", "anime characters infinite aura moments shorts", "unmatched anime aura flex moments shorts"],
+      "title_line1": "COLDEST ANIME",
+      "title_line2": "AURA MOMENTS",
+      "accent_word": "AURA MOMENTS",
+      "accent_color": "#9D00FF"
+    },
+    "ranking_rage_awakening_moments": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Insane Anime Pure Rage Awakening Moments",
+      "category_type": "action_moments",
+      "search_queries": ["insane anime rage moments ranking shorts", "anime character snaps pure rage shorts", "best anime awakening rage moments shorts"],
+      "title_line1": "INSANE PURE RAGE",
+      "title_line2": "AWAKENING MOMENTS",
+      "accent_word": "PURE RAGE",
+      "accent_color": "#FF0033"
+    },
     "ranking_unexpected_edits": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Best Unexpected Anime Edits",
+      "category_type": "creative_edits",
       "search_queries": ["ranking unexpected anime edits shorts", "unexpected anime edits ranking shorts", "crazy anime transition edits shorts"],
       "title_line1": "RANKING THE BEST",
       "title_line2": "UNEXPECTED ANIME EDITS",
@@ -68,6 +214,7 @@
     "ranking_brainrot_moments": {
       "niche": "ranking_edits_and_moments",
       "name": "Top 5 Random Brainrot Anime Moments",
+      "category_type": "comedy_moments",
       "search_queries": ["top 5 random brainrot anime moments shorts", "funny random brainrot anime stuff shorts", "anime brainrot moments shorts"],
       "title_line1": "TOP 5 RANDOM BRAINROT",
       "title_line2": "ANIME MOMENTS",
@@ -77,6 +224,7 @@
     "ranking_cleanest_transitions": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Cleanest Anime Transitions",
+      "category_type": "creative_edits",
       "search_queries": ["cleanest anime transitions ranking shorts", "best smooth anime transitions shorts", "anime transition edits shorts"],
       "title_line1": "RANKING THE CLEANEST",
       "title_line2": "ANIME TRANSITIONS",
@@ -86,6 +234,7 @@
     "ranking_peak_flow_edits": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking Edits With Unmatched Flow",
+      "category_type": "creative_edits",
       "search_queries": ["ranking anime edits with unmatched flow shorts", "best velocity anime edits ranking shorts", "peak flow anime edits shorts"],
       "title_line1": "RANKING EDITS WITH",
       "title_line2": "UNMATCHED FLOW",
@@ -95,6 +244,7 @@
     "ranking_hardest_beat_drops": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking Hardest Anime Beat Drop Edits",
+      "category_type": "creative_edits",
       "search_queries": ["hardest anime beat drop edits ranking shorts", "anime edits hardest drop shorts", "best phonk anime beat drops shorts"],
       "title_line1": "RANKING HARDEST",
       "title_line2": "BEAT DROP EDITS",
@@ -104,6 +254,7 @@
     "ranking_best_anime_arcs": {
       "niche": "ranking_edits_and_moments",
       "name": "Ranking The Best Anime Arcs In History",
+      "category_type": "lore_moments",
       "search_queries": ["ranking best anime arcs in history shorts", "best anime arcs ranking shorts", "top 5 greatest anime arcs shorts"],
       "title_line1": "RANKING THE BEST",
       "title_line2": "ANIME ARCS IN HISTORY",
@@ -113,15 +264,27 @@
     "ranking_chills_voice_lines": {
       "niche": "ranking_edits_and_moments",
       "name": "Anime Lines That Give You Pure Chills",
+      "category_type": "lore_moments",
       "search_queries": ["anime voice lines that give chills ranking shorts", "coldest anime lines ranking shorts", "anime dialogues that gave chills shorts"],
       "title_line1": "ANIME LINES THAT GIVE",
       "title_line2": "PURE CHILLS",
       "accent_word": "CHILLS",
       "accent_color": "#00FFFF"
     },
+    "ranking_shocking_plot_twists": {
+      "niche": "ranking_edits_and_moments",
+      "name": "Top 5 Most Shocking Anime Plot Twist Moments",
+      "category_type": "lore_moments",
+      "search_queries": ["most shocking anime plot twists shorts", "craziest anime plot twist moments shorts", "anime moments that broke the internet shorts"],
+      "title_line1": "TOP 5 MOST SHOCKING",
+      "title_line2": "PLOT TWIST MOMENTS",
+      "accent_word": "PLOT TWISTS",
+      "accent_color": "#FF0055"
+    },
     "aesthetic_softest_romance": {
       "niche": "aesthetic_anime_moments",
       "name": "The Softest Anime Romance Moments",
+      "category_type": "aesthetic_moments",
       "search_queries": ["softest anime romance moments shorts", "wholesome cute anime romance moments edit", "soft romance anime edit shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "lofi-ambient",
@@ -130,6 +293,7 @@
     "aesthetic_heartbreaking_scenes": {
       "niche": "aesthetic_anime_moments",
       "name": "Most Heartbreaking Anime Moments",
+      "category_type": "aesthetic_moments",
       "search_queries": ["most heartbreaking anime moments aesthetic edit shorts", "sad anime moments edit shorts", "anime scenes that broke your heart shorts"],
       "background_theme": "cool-night",
       "audio_vibe": "melancholic-piano",
@@ -138,6 +302,7 @@
     "aesthetic_comfort_vibes": {
       "niche": "aesthetic_anime_moments",
       "name": "Pure Comfort Anime Aesthetic Moments",
+      "category_type": "aesthetic_moments",
       "search_queries": ["pure comfort anime aesthetic edit shorts", "peaceful anime aesthetic vibes shorts", "relaxing anime scenery edit shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "lofi-chill",
@@ -146,6 +311,7 @@
     "aesthetic_raining_night_mood": {
       "niche": "aesthetic_anime_moments",
       "name": "Rainy Night Anime Mood Edits",
+      "category_type": "aesthetic_moments",
       "search_queries": ["rainy night anime aesthetic edit shorts", "raining anime vibes shorts", "lofi rainy anime moments shorts"],
       "background_theme": "rainy-blue",
       "audio_vibe": "rain-lofi",
@@ -154,6 +320,7 @@
     "aesthetic_nostalgic_golden_hour": {
       "niche": "aesthetic_anime_moments",
       "name": "Nostalgic Golden Hour Anime Scenes",
+      "category_type": "aesthetic_moments",
       "search_queries": ["nostalgic golden hour anime edit shorts", "anime sunset aesthetic edit shorts", "after school anime aesthetic moments shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "nostalgic-guitar",
@@ -162,6 +329,7 @@
     "aesthetic_silent_stares": {
       "niche": "aesthetic_anime_moments",
       "name": "The Way They Looked At Each Other",
+      "category_type": "aesthetic_moments",
       "search_queries": ["the way they looked at each other anime edit shorts", "silent eye contact anime scenes edit", "eye contact anime aesthetic shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "slowed-reverb",
@@ -170,6 +338,7 @@
     "aesthetic_cinematic_scenery": {
       "niche": "aesthetic_anime_moments",
       "name": "Breathtaking Anime Visual Landscapes",
+      "category_type": "aesthetic_moments",
       "search_queries": ["makoto shinkai scenery aesthetic edit shorts", "breathtaking anime visual landscapes shorts", "cinematic anime skies edit shorts"],
       "background_theme": "shinkai-sky",
       "audio_vibe": "cinematic-strings",
@@ -178,6 +347,7 @@
     "aesthetic_late_night_thoughts": {
       "niche": "aesthetic_anime_moments",
       "name": "Late Night Anime Thoughts & Solitude",
+      "category_type": "aesthetic_moments",
       "search_queries": ["late night anime thoughts aesthetic edit shorts", "lonely late night anime vibes shorts", "3am anime aesthetic edit shorts"],
       "background_theme": "midnight-purple",
       "audio_vibe": "ambient-synth",
@@ -186,6 +356,7 @@
     "aesthetic_wholesome_friendship": {
       "niche": "aesthetic_anime_moments",
       "name": "Wholesome Anime Friendship Memories",
+      "category_type": "aesthetic_moments",
       "search_queries": ["wholesome anime friendship moments edit shorts", "anime group of friends aesthetic shorts", "youth nostalgia anime edit shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "warm-acoustic",
@@ -194,6 +365,7 @@
     "aesthetic_unspoken_feelings": {
       "niche": "aesthetic_anime_moments",
       "name": "Unspoken Feelings & Hidden Love",
+      "category_type": "aesthetic_moments",
       "search_queries": ["unspoken feelings anime aesthetic edit shorts", "hidden love anime scenes edit shorts", "confession anime aesthetic shorts"],
       "background_theme": "warm-sunset",
       "audio_vibe": "slowed-reverb-piano",
