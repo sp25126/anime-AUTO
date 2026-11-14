@@ -1,29 +1,28 @@
 {
-  "scan_time": "2026-11-14T19:16:57.580321Z",
-  "total_probed": 7,
+  "timestamp": "2026-11-14T20:19:10.484538Z",
+  "total_probed_videos": 23,
   "winning_franchise": "Jujutsu Kaisen",
-  "total_cluster_virality": 238.48,
-  "recommended_subcategory_id": "jujutsu_kaisen_viral_edits",
-  "recommended_format": "AnimeShort",
-  "format_reason": "Matched keyword 'edit'",
-  "top_viral_video": {
-    "id": "mZsPXkbGVKk",
-    "title": "Jujutsu Kaisen - On The Floor [Edit/AMV]  | TY FOR 400K  \ud83d\udc99\ud83d\udd25!",
-    "channel": "XENOZ",
-    "views": 5315473,
-    "virality_score": 84.54,
-    "url": "https://www.youtube.com/watch?v=mZsPXkbGVKk"
+  "cluster_score": 21461.15,
+  "top_viral_clip": {
+    "id": "0j3_e3bDZfQ",
+    "title": "THIS IS 4K ANIME (Satoru Gojo)",
+    "channel": "KenzoAE",
+    "views": 1467504,
+    "upload_date": "",
+    "url": "https://www.youtube.com/shorts/0j3_e3bDZfQ",
+    "virality_score": 21461.15,
+    "detected_franchise": "Jujutsu Kaisen"
   },
-  "franchise_rankings": [
+  "top_rankings": [
     {
       "franchise": "Jujutsu Kaisen",
-      "total_virality": 238.48,
-      "count": 4
+      "score": 21461.15,
+      "count": 1
     },
     {
-      "franchise": "Trending Anime",
-      "total_virality": 40.01,
-      "count": 3
+      "franchise": "Blue Lock",
+      "score": 1507.02,
+      "count": 1
     }
   ]
 }
