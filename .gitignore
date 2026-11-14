@@ -8,16 +8,17 @@ harvested_clips/
 raw_clips/
 cache/
 
-# Media & Render Output
-output/
-*.mp4
-*.mkv
-*.webm
-*.avi
-*.mov
-*.wav
-*.flac
-*.aac
+# Harvested raw clips (never commit these - too large)
+temp_harvest/
+
+# Media - track public assets & output renders via Git LFS
+# Uncomment below if NOT using Git LFS:
+# output/
+# public/clips/
+# *.mp4
+
+# Build outputs
+# (dist/ already tracked below)
 
 # Build outputs
 dist/
