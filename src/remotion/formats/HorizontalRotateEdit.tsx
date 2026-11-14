@@ -16,8 +16,8 @@ export interface HorizontalRotateEditProps {
   channelHandle?: string; // e.g. "@animefandom0_0"
   channelDisplayName?: string; // e.g. "Anime Fandom"
   creatorCredit?: string; // e.g. "@akivfx"
-  tiltPromptDurationFrames?: number; // default 60 frames (2.0s)
-  overlayAnimationPath?: string; // transparent video animation
+  tiltPromptDurationFrames?: number; // default 75 frames (2.5s)
+  userTiltAnimationPath?: string; // User's 240570_medium.mp4 animation
 }
 
 export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
@@ -26,8 +26,8 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
   channelHandle = "@animefandom0_0",
   channelDisplayName = "Anime Fandom",
   creatorCredit = "@akivfx",
-  tiltPromptDurationFrames = 60, // 2 seconds prompt
-  overlayAnimationPath = "public/overlays/rotate_phone_transparent.webm"
+  tiltPromptDurationFrames = 75, // 2.5 seconds prompt matches user animation
+  userTiltAnimationPath = "public/overlays/user_tilt_animation.mp4"
 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
@@ -46,25 +46,25 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
     return staticFile(rel);
   };
 
-  // Phase 1 (0 to 60f = 0 to 2s): Show download green-screen phone rotation animation
-  // Phase 2 (60f to end): Smooth spring rotation to 90 degrees, filling the full 1080x1920 screen horizontally
+  // Phase 1 (0 to tiltPromptDurationFrames): User's "PLEASE ROTATE YOUR PHONE" sleek animation plays
+  // Phase 2 (tiltPromptDurationFrames onward): Spring rotation to 90 degrees expanding horizontally
   const rotationProgress = spring({
     frame: Math.max(0, frame - (tiltPromptDurationFrames - 15)),
     fps,
     config: {
-      damping: 15,
+      damping: 14,
       stiffness: 85,
-      mass: 0.85
+      mass: 0.8
     }
   });
 
   // Rotation: 0 -> 90 degrees
   const rotationDegrees = interpolate(rotationProgress, [0, 1], [0, 90]);
 
-  // Expand to fill the vertical height horizontally (scale 1.0 -> 1.777)
+  // Scale 1.0 -> 1.777 (so that 1080 width fills the 1920 height horizontally)
   const videoScale = interpolate(rotationProgress, [0, 1], [1.0, 1.777]);
 
-  // Fade out tilt prompt overlay smoothly
+  // Prompt overlay fades out smoothly as the rotation starts
   const promptOpacity = interpolate(
     frame,
     [tiltPromptDurationFrames - 15, tiltPromptDurationFrames],
@@ -73,11 +73,11 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
   );
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#050608', fontFamily: "'Impact', 'Arial Black', sans-serif" }}>
+    <AbsoluteFill style={{ backgroundColor: '#000000', fontFamily: "'Impact', 'Arial Black', sans-serif" }}>
       {/* 1. Background Music Track */}
       {audioPath && <Audio src={resolvePath(audioPath)} volume={0.85} />}
 
-      {/* 2. Dynamic Video-Reactive Glow Background (Rotates smoothly in sync) */}
+      {/* 2. Dynamic Video-Reactive Glow Background (Synchronized with anime colors) */}
       <AbsoluteFill style={{ overflow: 'hidden' }}>
         <OffthreadVideo
           src={resolvePath(videoPath)}
@@ -85,11 +85,11 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transform: `scale(2.2) rotate(${rotationDegrees * 0.5}deg)`,
+            transform: `scale(2.3) rotate(${rotationDegrees * 0.5}deg)`,
             filter: 'blur(55px) brightness(0.4) saturate(1.3)'
           }}
         />
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(5,6,8,0.35)' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.35)' }} />
       </AbsoluteFill>
 
       {/* 3. MAIN CINEMATIC ROTATING VIDEO CONTAINER */}
@@ -118,34 +118,32 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
         />
       </div>
 
-      {/* 4. REAL INTERNET "ROTATE PHONE" ANIMATION OVERLAY (Phase 1) */}
+      {/* 4. USER'S EXACT "PLEASE ROTATE YOUR PHONE" ANIMATION OVERLAY (Phase 1) */}
       {promptOpacity > 0 && (
         <AbsoluteFill
           style={{
             opacity: promptOpacity,
             display: 'flex',
-            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(5,6,8,0.7)',
-            backdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(0,0,0,0.85)',
             zIndex: 150
           }}
         >
-          {/* Downloaded Real Phone Rotation Animation Video */}
+          {/* User's 240570_medium.mp4 animation (screen blend mode blends pure black seamlessly) */}
           <div
             style={{
-              width: '320px',
-              height: '320px',
-              overflow: 'hidden',
+              width: '720px',
+              height: '1280px',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              filter: 'drop-shadow(0 0 30px rgba(0,240,255,0.8))'
+              mixBlendMode: 'screen',
+              filter: 'contrast(1.1) brightness(1.2)'
             }}
           >
             <OffthreadVideo
-              src={resolvePath(overlayAnimationPath)}
+              src={resolvePath(userTiltAnimationPath)}
               style={{
                 width: '100%',
                 height: '100%',
@@ -153,35 +151,10 @@ export const HorizontalRotateEdit: React.FC<HorizontalRotateEditProps> = ({
               }}
             />
           </div>
-
-          <div
-            style={{
-              fontSize: '56px',
-              color: '#FFE600',
-              marginTop: '15px',
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              textShadow: '0 0 25px rgba(255,230,0,0.85), 2px 2px 0 #000'
-            }}
-          >
-            ROTATE PHONE 🔄
-          </div>
-          <div
-            style={{
-              fontSize: '28px',
-              color: '#FFFFFF',
-              marginTop: '8px',
-              letterSpacing: '1px',
-              opacity: 0.9,
-              textShadow: '1px 1px 4px #000'
-            }}
-          >
-            For Full-Screen Cinema View
-          </div>
         </AbsoluteFill>
       )}
 
-      {/* 5. Minimal Channel Branding & Credit (Bottom) */}
+      {/* 5. Channel Branding & Attribution (Bottom) */}
       <div
         style={{
           position: 'absolute',
