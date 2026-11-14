@@ -75,11 +75,7 @@ export const RemotionRoot: React.FC = () => {
     channelDisplayName: "Anime Fandom",
     creatorCredit: "@akivfx",
     colorTheme: "warm-sunset",
-    captions: [
-      { word: "the way she looked at him...", startFrame: 0, endFrame: 60, color: "#39FF14" },
-      { word: "nothing else mattered.", startFrame: 60, endFrame: 130, color: "#FF69B4" },
-      { word: "pure aesthetic bliss ✨", startFrame: 130, endFrame: 210, color: "#FFFFFF" }
-    ]
+    captions: []
   };
 
   const totalRankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);

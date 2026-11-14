@@ -31,11 +31,7 @@ export interface AestheticShortProps {
 
 export const AestheticShort: React.FC<AestheticShortProps> = ({
   videoPath = "public/clips/gojo.mp4",
-  captions = [
-    { word: "the way she looked at him...", startFrame: 0, endFrame: 60, color: "#39FF14" },
-    { word: "nothing else mattered.", startFrame: 60, endFrame: 130, color: "#FF69B4" },
-    { word: "pure aesthetic bliss ✨", startFrame: 130, endFrame: 210, color: "#FFFFFF" }
-  ],
+  captions = [],
   audioPath = "public/audio/stems/versus_phonk_bed.mp3",
   backgroundMode = "painterly-art",
   painterlyArtBgPath = "public/backgrounds/golden_hour_sky.jpg",
