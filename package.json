@@ -1,0 +1,34 @@
+{
+  "name": "anime-compilation-engine",
+  "version": "1.0.0",
+  "description": "Autonomous multi-platform Anime viral shorts engine with reverse-engineered harvesters, 20 subcategories, Remotion renderer, and full attribution credit pipeline.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "remotion:preview": "remotion preview src/remotion/index.ts",
+    "remotion:render": "remotion render src/remotion/index.ts AnimeShort",
+    "harvest": "python scripts/anime_harvester.py",
+    "orchestrate": "ts-node src/pipeline/AnimeGraph.ts"
+  },
+  "keywords": ["anime", "remotion", "automation", "harvester", "shorts", "youtube"],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

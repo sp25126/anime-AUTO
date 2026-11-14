@@ -1,0 +1,428 @@
+{
+  "channel_reference": "AnimeAscendant",
+  "niche": "whole_anime",
+  "total_subcategories": 20,
+  "branding": {
+    "channel_name": "AnimeAscendant",
+    "handle": "@AnimeAscendant",
+    "theme_color": "#FF2A85",
+    "accent_color": "#00F0FF",
+    "secondary_color": "#FFE600",
+    "default_disclaimer": "All footages, music, and edits used in this video belong to their respective creators and studios. Full credits are provided below. No copyright infringement intended."
+  },
+  "visual_archetype": {
+    "resolution": { "width": 1080, "height": 1920, "fps": 30 },
+    "top_banner": {
+      "height_px": 240,
+      "background": "#0B0C10",
+      "prefix_color": "#FFFFFF",
+      "highlight_color": "#FFE600",
+      "subject_color": "#FF2A85",
+      "tag_color": "#00F0FF"
+    },
+    "ladder": {
+      "type": "level_climb",
+      "direction": "bottom_to_top",
+      "ranks_total": 5,
+      "levels": ["[Level 1]", "[Level 2]", "[Level 3]", "[Level 4]", "[Level 5]"],
+      "colors": {
+        "rank_1": "#FF2A85",
+        "rank_2": "#00F0FF",
+        "rank_3": "#FFE600",
+        "rank_4": "#FFFFFF",
+        "rank_5": "#FFFFFF"
+      }
+    }
+  },
+  "universal_negative_filters": [
+    "podcast", "interview", "commentary", "reaction", "facecam", "split screen", 
+    "green screen", "news report", "vlog", "gameplay", "genshin", "roblox",
+    "480p", "low quality", "cringe meme sound", "watermark banner", "du recorder"
+  ],
+  "subcategories": {
+    "trending_anime_edits": {
+      "id": "trending_anime_edits",
+      "name": "TRENDING ANIME EDITS",
+      "focus": "Viral Velocity, Twixtor Flow & Phonk Transitions",
+      "banner_title": "Ranking Trending",
+      "banner_subject": "VIRAL ANIME EDITS",
+      "banner_version": "(Peak Flow Edition)",
+      "hook_title": "Ranking Trending Viral Anime Edits 🔥⚡ #shorts #anime #animeedit",
+      "description_tags": ["#shorts", "#anime", "#animeedit", "#animetrend", "#amv", "#sakuga", "#phonk"],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/trending_anime_edits_bed.mp3",
+      "audio_genre": "Fast Phonk / Hardstyle Bass Drop",
+      "bpm": 138,
+      "harvester": {
+        "platforms": ["tiktok", "youtube", "instagram", "reddit"],
+        "primary_queries": [
+          "trending anime edit viral 4k",
+          "anime edit phonk velocity shorts",
+          "badass anime aura edit 60fps",
+          "peak anime edit transition"
+        ],
+        "tiktok_tags": ["animeedit", "animetrend", "animefyp", "alightmotionanime", "capcutanime"],
+        "instagram_tags": ["animeedits", "animeedit", "animereels"],
+        "reddit_subs": ["AnimeEdits", "anime", "sakuga"],
+        "min_duration": 4.0,
+        "max_duration": 30.0
+      }
+    },
+    "best_anime_by_genre": {
+      "id": "best_anime_by_genre",
+      "name": "BEST ANIME BY GENRE",
+      "focus": "Top 5 Definitive Champions Across Major Genres",
+      "banner_title": "Ranking The Best Anime",
+      "banner_subject": "IN EVERY SINGLE GENRE",
+      "banner_version": "(Ultimate Tier)",
+      "hook_title": "Ranking The Undisputed Best Anime In Every Genre 🏆 #shorts #anime #animerecommendations",
+      "description_tags": ["#shorts", "#anime", "#animerecommendations", "#shonen", "#seinen", "#isekai"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/best_anime_by_genre_bed.mp3",
+      "audio_genre": "Cinematic Orchestral Swell to Trap Drop",
+      "bpm": 128,
+      "harvester": {
+        "platforms": ["youtube", "reddit"],
+        "jikan_query": { "type": "genre_top", "genres": ["Action", "Romance", "Fantasy", "Sci-Fi", "Suspense"] },
+        "primary_queries": [
+          "best anime of every genre ranked",
+          "top shonen anime scene 1080p",
+          "top seinen masterpiece clip 1080p"
+        ]
+      }
+    },
+    "anime_by_year_all_time": {
+      "id": "anime_by_year_all_time",
+      "name": "ANIME BY YEAR (GOLDEN ERA)",
+      "focus": "Landmark Show of Each Year (2015-2025)",
+      "banner_title": "The #1 Anime From",
+      "banner_subject": "EVERY SINGLE YEAR",
+      "banner_version": "(2015 - 2025)",
+      "hook_title": "The #1 Anime From Every Year (2015-2025) ⏳🔥 #shorts #anime #animeevolution",
+      "description_tags": ["#shorts", "#anime", "#animeevolution", "#classic", "#animereview"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/anime_by_year_bed.mp3",
+      "audio_genre": "Synthwave Cyberpunk Time Riser",
+      "bpm": 130,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": [
+          "anime of the year clips 1080p",
+          "best anime 2019 scene 1080p",
+          "best anime 2023 scene 1080p"
+        ]
+      }
+    },
+    "underrated_hidden_gems": {
+      "id": "underrated_hidden_gems",
+      "name": "UNDERRATED HIDDEN GEMS",
+      "focus": "High Rating (>8.1) Slept-on Masterpieces",
+      "banner_title": "5 Masterpiece Anime",
+      "banner_subject": "NOBODY EVER TALKED ABOUT",
+      "banner_version": "(Hidden Gems)",
+      "hook_title": "5 Anime Masterpieces That Nobody Talked About 💎✨ #shorts #underratedanime #hiddengem",
+      "description_tags": ["#shorts", "#underratedanime", "#hiddengem", "#anime", "#mustwatch"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/underrated_gems_bed.mp3",
+      "audio_genre": "Moody Lofi Trap / Melancholic 808",
+      "bpm": 120,
+      "harvester": {
+        "platforms": ["youtube", "reddit"],
+        "primary_queries": [
+          "underrated anime masterpiece clips 1080p",
+          "hidden gem anime scenes",
+          "anime you need to watch before you die"
+        ]
+      }
+    },
+    "genre_by_year_cross_axis": {
+      "id": "genre_by_year_cross_axis",
+      "name": "GENRE BY YEAR (CROSS-AXIS)",
+      "focus": "Best of Single Genre Across Consecutive Years",
+      "banner_title": "Best Isekai Anime",
+      "banner_subject": "BY YEAR EVOLUTION",
+      "banner_version": "(2018 - 2024)",
+      "hook_title": "Best Isekai Anime By Year (2018-2024) 👑 #shorts #isekai #anime",
+      "description_tags": ["#shorts", "#isekai", "#anime", "#animerecommendations"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/genre_year_bed.mp3",
+      "audio_genre": "Fast J-Rock / Electronic Anthem",
+      "bpm": 140,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["best isekai anime year by year clips 1080p", "top isekai of the year"]
+      }
+    },
+    "anime_edits_sakuga_compilation": {
+      "id": "anime_edits_sakuga_compilation",
+      "name": "PEAK SAKUGA ANIMATION",
+      "focus": "Fluid Keyframe Animation & Smear Frame Combat",
+      "banner_title": "Moments Where The",
+      "banner_subject": "ANIMATION BUDGET BROKE",
+      "banner_version": "(Pure Sakuga)",
+      "hook_title": "Moments Where The Animation Budget Exploded 🤯💥 #shorts #sakuga #anime #animation",
+      "description_tags": ["#shorts", "#sakuga", "#animeanimation", "#ufotable", "#mappa"],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/sakuga_compilation_bed.mp3",
+      "audio_genre": "Heavy Brazilian Phonk / Sub Bass Impact",
+      "bpm": 136,
+      "harvester": {
+        "platforms": ["sakugabooru", "youtube", "reddit"],
+        "sakugabooru_tags": "fighting order:score",
+        "primary_queries": ["anime peak sakuga animation clips 1080p", "insane anime fight animation budget"]
+      }
+    },
+    "best_upcoming_anime_hype": {
+      "id": "best_upcoming_anime_hype",
+      "name": "BEST UPCOMING ANIME",
+      "focus": "Anticipated New Seasons & Massive Premieres",
+      "banner_title": "Ranking The Most",
+      "banner_subject": "ANTICIPATED UPCOMING ANIME",
+      "banner_version": "(2025 Hype Tier)",
+      "hook_title": "Most Anticipated Upcoming Anime Releasing In 2025 🚀🔥 #shorts #upcominganime #anime2025",
+      "description_tags": ["#shorts", "#upcominganime", "#anime2025", "#trailer", "#hype"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/upcoming_hype_bed.mp3",
+      "audio_genre": "Trailer Clock Ticking to Massive Hybrid Drop",
+      "bpm": 132,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["upcoming anime trailer 2025 pv 1080p", "most anticipated anime announcement"]
+      }
+    },
+    "best_anime_openings_ost": {
+      "id": "best_anime_openings_ost",
+      "name": "BEST ANIME OPENINGS & OST",
+      "focus": "10/10 Legendary Song Drops & Chorus Peaks",
+      "banner_title": "Anime Openings That",
+      "banner_subject": "ARE AN ABSOLUTE 10/10",
+      "banner_version": "(Never Skip)",
+      "hook_title": "Anime Openings That Are Literal 10/10 Masterpieces 🎧🔥 #shorts #animeop #animeost",
+      "description_tags": ["#shorts", "#animeop", "#animeost", "#animesongs", "#jpop"],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/openings_ost_bed.mp3",
+      "audio_genre": "Native Chorus Drop with Bass Sub-Swell",
+      "bpm": 145,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["best anime openings creditless 1080p", "iconic anime opening chorus drop"]
+      }
+    },
+    "iconic_transformations": {
+      "id": "iconic_transformations",
+      "name": "ICONIC TRANSFORMATIONS",
+      "focus": "God Form Awakenings & Internet-Breaking Forms",
+      "banner_title": "Anime Transformations That",
+      "banner_subject": "BROKE THE INTERNET",
+      "banner_version": "(God Form Edition)",
+      "hook_title": "Anime Transformations That Broke The Entire Internet ⚡😱 #shorts #transformation #anime",
+      "description_tags": ["#shorts", "#transformation", "#gear5", "#ultrainstinct", "#powerup"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/transformations_bed.mp3",
+      "audio_genre": "Riser Scream to 0.4s Silence to Sonic Boom",
+      "bpm": 142,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["anime legendary awakening transformation scene 1080p", "best anime transformations raw"]
+      }
+    },
+    "coldest_antagonist_moments": {
+      "id": "coldest_antagonist_moments",
+      "name": "COLDEST ANTAGONIST MOMENTS",
+      "focus": "Infinite Negative Aura & Humiliation of Heroes",
+      "banner_title": "Anime Villains With",
+      "banner_subject": "INFINITE NEGATIVE AURA",
+      "banner_version": "(Coldest Disrespect)",
+      "hook_title": "Anime Villains With Literal Negative Aura 🥶💀 #shorts #animevillain #aura #cold",
+      "description_tags": ["#shorts", "#animevillain", "#sukuna", "#aizen", "#madara", "#aura"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/coldest_villains_bed.mp3",
+      "audio_genre": "Dark Menacing Piano with Deep 808 Rumble",
+      "bpm": 115,
+      "harvester": {
+        "platforms": ["youtube", "tiktok", "instagram"],
+        "primary_queries": ["anime villain disrespect cold moment scene 1080p", "coldest anime villain walkout"]
+      }
+    },
+    "overpowered_mc_flexes": {
+      "id": "overpowered_mc_flexes",
+      "name": "OVERPOWERED MC FLEXES",
+      "focus": "Zero Damage Taken & Instant Traumatizing Counters",
+      "banner_title": "When The MC Stops",
+      "banner_subject": "HOLDING BACK THEIR POWER",
+      "banner_version": "(Absolute Domination)",
+      "hook_title": "When The Overpowered MC Stops Holding Back 😈⚡ #shorts #opmc #animeflex",
+      "description_tags": ["#shorts", "#opmc", "#animeflex", "#overpowered", "#badass"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/op_mc_bed.mp3",
+      "audio_genre": "Deadpan Speech Silence into Massive Distorted 808",
+      "bpm": 125,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["overpowered mc reveals true power scene 1080p", "op mc humiliates arrogant enemy"]
+      }
+    },
+    "mind_game_tactical_battles": {
+      "id": "mind_game_tactical_battles",
+      "name": "200 IQ TACTICAL BATTLES",
+      "focus": "Brute Force Meant Nothing (Death Note / Geass)",
+      "banner_title": "Anime Battles Where",
+      "banner_subject": "BRUTE FORCE MEANT NOTHING",
+      "banner_version": "(200 IQ Outplays)",
+      "hook_title": "Anime Battles Where Brute Force Meant Nothing 🧠⚡ #shorts #mindgames #anime",
+      "description_tags": ["#shorts", "#mindgames", "#deathnote", "#codegeass", "#animeiq"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/mind_games_bed.mp3",
+      "audio_genre": "Ticking Clock Heartbeat into Glass Shatter",
+      "bpm": 110,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["smartest anime outplay scene 1080p", "200 iq anime mind game moment"]
+      }
+    },
+    "saddest_backstories_tearjerkers": {
+      "id": "saddest_backstories_tearjerkers",
+      "name": "SADDEST TEARJERKER MOMENTS",
+      "focus": "Emotional Damage & Tragic Pasts",
+      "banner_title": "Anime Backstories That",
+      "banner_subject": "PERMANENTLY DAMAGE YOU",
+      "banner_version": "(Emotional Tears)",
+      "hook_title": "Anime Backstories That Will Emotionally Damage You 😭💔 #shorts #sadanime #tearjerker",
+      "description_tags": ["#shorts", "#sadanime", "#tearjerker", "#emotional", "#heartbreaking"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/saddest_moments_bed.mp3",
+      "audio_genre": "Acoustic Piano & Gentle Strings Swell",
+      "bpm": 85,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["saddest anime backstory scene 1080p", "most heartbreaking anime death scene"]
+      }
+    },
+    "insane_plot_twists": {
+      "id": "insane_plot_twists",
+      "name": "INSANE PLOT TWISTS",
+      "focus": "Traitor Reveals & Narrative Shockers",
+      "banner_title": "Anime Plot Twists That",
+      "banner_subject": "LEFT EVERYONE SPEECHLESS",
+      "banner_version": "(Total Shock)",
+      "hook_title": "Anime Plot Twists That Left The Entire World In Shock 😱🤯 #shorts #plottwist #anime",
+      "description_tags": ["#shorts", "#plottwist", "#aot", "#animereveal", "#shocking"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/plot_twists_bed.mp3",
+      "audio_genre": "Dissonant Metal Rise to Dead Stop",
+      "bpm": 118,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["craziest anime plot twist reveal scene 1080p", "anime betrayal scene"]
+      }
+    },
+    "best_anime_duos_rivalries": {
+      "id": "best_anime_duos_rivalries",
+      "name": "LEGENDARY DUOS & RIVALRIES",
+      "focus": "Brotherhood & Generational Clashing Wills",
+      "banner_title": "Greatest Anime Rivalries",
+      "banner_subject": "THAT DEFINED GENERATIONS",
+      "banner_version": "(Legendary Duos)",
+      "hook_title": "Anime Rivalries That Literally Defined An Entire Generation ⚔️🔥 #shorts #animerivals #duo",
+      "description_tags": ["#shorts", "#animerivals", "#narutosasuke", "#gokuvegeta", "#brotherhood"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/duos_rivalries_bed.mp3",
+      "audio_genre": "Fast Rock Guitars & Driving Breakbeats",
+      "bpm": 144,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["best anime rivalry clash scene 1080p", "legendary anime duo fighting together"]
+      }
+    },
+    "studio_animation_showcases": {
+      "id": "studio_animation_showcases",
+      "name": "STUDIO SHOWCASE (MAPPA VS UFOTABLE)",
+      "focus": "Studio Wars: Trademark Aesthetics & Sakuga Styles",
+      "banner_title": "Which Studio Rules Anime?",
+      "banner_subject": "MAPPA VS UFOTABLE VS WIT",
+      "banner_version": "(Studio Showcase)",
+      "hook_title": "Which Studio Truly Rules The Anime Industry? 🎨⚔️ #shorts #mappa #ufotable #witstudio",
+      "description_tags": ["#shorts", "#mappa", "#ufotable", "#witstudio", "#studiokey"],
+      "requires_creator_credit": true,
+      "audio_track": "public/audio/stems/studio_showcase_bed.mp3",
+      "audio_genre": "Hybrid Electronic Symphony",
+      "bpm": 134,
+      "harvester": {
+        "platforms": ["youtube", "sakugabooru"],
+        "primary_queries": ["mappa vs ufotable animation comparison 1080p", "wit studio odm gear sakuga"]
+      }
+    },
+    "first_season_peak_vs_continuous": {
+      "id": "first_season_peak_vs_continuous",
+      "name": "SEASON 1 PEAK VS CONTINUAL CLIMB",
+      "focus": "Trajectory: One-Season Wonder vs Unstoppable Growth",
+      "banner_title": "Anime That Peaked In S1",
+      "banner_subject": "VS GOT BETTER EVERY SEASON",
+      "banner_version": "(Trajectory)",
+      "hook_title": "Anime That Peaked In Season 1 vs Anime That Got Even Better 📈📉 #shorts #animereview #anime",
+      "description_tags": ["#shorts", "#animereview", "#animeevolution", "#season1"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/trajectory_bed.mp3",
+      "audio_genre": "Upbeat Groovy Tech Bass",
+      "bpm": 126,
+      "harvester": {
+        "platforms": ["youtube"],
+        "primary_queries": ["anime that fell off after season 1", "anime that gets better every season"]
+      }
+    },
+    "brutal_dark_psychological": {
+      "id": "brutal_dark_psychological",
+      "name": "BRUTAL DARK PSYCHOLOGICAL",
+      "focus": "Grimdark & High Tension Masterpieces",
+      "banner_title": "Dark Anime That Are",
+      "banner_subject": "NOT FOR THE FAINT OF HEART",
+      "banner_version": "(Psychological Grimdark)",
+      "hook_title": "Dark Anime That Are DEFINITELY Not For The Weak 💀🩸 #shorts #darkanime #psychological",
+      "description_tags": ["#shorts", "#darkanime", "#berserk", "#rezero", "#psychological"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/dark_psychological_bed.mp3",
+      "audio_genre": "Eerie Low Drone with Industrial Sub Impact",
+      "bpm": 95,
+      "harvester": {
+        "platforms": ["youtube", "reddit"],
+        "primary_queries": ["darkest anime scenes 1080p", "psychological horror anime moments"]
+      }
+    },
+    "most_satisfying_beatdowns": {
+      "id": "most_satisfying_beatdowns",
+      "name": "MOST SATISFYING BEATDOWNS",
+      "focus": "Bully Humbled & Instant Karma",
+      "banner_title": "Most Satisfying Moments",
+      "banner_subject": "WHEN ARROGANCE GOT HUMBLED",
+      "banner_version": "(Instant Regret)",
+      "hook_title": "Most Satisfying Anime Moments When Arrogance Got Destroyed 👊💥 #shorts #instantkarma #anime",
+      "description_tags": ["#shorts", "#instantkarma", "#beatdown", "#satisfying", "#animefight"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/satisfying_beatdowns_bed.mp3",
+      "audio_genre": "Heavy Trap 808 with Ringing Tinnitus Tail",
+      "bpm": 138,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["most satisfying anime beatdown scene 1080p", "bully gets humbled anime scene"]
+      }
+    },
+    "legendary_speeches_quotes": {
+      "id": "legendary_speeches_quotes",
+      "name": "LEGENDARY SPEECHES & QUOTES",
+      "focus": "Chills & Goosebumps Philosophy Monologues",
+      "banner_title": "Anime Speeches That",
+      "banner_subject": "GIVE YOU ABSOLUTE CHILLS",
+      "banner_version": "(Goosebumps Edition)",
+      "hook_title": "Anime Speeches That Give You Literal Goosebumps 🫡🔥 #shorts #animespeech #erwinsmith #quotes",
+      "description_tags": ["#shorts", "#animespeech", "#quotes", "#erwinsmith", "#goosebumps"],
+      "requires_creator_credit": false,
+      "audio_track": "public/audio/stems/speeches_quotes_bed.mp3",
+      "audio_genre": "Inspiring Cinematic Orchestra with Deep Voice Isolation",
+      "bpm": 105,
+      "harvester": {
+        "platforms": ["youtube", "tiktok"],
+        "primary_queries": ["most iconic anime speech 1080p", "anime quotes that hit hard scene"]
+      }
+    }
+  }
+}

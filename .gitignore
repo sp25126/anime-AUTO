@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Harvest staging & downloaded raw clips
+temp_harvest/
+temp_harvest_*/
+harvested_clips/
+raw_clips/
+cache/
+
+# Media & Render Output
+output/
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.mov
+*.wav
+*.flac
+*.aac
+
+# Build outputs
+dist/
+
+# Environment & Secrets
+.env
+.env.local
+*.log
+
+# OS artifacts
+Thumbs.db
+.DS_Store
