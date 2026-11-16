@@ -1,0 +1,61 @@
+name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
+
+on:
+  schedule:
+    # Runs everyday at 02:00 UTC (7:30 AM IST)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  produce-and-schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20 (For Remotion React Engine)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Python 3.11 (For Autonomous Pipeline & DSP)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install System Dependencies & FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 libgbm1 libasound2
+
+      - name: Install NPM & Remotion Dependencies
+        run: |
+          npm ci
+
+      - name: Ensure Headless Chromium for Remotion
+        run: |
+          npx remotion browser ensure
+
+      - name: Install Python Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Restore YouTube Token Secret
+        run: |
+          mkdir -p config
+          echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > config/youtube_token.json
+
+      - name: Run Master Autonomous Pipeline
+        run: |
+          python scripts/engine/autonomous_channel_manager.py
+
+      - name: Persist Cycle State Back to Repo
+        if: always()
+        run: |
+          git config --global user.name "AnimeFandomBot"
+          git config --global user.email "bot@animefandom.internal"
+          git add config/autonomous_state.json
+          git commit -m "chore: advance autonomous rotation state [skip ci]" || echo "No state changes"
+          git push

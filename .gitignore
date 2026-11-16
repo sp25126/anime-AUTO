@@ -7,26 +7,31 @@ temp_harvest_*/
 harvested_clips/
 raw_clips/
 cache/
+input/
+extended_parts/
+fresh_parts/
+fresh_jjk_downloads/
 
-# Harvested raw clips (never commit these - too large)
-temp_harvest/
+# Secrets & Local State
+config/youtube_token.json
+.env
+.env.local
+*.log
 
-# Media - track public assets & output renders via Git LFS
-# Uncomment below if NOT using Git LFS:
-# output/
-# public/clips/
-# *.mp4
-
-# Build outputs
-# (dist/ already tracked below)
+# Video binaries (heavy files)
+output/*.mp4
+output/*.wav
+output/*.jpg
+output/*.png
+public/clips/*.mp4
+*.mp4
 
 # Build outputs
 dist/
 
-# Environment & Secrets
-.env
-.env.local
-*.log
+# Python cache
+__pycache__/
+*.pyc
 
 # OS artifacts
 Thumbs.db
