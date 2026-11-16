@@ -5,93 +5,78 @@ import { AestheticShort, AestheticShortProps } from './formats/AestheticShort';
 import { HorizontalRotateEdit, HorizontalRotateEditProps } from './formats/HorizontalRotateEdit';
 
 export const RemotionRoot: React.FC = () => {
-  // 1. RankingShort: Pure vertical 9:16 format with left sidebar countdown & blur-clone BG
+  // 1. RankingShort: 5 DISTINCT high-energy viral edits at 15-16s EACH = ~75-80s Total
+  // (Fits perfectly within YouTube Shorts 3-minute / 180s limit while maximizing watch time)
   const defaultRankingProps: RankingShortProps = {
-    topTitleLine1: "RANKING THE BEST",
+    topTitleLine1: "TOP 5 GREATEST",
     topTitleLine2: "JJK EDITS",
     accentWord: "JJK",
     accentColor: "#FF0000",
-    audioPath: "public/audio/stems/versus_phonk_bed.mp3",
-    backgroundMode: "blur-clone",
+    masterVideoPath: "public/clips/ranking_base_master.mp4",
     clips: [
       {
-        videoPath: "public/clips/gojo.mp4",
-        durationInFrames: 150,
+        durationInFrames: 450, // 15.0s
         rankNumber: 5,
-        label: "Hollow Purple 200%",
-        viewCountText: "970K",
-        commentaryText: "TS AHH 🙏",
-        creatorCredit: "@bankaivzn",
-        animeTitle: "Jujutsu Kaisen"
+        label: "Toji Sorcerer Killer",
+        viewCountText: "1.2M",
+        creatorCredit: "@bankaivzn"
       },
       {
-        videoPath: "public/clips/sukuna.mp4",
-        durationInFrames: 180,
+        durationInFrames: 450, // 15.0s
         rankNumber: 4,
-        label: "Malevolent Shrine",
-        viewCountText: "1.8M",
-        commentaryText: "WATERMARK SO PEAK 🙏",
-        creatorCredit: "@waiyanchanmoe",
-        animeTitle: "Jujutsu Kaisen"
+        label: "Yuji Black Flash 120%",
+        viewCountText: "2.4M",
+        creatorCredit: "@waiyanchanmoe"
       },
       {
-        videoPath: "public/clips/gojo.mp4",
-        durationInFrames: 180,
+        durationInFrames: 480, // 16.0s
         rankNumber: 3,
-        label: "Limitless Void",
-        viewCountText: "2.9M",
-        commentaryText: "TRASH INTRO ✅",
-        creatorCredit: "@foryouamvv",
-        animeTitle: "Jujutsu Kaisen"
+        label: "Mahoraga Sacred Treasure",
+        viewCountText: "3.9M",
+        creatorCredit: "@foryouamvv"
       },
       {
-        videoPath: "public/clips/sukuna.mp4",
-        durationInFrames: 210,
+        durationInFrames: 480, // 16.0s
         rankNumber: 2,
-        label: "World Cutting Slash",
-        viewCountText: "4.5M",
-        commentaryText: "CHILLS 🥶",
-        creatorCredit: "@otakyo_vfx",
-        animeTitle: "Jujutsu Kaisen"
+        label: "Malevolent Shrine Rampage",
+        viewCountText: "5.7M",
+        creatorCredit: "@otakyo_vfx"
       },
       {
-        videoPath: "public/clips/gojo.mp4",
-        durationInFrames: 240,
+        durationInFrames: 510, // 17.0s
         rankNumber: 1,
-        label: "Honored One Awakening",
-        viewCountText: "8.2M",
-        commentaryText: "PEAK FICTION 👑",
-        creatorCredit: "@zenin_edits",
-        animeTitle: "Jujutsu Kaisen"
+        label: "The Honored One Climax",
+        viewCountText: "9.8M",
+        creatorCredit: "@zenin_edits"
       }
     ]
   };
 
   // 2. AestheticShort: Dynamic video-reactive blurred background in clean vertical orientation
   const defaultAestheticProps: AestheticShortProps = {
-    videoPath: "public/clips/gojo.mp4",
+    videoPath: "public/clips/ranked_edits/clip_1_gojo_portrait.mp4",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
     backgroundType: "dynamic-blur",
     channelHandle: "@animefandom0_0",
     channelDisplayName: "Anime Fandom",
-    creatorCredit: "@akivfx"
+    creatorCredit: "@zenin_edits"
   };
 
   // 3. HorizontalRotateEdit: "ROTATE PHONE" animated HUD -> Smooth 90deg rotation to full horizontal cinema edit
   const defaultRotateProps: HorizontalRotateEditProps = {
-    videoPath: "public/clips/gojo.mp4",
+    videoPath: "public/clips/ranked_edits/clip_1_gojo_portrait.mp4",
     audioPath: "public/audio/stems/versus_phonk_bed.mp3",
     channelHandle: "@animefandom0_0",
     channelDisplayName: "Anime Fandom",
-    creatorCredit: "@akivfx",
-    tiltPromptDurationFrames: 60 // 2 seconds tilt prompt
+    creatorCredit: "@zenin_edits",
+    tiltPromptDurationFrames: 75 // 2.5 seconds tilt prompt
   };
 
+  // 450 + 450 + 480 + 480 + 510 = 2370 frames (79.0s @ 30fps)
   const totalRankingFrames = defaultRankingProps.clips.reduce((acc, c) => acc + c.durationInFrames, 0);
 
   return (
     <>
-      {/* Format 1: RankingShort (Vertical only, 5-to-1 ranking countdown) */}
       <Composition
         id="RankingShort"
         component={RankingShort as unknown as React.ComponentType<Record<string, unknown>>}
@@ -102,22 +87,20 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={defaultRankingProps as unknown as Record<string, unknown>}
       />
 
-      {/* Format 2: AestheticShort (Vertical with dynamic video-reactive background) */}
       <Composition
         id="AestheticShort"
         component={AestheticShort as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={210}
+        durationInFrames={900} // 30.0s
         fps={30}
         width={1080}
         height={1920}
         defaultProps={defaultAestheticProps as unknown as Record<string, unknown>}
       />
 
-      {/* Format 3: HorizontalRotateEdit ("ROTATE PHONE" animation -> 90deg full landscape cinema edit) */}
       <Composition
         id="HorizontalRotateEdit"
         component={HorizontalRotateEdit as unknown as React.ComponentType<Record<string, unknown>>}
-        durationInFrames={240} // 8 seconds sample (2s prompt + 6s full horizontal cinema)
+        durationInFrames={900} // 30.0s
         fps={30}
         width={1080}
         height={1920}
