@@ -35,15 +35,11 @@ jobs:
       - name: Install System Dependencies & FFmpeg
         run: |
           sudo apt-get update || true
-          sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 || sudo apt-get install -y ffmpeg
+          sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 chromium-browser || sudo apt-get install -y ffmpeg
 
       - name: Install NPM & Remotion Dependencies
         run: |
           npm ci || npm install
-
-      - name: Ensure Headless Chromium for Remotion
-        run: |
-          npx remotion browser ensure
 
       - name: Install Python Dependencies
         run: |
