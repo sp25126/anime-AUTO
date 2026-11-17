@@ -4,6 +4,11 @@ on:
   schedule:
     # Runs everyday at 02:00 UTC (7:30 AM IST)
     - cron: '0 2 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/**'
   workflow_dispatch:
 
 permissions:
@@ -30,7 +35,7 @@ jobs:
       - name: Install System Dependencies & FFmpeg
         run: |
           sudo apt-get update || true
-          sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 libasound2 || sudo apt-get install -y ffmpeg
+          sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 || sudo apt-get install -y ffmpeg
 
       - name: Install NPM & Remotion Dependencies
         run: |
