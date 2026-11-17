@@ -6,6 +6,9 @@ on:
     - cron: '0 2 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   produce-and-schedule:
     runs-on: ubuntu-latest
@@ -17,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Set up Python 3.11 (For Autonomous Pipeline & DSP)
         uses: actions/setup-python@v5
@@ -32,7 +34,7 @@ jobs:
 
       - name: Install NPM & Remotion Dependencies
         run: |
-          npm ci
+          npm ci || npm install
 
       - name: Ensure Headless Chromium for Remotion
         run: |
@@ -56,6 +58,5 @@ jobs:
         run: |
           git config --global user.name "AnimeFandomBot"
           git config --global user.email "bot@animefandom.internal"
-          git add config/autonomous_state.json
-          git commit -m "chore: advance autonomous rotation state [skip ci]" || echo "No state changes"
-          git push
+          git add -A config/autonomous_state.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: advance autonomous rotation state [skip ci]" && git push)

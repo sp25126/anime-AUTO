@@ -12,8 +12,9 @@ extended_parts/
 fresh_parts/
 fresh_jjk_downloads/
 
-# Secrets & Local State
+# Secrets
 config/youtube_token.json
+config/client_secrets.json
 .env
 .env.local
 *.log
