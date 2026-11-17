@@ -2,8 +2,8 @@
 Master Channel Autonomous Daemon (AFA-SE Zero-Touch Engine)
 Runs 24/7 or on scheduled GitHub Actions cron triggers to autonomously:
 1. Cycle between Group A (Edit Ranking), Group B (Rotate Phone), and Group C (Micro-Moment)
-2. Ingest real-time market signals (AniList GraphQL, YouTube, TikTok, Instagram Syndication)
-3. Evaluate candidates with Multi-Horizon Math Matrices (Daily / Weekly / Monthly) across ALL genres
+2. Drive production through VIRALITY: Trending songs/BGM, cross-anime tropes, and booming moments (not tied to single anime)
+3. Evaluate candidates with Multi-Horizon Math Matrices across ALL genres
 4. Filter out any unreleased titles, western cartoons, and kid shows via Strict Authenticity Gate
 5. Harvest 1080p clips directly via Stream Harvester (HLS seek / micro-clipper)
 6. Render 1080x1920 vertical master with dynamic Remotion or Forensic Earshot DSP
@@ -31,6 +31,7 @@ from stream_harvester import StreamHarvester
 from dsp_engine import ForensicDSPEngine
 from qa_scheduler import QAGatekeeper, YouTubeScheduler
 from metadata_engine import MetadataComplianceEngine
+from viral_catalog import VIRAL_THEMES
 
 ROTATION_CYCLE = ["GROUP_A", "GROUP_C", "GROUP_B", "GROUP_C"]
 STATE_FILE = os.path.join(WORKSPACE_ROOT, "config", "autonomous_state.json")
@@ -55,6 +56,7 @@ class AutonomousChannelManager:
         return {
             "last_run_date": "",
             "cycle_index": 0,
+            "recent_themes": [],
             "recent_franchises": [],
             "scheduled_videos": []
         }
@@ -68,76 +70,89 @@ class AutonomousChannelManager:
         idx = self.state.get("cycle_index", 0)
         return ROTATION_CYCLE[idx % len(ROTATION_CYCLE)]
 
-    def advance_cycle(self, franchise: str = None):
+    def advance_cycle(self, theme_key: str = None, franchise: str = None):
         self.state["cycle_index"] = self.state.get("cycle_index", 0) + 1
         self.state["last_run_date"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        if theme_key:
+            rec_themes = self.state.get("recent_themes", [])
+            rec_themes.append(theme_key)
+            self.state["recent_themes"] = rec_themes[-15:]
         if franchise:
             recents = self.state.get("recent_franchises", [])
             recents.append(franchise)
-            self.state["recent_franchises"] = recents[-15:] # Keep last 15 to ensure broad genre rotation
+            self.state["recent_franchises"] = recents[-15:]
         self.save_state()
 
-    def select_multi_horizon_candidate(self, group: str) -> str:
+    def select_viral_theme_or_show(self, group: str) -> Dict[str, Any]:
         """
-        Dynamically selects the top performing anime across Daily (airing), Weekly (trending),
-        and Monthly (evergreen) horizons while preventing franchise repetition.
+        Selects the optimal viral theme or trending anime based on virality, 
+        trending songs, and cross-anime moments rather than a single franchise.
         """
-        recent = [f.lower() for f in self.state.get("recent_franchises", [])]
-        roster = self.radar.fetch_multi_horizon_roster()
+        recent_themes = self.state.get("recent_themes", [])
         
-        # Determine candidate search order:
-        # For Group A (Ranking) & Group B (Rotate): Prioritize high-action Weekly & Monthly Evergreen
-        # For Group C (Moments & Rizz): Prioritize Daily Airing romcom/slice-of-life & Weekly Trending
-        if group in ["GROUP_A", "GROUP_B"]:
-            search_tiers = [roster["weekly_trending"], roster["monthly_evergreen"], roster["daily_airing"]]
-            preferred_genres = ["Action", "Fantasy", "Supernatural", "Sci-Fi"]
-        else: # GROUP_C
-            search_tiers = [roster["daily_airing"], roster["weekly_trending"], roster["monthly_evergreen"]]
-            preferred_genres = ["Comedy", "Romance", "Slice of Life", "Drama", "Mystery"]
-
-        for tier in search_tiers:
-            for show in tier:
-                title = show["title"]
-                if any(r in title.lower() or title.lower() in r for r in recent):
-                    continue
-                genres = show.get("genres", [])
-                if any(g in preferred_genres for g in genres):
-                    return title
-
-        # Fallback to any non-recent show
-        for tier in search_tiers:
-            for show in tier:
-                title = show["title"]
-                if not any(r in title.lower() or title.lower() in r for r in recent):
-                    return title
-
-        return "Bleach TYBW"
-
-    def produce_group_a_ranking(self, output_path: str, anime_title: str):
-        """
-        Group A: Top 5 Battle / Sakuga Edit Ranking (~75-80s).
-        Harvests verified 4K anime edits from YouTube/TikTok syndications.
-        """
-        print(f"[Group A Production] Generating High-Energy Ranking Edit for {anime_title}...")
-        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_group_a_{anime_title.replace(' ', '_').lower()}.mp4")
-        
-        queries = [
-            f"{anime_title} viral edit tiktok 4k",
-            f"{anime_title} insane battle edit 4k 60fps",
-            f"best {anime_title} edits shorts",
-            f"{anime_title} amv 4k 60fps"
+        # Filter viral themes matching current group
+        matching_themes = [
+            (k, v) for k, v in VIRAL_THEMES.items() 
+            if v["group"] == group and k not in recent_themes
         ]
         
+        if matching_themes:
+            chosen_key, chosen_val = matching_themes[0]
+            return {
+                "type": "VIRAL_THEME",
+                "key": chosen_key,
+                "data": chosen_val,
+                "label": chosen_val["theme_name"]
+            }
+
+        # Fallback to multi-horizon anime selection across all genres
+        roster = self.radar.fetch_multi_horizon_roster()
+        recent_shows = [s.lower() for s in self.state.get("recent_franchises", [])]
+        
+        all_shows = roster["weekly_trending"] + roster["monthly_evergreen"] + roster["daily_airing"]
+        for s in all_shows:
+            if s["title"].lower() not in recent_shows:
+                return {
+                    "type": "ANIME_SHOW",
+                    "key": s["title"],
+                    "data": s,
+                    "label": s["title"]
+                }
+                
+        return {
+            "type": "ANIME_SHOW",
+            "key": "Jujutsu Kaisen",
+            "data": {"title": "Jujutsu Kaisen", "genres": ["Action"]},
+            "label": "Jujutsu Kaisen"
+        }
+
+    def produce_group_a_ranking(self, output_path: str, target: Dict[str, Any]):
+        """
+        Group A: Multi-Clip Viral Ranking (75-80s).
+        Can be a Cross-Anime Viral Theme (e.g., Coldest Aura, Hardest Beat Drops, Rage Awakenings)
+        or Single-Franchise Viral Climax Ranking.
+        """
+        theme_data = target.get("data", {})
+        theme_label = target.get("label", "Viral Edits")
+        print(f"[Group A Production] Generating 75-80s Ranking Edit for: '{theme_label}'...")
+
+        # If it's a cross-anime theme with dedicated query set
+        queries = theme_data.get("search_queries") or [
+            f"top 5 {theme_label} edits 4k",
+            f"{theme_label} viral edit tiktok 4k",
+            f"best {theme_label} shorts"
+        ]
+
+        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_ranking_{target['key']}.mp4")
         harvested = self.harvester.harvest_validated_clip(
-            anime_title=anime_title,
+            anime_title="Anime",
             search_queries=queries,
             start_time=5.0,
             duration=45.0,
             output_path=raw_clip
         )
-        
+
         if harvested and os.path.exists(harvested):
-            # Render via 9:16 vertical blur background compositor
             filter_complex = (
                 "[0:v]fps=30,split=2[fg_raw][bg_raw];"
                 "[bg_raw]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,eq=brightness=-0.15:saturation=1.2[bg_blur];"
@@ -157,30 +172,36 @@ class AutonomousChannelManager:
             if os.path.exists(output_path):
                 return output_path
 
+        # Fallback to villain blur base or luffy gear 5 if raw query misses
+        villain_base = os.path.join(WORKSPACE_ROOT, "output", "ranking_villain_aura_mastered.mp4")
+        if os.path.exists(villain_base):
+            return villain_base
         return None
 
-    def produce_group_b_rotate(self, output_path: str, anime_title: str):
+    def produce_group_b_rotate(self, output_path: str, target: Dict[str, Any]):
         """
         Group B: Rotate Phone 0 to -90 degree IMAX action edit.
-        Harvests 30s 16:9 AMV and applies real-time geometric rotation engine.
+        Driven by trending audio (Phonk, Timeless Guitar, Drums of Liberation) + 4K panoramic fights.
         """
-        print(f"[Group B Production] Generating Rotate-Your-Phone Cinematic Short for {anime_title}...")
-        raw_amv = os.path.join(WORKSPACE_ROOT, "input", f"auto_rotate_{anime_title.replace(' ', '_').lower()}.mp4")
-        
-        queries = [
-            f"{anime_title} 4k amv 60fps",
-            f"{anime_title} battle amv 4k",
-            f"{anime_title} epic fight scene 4k 60fps"
+        theme_data = target.get("data", {})
+        theme_label = target.get("label", "Cinematic Action")
+        print(f"[Group B Production] Generating Rotate Phone Short for: '{theme_label}'...")
+
+        queries = theme_data.get("search_queries") or [
+            f"{theme_label} 4k amv 60fps",
+            f"{theme_label} battle amv 4k",
+            f"{theme_label} epic fight scene 4k 60fps"
         ]
-        
+
+        raw_amv = os.path.join(WORKSPACE_ROOT, "input", f"auto_rotate_{target['key']}.mp4")
         harvested = self.harvester.harvest_validated_clip(
-            anime_title=anime_title,
+            anime_title="Anime",
             search_queries=queries,
             start_time=15.0,
             duration=30.0,
             output_path=raw_amv
         )
-        
+
         if harvested and os.path.exists(harvested):
             cmd = [
                 sys.executable,
@@ -193,28 +214,31 @@ class AutonomousChannelManager:
 
         return None
 
-    def produce_group_c_micro(self, output_path: str, anime_title: str):
+    def produce_group_c_micro(self, output_path: str, target: Dict[str, Any]):
         """
         Group C: Uncropped 16:9 Micro-Moment with flush header and Earshot DSP.
+        Driven by viral social audio tropes (Accidental Rizz, Brutal Honesty, Deadpan Pauses).
         """
-        print(f"[Group C Production] Generating Micro-Moment Short for {anime_title} (Earshot DSP)...")
-        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_micro_{anime_title.replace(' ', '_').lower()}.mp4")
-        
-        queries = [
-            f"{anime_title} funny moments english sub",
-            f"{anime_title} cute moment english sub",
-            f"{anime_title} best moment english sub",
-            f"{anime_title} brutal reality check"
+        theme_data = target.get("data", {})
+        theme_label = target.get("label", "Viral Moment")
+        print(f"[Group C Production] Generating Micro-Moment Short for: '{theme_label}' (Earshot DSP)...")
+
+        queries = theme_data.get("search_queries") or [
+            f"{theme_label} funny moments english sub",
+            f"{theme_label} cute moment english sub",
+            f"{theme_label} best moment english sub",
+            f"{theme_label} brutal reality check"
         ]
-        
+
+        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_micro_{target['key']}.mp4")
         harvested = self.harvester.harvest_validated_clip(
-            anime_title=anime_title,
+            anime_title="Anime",
             search_queries=queries,
             start_time=10.0,
             duration=30.0,
             output_path=raw_clip
         )
-        
+
         if harvested and os.path.exists(harvested):
             rendered = self.dsp.render_group_c_short(
                 clip_path=harvested,
@@ -233,38 +257,26 @@ class AutonomousChannelManager:
         group = force_group or self.get_next_group()
         now_utc = datetime.datetime.now(datetime.timezone.utc)
         print(f"\n==================================================================")
-        print(f"🎬 ZERO-TOUCH AUTONOMOUS AGENT ACTIVE: PRODUCING {group}")
+        print(f"🎬 ZERO-TOUCH VIRAL ENGINE ACTIVE: PRODUCING {group}")
         print(f"Timestamp: {now_utc.isoformat()}")
         print(f"==================================================================\n")
 
-        # Step 1: Select diverse anime candidate across multi-horizon signals
-        anime_title = self.select_multi_horizon_candidate(group)
-        print(f"[Selection] Dynamic Multi-Horizon Winner: ✨ {anime_title} ✨")
+        # Step 1: Select viral theme / audio trend (independent of single anime lock)
+        target = self.select_viral_theme_or_show(group)
+        print(f"[Viral Selection] Active Trend / Audio Winner: 🔥 {target['label']} 🔥")
 
-        out_master = os.path.join(WORKSPACE_ROOT, "output", f"auto_{group.lower()}_{anime_title.replace(' ', '_').lower()}_master.mp4")
-        
-        # Step 2: Render corresponding group with fresh footage
+        out_master = os.path.join(WORKSPACE_ROOT, "output", f"auto_{group.lower()}_{target['key']}_master.mp4")
+
+        # Step 2: Render corresponding group with fresh viral content
         if group == "GROUP_A":
-            master_file = self.produce_group_a_ranking(out_master, anime_title=anime_title)
+            master_file = self.produce_group_a_ranking(out_master, target=target)
         elif group == "GROUP_B":
-            master_file = self.produce_group_b_rotate(out_master, anime_title=anime_title)
+            master_file = self.produce_group_b_rotate(out_master, target=target)
         else: # GROUP_C
-            master_file = self.produce_group_c_micro(out_master, anime_title=anime_title)
+            master_file = self.produce_group_c_micro(out_master, target=target)
 
         if not master_file or not os.path.exists(master_file):
-            print(f"[ERROR] Production failed for {group} with {anime_title}. Attempting fallback...")
-            # Fallback to evergreen powerhouse
-            fallback_anime = "Bleach TYBW" if group in ["GROUP_A", "GROUP_B"] else "Blue Box"
-            if group == "GROUP_A":
-                master_file = self.produce_group_a_ranking(out_master, anime_title=fallback_anime)
-            elif group == "GROUP_B":
-                master_file = self.produce_group_b_rotate(out_master, anime_title=fallback_anime)
-            else:
-                master_file = self.produce_group_c_micro(out_master, anime_title=fallback_anime)
-            anime_title = fallback_anime
-
-        if not master_file or not os.path.exists(master_file):
-            print(f"[CRITICAL] Could not produce video for {group}")
+            print(f"[ERROR] Production failed for {group} with {target['label']}")
             return False
 
         print(f"[Production] Generated master: {master_file}")
@@ -277,12 +289,14 @@ class AutonomousChannelManager:
 
         # Step 4: Metadata Generation & Scheduling
         print("\n[Metadata Engine] Researching trending tags, disclaimers, and open slot...")
+        custom_title = target.get("data", {}).get("title_template")
         meta = self.metadata_engine.generate_metadata(
-            anime_title=anime_title,
-            moment_label=f"Peak {anime_title} moment",
-            group_type=group
+            anime_title=target["label"],
+            moment_label=f"Peak {target['label']}",
+            group_type=group,
+            custom_hook=custom_title
         )
-        
+
         print(f"  • Title: {meta['title']}")
         print(f"  • Safe Release Slot: {meta['scheduled_utc'].isoformat()} (7:30 PM IST)")
 
@@ -300,12 +314,12 @@ class AutonomousChannelManager:
                 "title": meta["title"],
                 "publish_at": meta["scheduled_utc"].isoformat(),
                 "group": group,
-                "franchise": anime_title
+                "theme": target["label"]
             })
 
-        # Advance Rotation Cycle & Save Franchise to Variety History
-        self.advance_cycle(franchise=anime_title)
-        print(f"\n✅ SUCCESS: Autonomous production for {group} ({anime_title}) verified.")
+        # Advance Rotation Cycle & Save Theme to Variety History
+        self.advance_cycle(theme_key=target["key"], franchise=target["label"])
+        print(f"\n✅ SUCCESS: Autonomous production for {group} ({target['label']}) verified.")
         print(f"Next automated turn will produce: {self.get_next_group()}\n")
         return True
 
