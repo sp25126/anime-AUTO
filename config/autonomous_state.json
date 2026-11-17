@@ -1,5 +1,12 @@
 {
-  "last_run_date": "2026-11-16T16:32:10.561494+00:00",
-  "cycle_index": 1,
-  "scheduled_videos": []
+  "last_run_date": "2026-11-17T06:02:38.309993+00:00",
+  "cycle_index": 2,
+  "scheduled_videos": [
+    {
+      "video_id": "g42MNe58IgE",
+      "title": "These two are hilarious \ud83e\udd23 | Jueshi Zhan Hun 2 #shorts #anime",
+      "publish_at": "2026-11-21T14:00:00+00:00",
+      "group": "GROUP_C"
+    }
+  ]
 }
