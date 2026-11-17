@@ -28,6 +28,7 @@ sys.path.append(ENGINE_DIR)
 
 from omni_radar import OmniPlatformTrendRadar
 from stream_harvester import StreamHarvester
+from group_a_harvester import MultiPlatformGroupAHarvester
 from dsp_engine import ForensicDSPEngine
 from qa_scheduler import QAGatekeeper, YouTubeScheduler
 from metadata_engine import MetadataComplianceEngine
@@ -40,6 +41,7 @@ class AutonomousChannelManager:
     def __init__(self):
         self.radar = OmniPlatformTrendRadar()
         self.harvester = StreamHarvester()
+        self.group_a_harvester = MultiPlatformGroupAHarvester(WORKSPACE_ROOT)
         self.dsp = ForensicDSPEngine()
         self.qa = QAGatekeeper()
         self.metadata_engine = MetadataComplianceEngine(youtube_creds_path=os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json"))
@@ -129,50 +131,33 @@ class AutonomousChannelManager:
     def produce_group_a_ranking(self, output_path: str, target: Dict[str, Any]):
         """
         Group A: Multi-Clip Viral Ranking (75-80s).
-        Can be a Cross-Anime Viral Theme (e.g., Coldest Aura, Hardest Beat Drops, Rage Awakenings)
-        or Single-Franchise Viral Climax Ranking.
+        Uses MultiPlatformGroupAHarvester to scout, download, and stitch 5 distinct clips
+        across TikTok, Instagram, and YouTube.
         """
         theme_data = target.get("data", {})
         theme_label = target.get("label", "Viral Edits")
-        print(f"[Group A Production] Generating 75-80s Ranking Edit for: '{theme_label}'...")
+        print(f"[Group A Production] Generating 75-80s Multi-Platform Ranking Edit for: '{theme_label}'...")
 
-        # If it's a cross-anime theme with dedicated query set
-        queries = theme_data.get("search_queries") or [
-            f"top 5 {theme_label} edits 4k",
-            f"{theme_label} viral edit tiktok 4k",
-            f"best {theme_label} shorts"
-        ]
-
-        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_ranking_{target['key']}.mp4")
-        harvested = self.harvester.harvest_validated_clip(
-            anime_title="Anime",
-            search_queries=queries,
-            start_time=5.0,
-            duration=45.0,
-            output_path=raw_clip
+        # 1. Harvest multi-clip pack across TikTok, Instagram, and YouTube
+        stitched_master = self.group_a_harvester.harvest_ranking_pack(
+            anime_title=theme_label,
+            target_clips_count=5
         )
 
-        if harvested and os.path.exists(harvested):
-            filter_complex = (
-                "[0:v]fps=30,split=2[fg_raw][bg_raw];"
-                "[bg_raw]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,eq=brightness=-0.15:saturation=1.2[bg_blur];"
-                "[fg_raw]scale=1080:-2,setsar=1[fg_scaled];"
-                "[bg_blur][fg_scaled]overlay=0:(1920-h)/2[vout];"
-                "[0:a]loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
-            )
-            cmd = [
-                "ffmpeg", "-y", "-i", harvested,
-                "-filter_complex", filter_complex,
-                "-map", "[vout]", "-map", "[aout]",
-                "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
-                "-c:a", "aac", "-b:a", "256k",
+        if stitched_master and os.path.exists(stitched_master):
+            # Apply EBU R128 mastering and copy to output_path
+            master_cmd = [
+                "ffmpeg", "-y", "-i", stitched_master,
+                "-af", "loudnorm=I=-14:TP=-1.5:LRA=7",
+                "-c:v", "copy",
+                "-c:a", "aac", "-b:a", "192k",
                 output_path
             ]
-            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(master_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if os.path.exists(output_path):
                 return output_path
 
-        # Fallback to villain blur base or luffy gear 5 if raw query misses
+        # Fallback to existing villain aura master if live harvest was interrupted
         villain_base = os.path.join(WORKSPACE_ROOT, "output", "ranking_villain_aura_mastered.mp4")
         if os.path.exists(villain_base):
             return villain_base
