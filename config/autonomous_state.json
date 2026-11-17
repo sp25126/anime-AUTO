@@ -1,11 +1,12 @@
 {
-  "last_run_date": "2026-11-17T06:49:02.646013+00:00",
-  "cycle_index": 1,
+  "last_run_date": "2026-11-17T07:31:00.061948+00:00",
+  "cycle_index": 2,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
     "One Piece",
-    "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!"
+    "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
+    "Overgeared"
   ],
   "scheduled_videos": [
     {
@@ -14,6 +15,13 @@
       "publish_at": "2026-11-21T14:00:00+00:00",
       "group": "GROUP_A",
       "franchise": "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!"
+    },
+    {
+      "video_id": "StAX5P-t_fg",
+      "title": "The way she looked at him is insane \ud83d\ude2d | Overgeared #shorts",
+      "publish_at": "2026-11-21T14:00:00+00:00",
+      "group": "GROUP_C",
+      "franchise": "Overgeared"
     }
   ]
 }
