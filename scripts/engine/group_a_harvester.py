@@ -44,7 +44,9 @@ ANIME_DISCOVERY_ROSTER = [
     {"anime": "Fate", "characters": ["Gilgamesh", "Saber Alter", "Archer", "Berserker", "Shirou Emiya", "Lancer"]},
     {"anime": "Berserk", "characters": ["Guts", "Griffith", "Zodd"]},
     {"anime": "Overgeared", "characters": ["Grid", "Greed", "Khan"]},
-    {"anime": "Bungo Stray Dogs", "characters": ["Dazai", "Chuya", "Akutagawa", "Atsushi"]}
+    {"anime": "Bungo Stray Dogs", "characters": ["Dazai", "Chuya", "Akutagawa", "Atsushi"]},
+    {"anime": "Seven Deadly Sins", "characters": ["Escanor", "Meliodas", "Ban", "King", "Zeldris"]},
+    {"anime": "Monster", "characters": ["Johan Liebert", "Johan", "Tenma"]}
 ]
 
 NON_ANIME_BANNED_KEYWORDS = [
@@ -96,7 +98,53 @@ class MasterAnimeGroupAHarvester:
 
         return has_generic_anime_tag or matches_character
 
-    def generate_hud_overlay_image(self, rank: int, title_line1: str, title_line2: str, creator: str, views: str, output_path: str):
+    def extract_clip_vibrant_accent(self, video_path: str, seek_sec: float = 3.0) -> tuple:
+        """
+        Samples a keyframe from the clip and extracts the most vibrant/saturated dominant accent color.
+        Adapts dynamically to the fight/background (e.g. fire/orange, blood/red, cursed/purple, neon/cyan).
+        """
+        try:
+            cmd = [
+                "ffmpeg", "-ss", str(seek_sec), "-i", video_path,
+                "-vframes", "1", "-f", "image2pipe", "-vcodec", "png", "-"
+            ]
+            proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            if not proc.stdout:
+                return (0, 240, 255)
+            import io
+            img = Image.open(io.BytesIO(proc.stdout)).convert("RGB")
+            small = img.resize((32, 32))
+            colors = small.getcolors(32 * 32)
+            if not colors:
+                return (0, 240, 255)
+
+            best_c = (0, 240, 255)
+            max_sat = 0.0
+            for count, (r, g, b) in colors:
+                # Filter out pure blacks/shadows and overblown whites
+                if r + g + b < 70 or r + g + b > 710:
+                    continue
+                max_val = max(r, g, b)
+                min_val = min(r, g, b)
+                sat = (max_val - min_val) / max(1, max_val)
+                if sat > max_sat:
+                    max_sat = sat
+                    best_c = (r, g, b)
+
+            # Boost brightness/vibrancy so text is vivid on dark HUD box
+            mx = max(best_c)
+            if mx > 0:
+                boost = 255.0 / mx
+                best_c = (
+                    min(255, int(best_c[0] * boost)),
+                    min(255, int(best_c[1] * boost)),
+                    min(255, int(best_c[2] * boost))
+                )
+            return best_c
+        except Exception:
+            return (0, 240, 255)
+
+    def generate_hud_overlay_image(self, rank: int, title_line1: str, title_line2: str, creator: str, views: str, output_path: str, accent_color: tuple = None):
         img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
 
@@ -111,11 +159,25 @@ class MasterAnimeGroupAHarvester:
             font_rank = ImageFont.load_default()
             font_small = ImageFont.load_default()
 
-        # Top Header Box
-        draw.rounded_rectangle([(70, 130), (1010, 315)], radius=24, fill=(10, 10, 15, 215), outline=(255, 255, 255, 60), width=3)
+        if accent_color is None:
+            accent_color = (0, 240, 255)
+
+        # Top Header Box: tinted background from fight aura + vibrant neon border + glow
+        card_bg = (
+            int(accent_color[0] * 0.14) + 8,
+            int(accent_color[1] * 0.14) + 8,
+            int(accent_color[2] * 0.14) + 12,
+            238
+        )
+        outer_glow = (accent_color[0], accent_color[1], accent_color[2], 70)
+        border_color = (accent_color[0], accent_color[1], accent_color[2], 240)
+        
+        # Soft atmospheric outer glow rim
+        draw.rounded_rectangle([(66, 126), (1014, 319)], radius=26, outline=outer_glow, width=3)
+        # Main solid card
+        draw.rounded_rectangle([(70, 130), (1010, 315)], radius=24, fill=card_bg, outline=border_color, width=4)
         draw.text((540, 185), title_line1, font=font_title, fill=(255, 255, 255), anchor="mm")
         
-        accent_color = (255, 215, 0) if rank == 1 else (0, 240, 255)
         # Scale down font_sub if title_line2 is long
         sub_len = font_sub.getlength(title_line2)
         if sub_len > 860:
@@ -126,15 +188,21 @@ class MasterAnimeGroupAHarvester:
             font_sub_scaled = font_sub
         draw.text((540, 260), title_line2, font=font_sub_scaled, fill=accent_color, anchor="mm")
 
-        # Rank Badge
-        rank_bg = (255, 215, 0, 240) if rank == 1 else (20, 20, 30, 225)
-        rank_fg = (0, 0, 0) if rank == 1 else (255, 255, 255)
-        rank_label = "#1 CLIMAX" if rank == 1 else f"#{rank}"
+        # Rank Badge: Clean "#1" without "CLIMAX" text, tinted to background
+        rank_bg = (
+            int(accent_color[0] * 0.18) + 10 if rank == 1 else 20,
+            int(accent_color[1] * 0.18) + 10 if rank == 1 else 20,
+            int(accent_color[2] * 0.18) + 15 if rank == 1 else 30,
+            240
+        )
+        rank_fg = accent_color if rank == 1 else (255, 255, 255)
+        rank_label = f"#{rank}"
 
         badge_w = int(font_rank.getlength(rank_label)) + 60
         box_left = 60
-        box_right = box_left + max(240, badge_w)
-        draw.rounded_rectangle([(box_left, 470), (box_right, 595)], radius=20, fill=rank_bg, outline=(255, 255, 255, 120), width=4)
+        box_right = box_left + max(200, badge_w)
+        badge_border = (accent_color[0], accent_color[1], accent_color[2], 240) if rank == 1 else (accent_color[0], accent_color[1], accent_color[2], 140)
+        draw.rounded_rectangle([(box_left, 470), (box_right, 595)], radius=20, fill=rank_bg, outline=badge_border, width=4)
         draw.text(((box_left + box_right)//2, 532), rank_label, font=font_rank, fill=rank_fg, anchor="mm")
 
         # Creator Credit
@@ -200,7 +268,8 @@ class MasterAnimeGroupAHarvester:
                         vid_title = d.get("title") or ""
                         uploader = d.get("uploader") or d.get("channel") or "Unknown"
                         dur = d.get("duration") or 0
-                        if vid_id in seen_ids or not (14 <= dur <= 120): continue
+                        # Accept clips >= 12s; if clip is shorter than 20s, it will loop seamlessly to 20s
+                        if vid_id in seen_ids or not (12 <= dur <= 180): continue
                         if not self.is_strictly_anime(vid_title, uploader, required_anime=franchise_lock): continue
                         seen_ids.add(vid_id)
                         collected_candidates.append({
@@ -213,23 +282,27 @@ class MasterAnimeGroupAHarvester:
                     except: pass
         else:
             # Macro Theme: Check if theme has curated semantic reference pool
-            macro_pool = MACRO_THEME_REFERENCE_POOLS.get(theme_id)
+            macro_pool = list(MACRO_THEME_REFERENCE_POOLS.get(theme_id, []))
             if macro_pool and len(macro_pool) >= target_clips_count:
-                selected_refs = random.sample(macro_pool, target_clips_count)
+                random.shuffle(macro_pool)
+                candidate_pool = macro_pool
             else:
-                selected_roster = random.sample(ANIME_DISCOVERY_ROSTER, target_clips_count)
-                selected_refs = [
+                selected_roster = random.sample(ANIME_DISCOVERY_ROSTER, len(ANIME_DISCOVERY_ROSTER))
+                candidate_pool = [
                     {"anime": e["anime"], "character": random.choice(e["characters"]), "form": "Viral Climax", "query": f"{random.choice(e['characters'])} {e['anime']} viral edit 4k"}
                     for e in selected_roster
                 ]
 
-            for idx, ref in enumerate(selected_refs):
+            for ref in candidate_pool:
+                if len(collected_candidates) >= target_clips_count:
+                    break
                 anime_name = ref["anime"]
                 char = ref["character"]
                 q = ref["query"]
-                print(f"  • Scouting Rank #{target_clips_count - idx}: {anime_name} ({char}) - '{ref.get('form', '')}'...")
+                current_rank = target_clips_count - len(collected_candidates)
+                print(f"  • Scouting Rank #{current_rank}: {anime_name} ({char}) - '{ref.get('form', '')}'...")
 
-                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch5:{q}", "--dump-json", "--flat-playlist", "--no-warnings"]
+                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch8:{q}", "--dump-json", "--flat-playlist", "--no-warnings"]
                 res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
                 for line in res.stdout.strip().split("\n"):
                     if not line: continue
@@ -239,7 +312,8 @@ class MasterAnimeGroupAHarvester:
                         vid_title = d.get("title") or ""
                         uploader = d.get("uploader") or d.get("channel") or "Unknown"
                         dur = d.get("duration") or 0
-                        if vid_id in seen_ids or not (14 <= dur <= 120): continue
+                        # Accept clips >= 10s; if clip is shorter than 20s, it will loop seamlessly to 20s
+                        if vid_id in seen_ids or not (10 <= dur <= 180): continue
                         if not self.is_strictly_anime(vid_title, uploader): continue
                         seen_ids.add(vid_id)
                         collected_candidates.append({
@@ -248,6 +322,7 @@ class MasterAnimeGroupAHarvester:
                             "uploader": uploader, "duration": dur,
                             "url": f"https://www.youtube.com/watch?v={vid_id}"
                         })
+                        print(f"    ✓ Found candidate for Rank #{current_rank}: {vid_title[:45]} ({dur}s)")
                         break
                     except: pass
 
@@ -284,15 +359,6 @@ class MasterAnimeGroupAHarvester:
                     h_line1 = "TOP 5 ANIME FIGHTS"
                 h_line2 = f"{cand['anime'].upper()} • {cand['character'].upper()}"
 
-            self.generate_hud_overlay_image(
-                rank=rank,
-                title_line1=h_line1,
-                title_line2=h_line2,
-                creator=f"@{cand['uploader'][:12]}",
-                views="Viral",
-                output_path=hud_png
-            )
-
             # Download full container to ensure full audio stream
             if not os.path.exists(raw_full) or os.path.getsize(raw_full) < 500000:
                 print(f"[Harvester] Downloading Pure Anime #{rank}: {cand['anime']} - {cand['character']} (@{cand['uploader']})...")
@@ -307,11 +373,25 @@ class MasterAnimeGroupAHarvester:
             if not os.path.exists(raw_full):
                 continue
 
-            clip_dur = 15.0
+            # Extract dynamic background accent color from the clip
+            dynamic_accent = self.extract_clip_vibrant_accent(raw_full, seek_sec=3.0)
+
+            # Generate HUD with dynamic color matching the fight background
+            self.generate_hud_overlay_image(
+                rank=rank,
+                title_line1=h_line1,
+                title_line2=h_line2,
+                creator=f"@{cand['uploader'][:12]}",
+                views="Viral",
+                output_path=hud_png,
+                accent_color=dynamic_accent
+            )
+
+            clip_dur = 20.0
             # Safe start_sec calculation: ensure we NEVER seek past duration - clip_dur
             if cand["duration"] > (clip_dur + 3.0):
                 # Seek slightly into the edit for the action/climax, but bounded
-                start_sec = max(0.0, min(5.0, (cand["duration"] - clip_dur) * 0.4))
+                start_sec = max(0.0, min(5.0, (cand["duration"] - clip_dur) * 0.35))
             else:
                 start_sec = 0.0
 
@@ -322,10 +402,11 @@ class MasterAnimeGroupAHarvester:
                 f"[fg_raw]scale=1080:-2,setsar=1[fg_scaled];"
                 f"[bg_blur][fg_scaled]overlay=0:(1920-h)/2[base_comp];"
                 f"[base_comp][1:v]overlay=0:0[vout];"
-                f"[0:a]aresample=48000,asetrate=48000*1.025,atempo=1/1.025,aresample=48000,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,loudnorm=I=-14:TP=-1.5:LRA=7[aout]"
+                f"[0:a]aresample=48000,asetrate=48000*1.025,atempo=1/1.025,aresample=48000,apad,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,loudnorm=I=-14:TP=-1.5:LRA=7[aout]"
             )
             comp_cmd = [
                 "ffmpeg", "-y",
+                "-stream_loop", "1",
                 "-ss", f"{start_sec:.2f}", "-t", f"{clip_dur:.2f}",
                 "-i", raw_full,
                 "-i", hud_png,
@@ -333,6 +414,7 @@ class MasterAnimeGroupAHarvester:
                 "-map", "[vout]", "-map", "[aout]",
                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
                 "-c:a", "aac", "-b:a", "256k",
+                "-t", f"{clip_dur:.2f}",
                 out_clip
             ]
             subprocess.run(comp_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

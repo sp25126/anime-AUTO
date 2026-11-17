@@ -1,0 +1,814 @@
+[
+  {
+    "id": 195604,
+    "title": "Black Clover Season 2",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Fantasy"
+    ],
+    "daily_trend": 52.857142857142854,
+    "weekly_pop": 73.80333333333333,
+    "monthly_score": 88,
+    "final_score": 86.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 212888,
+    "title": "Overgeared",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Fantasy"
+    ],
+    "daily_trend": 97.14285714285714,
+    "weekly_pop": 43.16266666666667,
+    "monthly_score": 0,
+    "final_score": 81.0,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 207191,
+    "title": "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
+    "genres": [
+      "Fantasy",
+      "Romance"
+    ],
+    "daily_trend": 70.57142857142857,
+    "weekly_pop": 22.069333333333333,
+    "monthly_score": 0,
+    "final_score": 60.6,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 21,
+    "title": "ONE PIECE",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Drama",
+      "Fantasy"
+    ],
+    "daily_trend": 56.285714285714285,
+    "weekly_pop": 0,
+    "monthly_score": 87,
+    "final_score": 58.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 180136,
+    "title": "The Exiled Heavy Knight Knows How to Game the System",
+    "genres": [
+      "Action",
+      "Fantasy"
+    ],
+    "daily_trend": 15.714285714285714,
+    "weekly_pop": 51.56733333333333,
+    "monthly_score": 0,
+    "final_score": 47.7,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 195516,
+    "title": "The Apothecary Diaries Season 3",
+    "genres": [
+      "Drama",
+      "Mystery"
+    ],
+    "daily_trend": 38.285714285714285,
+    "weekly_pop": 76.10133333333333,
+    "monthly_score": 0,
+    "final_score": 47.7,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 186541,
+    "title": "Reborn as a Space Mercenary: I Woke Up Piloting the Strongest Starship!",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Mecha",
+      "Romance",
+      "Sci-Fi"
+    ],
+    "daily_trend": 40.57142857142857,
+    "weekly_pop": 20.891333333333332,
+    "monthly_score": 0,
+    "final_score": 46.6,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 185756,
+    "title": "As a Reincarnated Aristocrat, I'll Use My Appraisal Skill to Rise in the World Season 3",
+    "genres": [
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 35.42857142857143,
+    "weekly_pop": 20.876666666666665,
+    "monthly_score": 0,
+    "final_score": 44.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 206814,
+    "title": "Dragon Ball Super: Beerus",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Sci-Fi"
+    ],
+    "daily_trend": 32.57142857142857,
+    "weekly_pop": 21.42866666666667,
+    "monthly_score": 0,
+    "final_score": 43.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 210482,
+    "title": "STEEL BALL RUN JoJo's Bizarre Adventure 2nd - 3rd STAGE",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Mystery",
+      "Supernatural"
+    ],
+    "daily_trend": 18.571428571428573,
+    "weekly_pop": 34.88066666666667,
+    "monthly_score": 0,
+    "final_score": 42.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 205896,
+    "title": "Full Clearing Another World under a Goddess with Zero Believers",
+    "genres": [
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 39.714285714285715,
+    "weekly_pop": 0,
+    "monthly_score": 0,
+    "final_score": 37.9,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 209219,
+    "title": "So What's Wrong with Getting Reborn as a Goblin?",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Drama",
+      "Fantasy",
+      "Romance"
+    ],
+    "daily_trend": 37.142857142857146,
+    "weekly_pop": 0,
+    "monthly_score": 0,
+    "final_score": 36.7,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 208025,
+    "title": "I'm Dating a Dark Summoner",
+    "genres": [
+      "Comedy",
+      "Ecchi",
+      "Fantasy",
+      "Romance"
+    ],
+    "daily_trend": 18.0,
+    "weekly_pop": 20.660666666666668,
+    "monthly_score": 0,
+    "final_score": 36.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 202250,
+    "title": "Magic Repo Man: Dumped by My Party, I\u2019ll Cash In With a Cute Support Fairy to Become the Strongest!",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 18.285714285714285,
+    "weekly_pop": 18.21066666666667,
+    "monthly_score": 0,
+    "final_score": 35.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 159042,
+    "title": "Reincarnated as a Sword Season 2",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 37.75666666666667,
+    "monthly_score": 0,
+    "final_score": 35.1,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 169581,
+    "title": "Magical Explorer",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Ecchi",
+      "Fantasy",
+      "Romance"
+    ],
+    "daily_trend": 15.428571428571429,
+    "weekly_pop": 18.214,
+    "monthly_score": 0,
+    "final_score": 34.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 20996,
+    "title": "Gintama Season 3",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 90,
+    "final_score": 33.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 154587,
+    "title": "Frieren: Beyond Journey\u2019s End",
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 90,
+    "final_score": 33.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 207329,
+    "title": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
+    "genres": [
+      "Adventure",
+      "Comedy",
+      "Fantasy",
+      "Slice of Life"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 33.845333333333336,
+    "monthly_score": 0,
+    "final_score": 33.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 189046,
+    "title": "Re:ZERO -Starting Life in Another World- Season 4",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Fantasy",
+      "Psychological",
+      "Romance",
+      "Thriller"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 90,
+    "final_score": 33.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 5114,
+    "title": "Fullmetal Alchemist: Brotherhood",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 90,
+    "final_score": 33.5,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 104578,
+    "title": "Attack on Titan Season 3 Part 2",
+    "genres": [
+      "Action",
+      "Drama",
+      "Fantasy",
+      "Mystery"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 9253,
+    "title": "Steins;Gate",
+    "genres": [
+      "Drama",
+      "Psychological",
+      "Sci-Fi",
+      "Thriller"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 11061,
+    "title": "Hunter x Hunter (2011)",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 15417,
+    "title": "Gintama Season 2 Part 2",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 97889,
+    "title": "Gintama Season 4",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 2921,
+    "title": "Tomorrow's Joe 2",
+    "genres": [
+      "Action",
+      "Drama",
+      "Slice of Life",
+      "Sports"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 9969,
+    "title": "Gintama Season 2",
+    "genres": [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 33.4,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 185874,
+    "title": "BLEACH: Thousand-Year Blood War - The Calamity",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 33.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 116674,
+    "title": "BLEACH: Thousand-Year Blood War",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 33.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 136430,
+    "title": "Vinland Saga Season 2",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 33.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 178083,
+    "title": "Tokyo Revengers: War of the Three Titans Arc",
+    "genres": [
+      "Action",
+      "Drama",
+      "Romance",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 26.929333333333332,
+    "monthly_score": 0,
+    "final_score": 30.8,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 191656,
+    "title": "Even the Student Council Has Its Holes!",
+    "genres": [
+      "Comedy",
+      "Ecchi",
+      "Slice of Life"
+    ],
+    "daily_trend": 34.285714285714285,
+    "weekly_pop": 36.15266666666667,
+    "monthly_score": 0,
+    "final_score": 29.9,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 172192,
+    "title": "A Returner's Magic Should be Special Season 2",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 23.976666666666667,
+    "monthly_score": 0,
+    "final_score": 29.6,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 189123,
+    "title": "Blue Box Season 2",
+    "genres": [
+      "Romance",
+      "Slice of Life",
+      "Sports"
+    ],
+    "daily_trend": 32.285714285714285,
+    "weekly_pop": 35.81333333333333,
+    "monthly_score": 0,
+    "final_score": 28.9,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 206949,
+    "title": "Nia Liston: The Merciless Maiden",
+    "genres": [
+      "Action",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 20.723333333333333,
+    "monthly_score": 0,
+    "final_score": 28.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 200455,
+    "title": "Even Though I'm a Super Timid Noble Girl, I Accepted the Bet From My Cunning Fianc\u00e9",
+    "genres": [
+      "Comedy",
+      "Fantasy",
+      "Romance"
+    ],
+    "daily_trend": 15.714285714285714,
+    "weekly_pop": 0,
+    "monthly_score": 0,
+    "final_score": 27.1,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 204389,
+    "title": "A Wild Last Boss Appeared! Season 2",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 17.067333333333334,
+    "monthly_score": 0,
+    "final_score": 26.8,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 204011,
+    "title": "PSYREN",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Sci-Fi"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 16.476,
+    "monthly_score": 0,
+    "final_score": 26.6,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "sakuga_lightning.jpg"
+  },
+  {
+    "id": 205909,
+    "title": "Firefly Wedding",
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "daily_trend": 22.571428571428573,
+    "weekly_pop": 37.382,
+    "monthly_score": 0,
+    "final_score": 25.1,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 191788,
+    "title": "Aoashi Season 2",
+    "genres": [
+      "Sports"
+    ],
+    "daily_trend": 24.857142857142858,
+    "weekly_pop": 18.986666666666668,
+    "monthly_score": 0,
+    "final_score": 18.8,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 124194,
+    "title": "Fruits Basket The Final Season",
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Psychological",
+      "Romance",
+      "Slice of Life",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 13.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 98478,
+    "title": "March comes in like a lion Season 2",
+    "genres": [
+      "Drama",
+      "Slice of Life"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 13.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 125367,
+    "title": "Kaguya-sama: Love is War -Ultra Romantic-",
+    "genres": [
+      "Comedy",
+      "Psychological",
+      "Romance",
+      "Slice of Life"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 13.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 21745,
+    "title": "Owarimonogatari Second Season",
+    "genres": [
+      "Comedy",
+      "Mystery",
+      "Psychological",
+      "Romance",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 89,
+    "final_score": 13.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 19,
+    "title": "Monster",
+    "genres": [
+      "Drama",
+      "Horror",
+      "Mystery",
+      "Psychological",
+      "Thriller"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 13.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 176301,
+    "title": "The Apothecary Diaries Season 2",
+    "genres": [
+      "Drama",
+      "Mystery"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 13.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 17074,
+    "title": "Monogatari Series Second Season",
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Mystery",
+      "Psychological",
+      "Romance",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 13.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 4181,
+    "title": "Clannad: After Story",
+    "genres": [
+      "Drama",
+      "Romance",
+      "Slice of Life",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 13.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 161645,
+    "title": "The Apothecary Diaries",
+    "genres": [
+      "Drama",
+      "Mystery"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 0,
+    "monthly_score": 88,
+    "final_score": 13.2,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 213805,
+    "title": "The Ramparts of Ice Season 2",
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Romance",
+      "Slice of Life"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 27.394,
+    "monthly_score": 0,
+    "final_score": 11.0,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  },
+  {
+    "id": 152677,
+    "title": "The Detective Is Already Dead Season 2",
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Mystery",
+      "Romance",
+      "Supernatural"
+    ],
+    "daily_trend": 0,
+    "weekly_pop": 18.17866666666667,
+    "monthly_score": 0,
+    "final_score": 7.3,
+    "archetype": "Sakuga Climax / Cold Aura Flex",
+    "bg_recommendation": "cyberpunk_moon.jpg"
+  }
+]

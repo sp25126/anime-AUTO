@@ -33,6 +33,7 @@ from trend_gate import IntelligentTrendGate
 from dsp_engine import ForensicDSPEngine
 from qa_scheduler import QAGatekeeper, YouTubeScheduler
 from metadata_engine import MetadataComplianceEngine
+from viral_growth_booster import ViralGrowthBoosterWorkflow
 from viral_catalog import VIRAL_THEMES
 
 ROTATION_CYCLE = ["GROUP_A", "GROUP_C", "GROUP_B", "GROUP_C"]
@@ -47,6 +48,7 @@ class AutonomousChannelManager:
         self.dsp = ForensicDSPEngine()
         self.qa = QAGatekeeper()
         self.metadata_engine = MetadataComplianceEngine(youtube_creds_path=os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json"))
+        self.viral_booster = ViralGrowthBoosterWorkflow()
         self.scheduler = YouTubeScheduler(token_path=os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json"))
         self.state = self.load_state()
 
@@ -278,18 +280,20 @@ class AutonomousChannelManager:
         if not passed:
             print("[QA Gatekeeper] Logging Warning...")
 
-        # Step 4: Metadata Generation & Scheduling
-        print("\n[Metadata Engine] Researching trending tags, disclaimers, and open slot...")
+        # Step 4: Metadata Generation & Scheduling (Viral Growth Booster Workflow)
+        print("\n[Viral Growth Booster Workflow] Generating high-CTR title, boost tags, and disclaimer...")
         custom_title = target.get("data", {}).get("title_template")
-        meta = self.metadata_engine.generate_metadata(
-            anime_title=target.get("data", {}).get("franchise") or target["label"],
-            moment_label=f"Peak {target['label']}",
+        meta = self.viral_booster.assemble_boosted_metadata(
+            video_path=master_file,
+            target_name=target.get("data", {}).get("franchise") or target["label"],
             group_type=group,
             custom_hook=custom_title
         )
 
         print(f"  • Title: {meta['title']}")
-        print(f"  • Safe Release Slot: {meta['scheduled_utc'].isoformat()} (7:30 PM IST)")
+        print(f"  • Safe Release Slot: {meta['scheduled_ist']} ({meta['scheduled_utc'].isoformat()})")
+        print(f"  • Pinned Comment: {meta['pinned_comment'][:60]}...")
+        print(f"  • Tag Stack: {len(meta['tags'])} tags generated")
 
         # Step 5: Schedule via YouTube API (Skip if local_only is True)
         if not local_only and os.path.exists(os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json")):
