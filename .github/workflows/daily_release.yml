@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js 20 (For Remotion React Engine)
         uses: actions/setup-node@v4
@@ -48,16 +51,22 @@ jobs:
       - name: Restore YouTube Token Secret
         run: |
           mkdir -p config
-          echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > config/youtube_token.json
+          if [ -n "${{ secrets.YOUTUBE_TOKEN_JSON }}" ]; then
+            echo '${{ secrets.YOUTUBE_TOKEN_JSON }}' > config/youtube_token.json
+            echo "YouTube token restored successfully."
+          else
+            echo "WARNING: YOUTUBE_TOKEN_JSON secret is empty or missing in repo settings!"
+          fi
 
       - name: Run Master Autonomous Pipeline
         run: |
-          python scripts/engine/autonomous_channel_manager.py
+          python -u scripts/engine/autonomous_channel_manager.py
 
       - name: Persist Cycle State Back to Repo
         if: always()
         run: |
-          git config --global user.name "AnimeFandomBot"
-          git config --global user.email "bot@animefandom.internal"
-          git add -A config/autonomous_state.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: advance autonomous rotation state [skip ci]" && git push)
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add config/autonomous_state.json
+          git status
+          git diff --staged --quiet || (git commit -m "chore: advance autonomous rotation state [skip ci]" && git push origin main)
