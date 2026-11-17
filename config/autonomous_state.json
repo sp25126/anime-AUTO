@@ -1,6 +1,6 @@
 {
-  "last_run_date": "2026-11-17T08:00:57.793852+00:00",
-  "cycle_index": 3,
+  "last_run_date": "2026-11-17T08:21:45.777800+00:00",
+  "cycle_index": 4,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
@@ -8,7 +8,8 @@
     "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
     "Overgeared",
     "Trending Phonk: Slava Funk / Montagem",
-    "Accidental Rizz & Flustered Encounters"
+    "Accidental Rizz & Flustered Encounters",
+    "Coldest 1,000,000+ Aura Walks in Anime"
   ],
   "scheduled_videos": [
     {
@@ -31,10 +32,18 @@
       "publish_at": "2026-11-22T14:00:00+00:00",
       "group": "GROUP_B",
       "theme": "Trending Phonk: Slava Funk / Montagem"
+    },
+    {
+      "video_id": "TfVVXkZC8wk",
+      "title": "Top 5 COLDEST Anime Aura Walks That Broke The Internet! \ud83d\udc80\ud83e\udd76 #shorts #anime",
+      "publish_at": "2026-11-23T14:00:00+00:00",
+      "group": "GROUP_A",
+      "theme": "Coldest 1,000,000+ Aura Walks in Anime"
     }
   ],
   "recent_themes": [
     "rotate_slava_phonk",
-    "moment_accidental_rizz"
+    "moment_accidental_rizz",
+    "ranking_coldest_aura"
   ]
 }
