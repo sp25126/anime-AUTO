@@ -1,15 +1,13 @@
 """
 Master Multi-Platform Group A Anime Harvester
-Rule: 100% PURE ANIME EDITS ONLY.
-Zero cars, zero games (Free Fire/GTA/Fortnite), zero western superheroes (Marvel/DC), zero IRL.
-
-Features:
-1. Massive Dynamic Anime Character & Franchise Pool (Over 60+ top anime franchises & hundreds of iconic characters).
-2. Strict Non-Anime Blacklist (rejects any non-anime title/uploader instantly).
-3. Positive Anime Gatekeeper (every candidate MUST match verified anime markers).
-4. Audio Content-ID Shield (+3% pitch/speed shift + EQ) to ensure 0 copyright blocks.
-5. High-Contrast Animated Ranking HUD (#5 to #1 Climax).
-6. Full-Container Download to guarantee continuous audio across all 5 clips.
+Supports:
+1. Dynamic Multi-Scale Modes:
+   - MACRO_THEME: Cross-anime compilation across multiple top franchises (e.g. Anime Fight Scenes, Coldest Aura, Beat Drops).
+   - MICRO_FRANCHISE: Single-anime locked compilation (e.g. Naruto fight scenes, Dandadan, Jujutsu Kaisen).
+2. 100% PURE ANIME ONLY (Zero cars, zero games, zero Marvel, zero IRL).
+3. Anti-Content-ID Audio Shield (+2.5% micro pitch modulation + EBU R128 normalization).
+4. High-Contrast Animated Ranking HUD (#5 to #1 CLIMAX).
+5. Full Container Download to guarantee continuous audio.
 """
 
 import os
@@ -19,71 +17,43 @@ import re
 import random
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
-# Verified Roster of Top Anime Franchises & Characters across Shonen, Seinen, Isekai, Dark Fantasy, Sports
+from semantic_roster import MACRO_THEME_REFERENCE_POOLS, MICRO_FRANCHISE_REFERENCE_POOLS
+
 ANIME_DISCOVERY_ROSTER = [
-    # JJK
     {"anime": "Jujutsu Kaisen", "characters": ["Gojo", "Sukuna", "Toji", "Yuji", "Megumi", "Yuta", "Nanami", "Mahito"]},
-    # Demon Slayer
     {"anime": "Demon Slayer", "characters": ["Tanjiro", "Zenitsu", "Rengoku", "Akaza", "Kokushibo", "Yoriichi", "Tengen", "Muichiro"]},
-    # Solo Leveling
     {"anime": "Solo Leveling", "characters": ["Sung Jin-Woo", "Igris", "Beru", "Shadow Monarch"]},
-    # Bleach
-    {"anime": "Bleach", "characters": ["Ichigo", "Aizen", "Yhwach", "Kenpachi", "Byakuya", "Ulviorra", "Grimmjow", "Yamamoto"]},
-    # One Piece
+    {"anime": "Bleach", "characters": ["Ichigo", "Aizen", "Yhwach", "Kenpachi", "Byakuya", "Ulquiorra", "Grimmjow", "Yamamoto"]},
     {"anime": "One Piece", "characters": ["Luffy Gear 5", "Zoro", "Sanji", "Shanks", "Kaido", "Law", "Whitebeard", "Ace"]},
-    # Dandadan
     {"anime": "Dandadan", "characters": ["Okarun", "Momo", "Turbo Granny", "Aira", "Jiji"]},
-    # Attack on Titan
     {"anime": "Attack on Titan", "characters": ["Eren Yeager", "Levi Ackerman", "Mikasa", "Erwin Smith", "Armin", "Beast Titan"]},
-    # Chainsaw Man
     {"anime": "Chainsaw Man", "characters": ["Denji", "Makima", "Aki", "Power", "Katana Man"]},
-    # Naruto / Shippuden
     {"anime": "Naruto", "characters": ["Madara", "Itachi", "Sasuke", "Kakashi", "Pain", "Minato", "Obito", "Might Guy"]},
-    # Dragon Ball
     {"anime": "Dragon Ball", "characters": ["Goku Ultra Instinct", "Vegeta", "Gohan Beast", "Broly", "Future Trunks", "Frieza"]},
-    # Hunter x Hunter
     {"anime": "Hunter x Hunter", "characters": ["Gon Rage", "Killua Godspeed", "Hisoka", "Meruem", "Netero", "Chrollo"]},
-    # Black Clover
     {"anime": "Black Clover", "characters": ["Asta Demon Form", "Yuno", "Yami Sukehiro", "Julius", "Mereoleona", "Noelle"]},
-    # Blue Lock
     {"anime": "Blue Lock", "characters": ["Isagi Yoichi", "Bachira", "Nagi Seishiro", "Rin Itoshi", "Barou", "Chigiri"]},
-    # Frieren
     {"anime": "Frieren", "characters": ["Frieren", "Fern", "Stark", "Himmel", "Serie", "Ubel"]},
-    # Mob Psycho 100
     {"anime": "Mob Psycho 100", "characters": ["Mob 100%", "Reigen", "Toichiro", "Serizawa", "Dimple"]},
-    # One Punch Man
     {"anime": "One Punch Man", "characters": ["Saitama", "Garou Cosmic Fear", "Genos", "Boros", "Tatsumaki"]},
-    # Tokyo Ghoul
     {"anime": "Tokyo Ghoul", "characters": ["Kaneki Ken", "Touka", "Arima", "Juuzou", "Ayato"]},
-    # Vinland Saga
     {"anime": "Vinland Saga", "characters": ["Thorfinn", "Askeladd", "Thorkell", "Canute"]},
-    # Fire Force
     {"anime": "Fire Force", "characters": ["Shinra Kusakabe", "Arthur Boyle", "Beni", "Benimaru Shinmon"]},
-    # Fate Series
     {"anime": "Fate", "characters": ["Gilgamesh", "Saber Alter", "Archer", "Berserker", "Shirou Emiya", "Lancer"]},
-    # Berserk
     {"anime": "Berserk", "characters": ["Guts", "Griffith", "Zodd"]},
-    # Overgeared / Manhwa Anime
     {"anime": "Overgeared", "characters": ["Grid", "Greed", "Khan"]},
-    # Bungo Stray Dogs
     {"anime": "Bungo Stray Dogs", "characters": ["Dazai", "Chuya", "Akutagawa", "Atsushi"]}
 ]
 
-# Strict Non-Anime Blacklist
 NON_ANIME_BANNED_KEYWORDS = [
-    # Games
     "free fire", "ff edit", "pubg", "bgmi", "gta", "gta 5", "fortnite", "roblox", "minecraft",
     "cod", "call of duty", "valorant", "league of legends", "genshin impact", "honkai", "clash royale",
-    # Superheroes & Western Cartoons
     "spider-man", "spiderman", "batman", "superman", "iron man", "avengers", "marvel", "dc", "hulk",
     "deadpool", "wolverine", "cocomelon", "peppa pig", "talking tom", "poppy playtime", "skibidi",
-    # Cars & Automotive
     "gtr", "r35", "supra", "bmw", "mercedes", "audi", "lamborghini", "ferrari", "porsche", "mustang",
-    "car edit", "jdm", "drift car",
-    # Real Life / Sports / Football
-    "ronaldo", "messi", "neymar", "football edit", "cricket", "sigma male irl", "hollywood", "movie edit"
+    "car edit", "jdm", "drift car", "ronaldo", "messi", "neymar", "football edit", "cricket", "hollywood", "movie edit"
 ]
 
 class MasterAnimeGroupAHarvester:
@@ -94,19 +64,24 @@ class MasterAnimeGroupAHarvester:
         os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.cuts_dir, exist_ok=True)
 
-    def is_strictly_anime(self, title: str, channel: str) -> bool:
-        """
-        Enforces 100% PURE ANIME:
-        1. Must NOT match any banned gaming, automotive, western comic, or IRL terms.
-        2. Must contain anime keywords or recognized anime characters/series.
-        """
+    def is_strictly_anime(self, title: str, channel: str, required_anime: str = None) -> bool:
         text = f"{title} {channel}".lower()
         if any(b in text for b in NON_ANIME_BANNED_KEYWORDS):
             return False
 
-        # Positive anime check: Must match known anime character, series, or core anime terms
+        # If a specific franchise is required (e.g. Naruto)
+        if required_anime and required_anime.lower() not in text:
+            # Check characters for that franchise
+            matched_char = False
+            for entry in ANIME_DISCOVERY_ROSTER:
+                if entry["anime"].lower() == required_anime.lower():
+                    if any(ch.lower() in text for ch in entry["characters"]):
+                        matched_char = True
+                        break
+            if not matched_char:
+                return False
+
         has_generic_anime_tag = any(k in text for k in ["anime", "amv", "sakuga", "waifu", "shonen", "otaku"])
-        
         matches_character = False
         for entry in ANIME_DISCOVERY_ROSTER:
             if entry["anime"].lower() in text:
@@ -122,16 +97,13 @@ class MasterAnimeGroupAHarvester:
         return has_generic_anime_tag or matches_character
 
     def generate_hud_overlay_image(self, rank: int, title_line1: str, title_line2: str, creator: str, views: str, output_path: str):
-        """
-        Generates transparent 1080x1920 PNG overlay with high-contrast animated HUD.
-        """
         img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
 
         try:
-            font_title = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 64)
-            font_sub = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 74)
-            font_rank = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 110)
+            font_title = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 62)
+            font_sub = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 70)
+            font_rank = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 95)
             font_small = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 32)
         except Exception:
             font_title = ImageFont.load_default()
@@ -140,102 +112,146 @@ class MasterAnimeGroupAHarvester:
             font_small = ImageFont.load_default()
 
         # Top Header Box
-        draw.rounded_rectangle([(80, 140), (1000, 310)], radius=24, fill=(10, 10, 15, 200), outline=(255, 255, 255, 60), width=3)
-        draw.text((540, 190), title_line1, font=font_title, fill=(255, 255, 255), anchor="mm")
+        draw.rounded_rectangle([(70, 130), (1010, 315)], radius=24, fill=(10, 10, 15, 215), outline=(255, 255, 255, 60), width=3)
+        draw.text((540, 185), title_line1, font=font_title, fill=(255, 255, 255), anchor="mm")
         
         accent_color = (255, 215, 0) if rank == 1 else (0, 240, 255)
-        draw.text((540, 260), title_line2, font=font_sub, fill=accent_color, anchor="mm")
+        # Scale down font_sub if title_line2 is long
+        sub_len = font_sub.getlength(title_line2)
+        if sub_len > 860:
+            scale_ratio = 860 / sub_len
+            new_size = max(38, int(70 * scale_ratio))
+            font_sub_scaled = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", new_size)
+        else:
+            font_sub_scaled = font_sub
+        draw.text((540, 260), title_line2, font=font_sub_scaled, fill=accent_color, anchor="mm")
 
         # Rank Badge
-        rank_bg = (255, 215, 0, 230) if rank == 1 else (20, 20, 30, 220)
+        rank_bg = (255, 215, 0, 240) if rank == 1 else (20, 20, 30, 225)
         rank_fg = (0, 0, 0) if rank == 1 else (255, 255, 255)
         rank_label = "#1 CLIMAX" if rank == 1 else f"#{rank}"
 
-        draw.rounded_rectangle([(60, 480), (320, 600)], radius=20, fill=rank_bg, outline=(255, 255, 255, 120), width=4)
-        draw.text((190, 540), rank_label, font=font_rank, fill=rank_fg, anchor="mm")
+        badge_w = int(font_rank.getlength(rank_label)) + 60
+        box_left = 60
+        box_right = box_left + max(240, badge_w)
+        draw.rounded_rectangle([(box_left, 470), (box_right, 595)], radius=20, fill=rank_bg, outline=(255, 255, 255, 120), width=4)
+        draw.text(((box_left + box_right)//2, 532), rank_label, font=font_rank, fill=rank_fg, anchor="mm")
 
         # Creator Credit
         credit_text = f"Edit: {creator} • {views}"
-        draw.rounded_rectangle([(60, 1340), (620, 1410)], radius=18, fill=(15, 15, 25, 210), outline=(255, 255, 255, 40), width=2)
-        draw.text((340, 1375), credit_text, font=font_small, fill=(240, 240, 240), anchor="mm")
+        credit_w = int(font_small.getlength(credit_text)) + 40
+        c_left = 60
+        c_right = min(1000, c_left + max(480, credit_w))
+        draw.rounded_rectangle([(c_left, 1340), (c_right, 1410)], radius=18, fill=(15, 15, 25, 210), outline=(255, 255, 255, 40), width=2)
+        draw.text(((c_left + c_right)//2, 1375), credit_text, font=font_small, fill=(240, 240, 240), anchor="mm")
 
         img.save(output_path, "PNG")
         return output_path
 
-    def harvest_ranking_pack(self, theme_title: str = "Anime Edits", target_clips_count: int = 5) -> Optional[str]:
+    def harvest_ranking_pack(self, trend_decision: Dict[str, Any] = None, target_clips_count: int = 5) -> Optional[str]:
         """
-        Gathers 5 verified pure anime clips across multiple distinct anime characters,
-        downloads complete audio/video, applies Content-ID protective DSP, and compiles the short.
+        Dynamically adapts based on the Intelligent Trend Gate:
+        - If mode is 'MICRO_FRANCHISE': Locks to that single anime (e.g. Naruto fight scenes).
+        - If mode is 'MACRO_THEME': Fans out across 5 distinct anime franchises.
         """
-        print(f"\n[Master Anime Harvester] Gathering 5 Pure Anime Edits across Top Franchises...")
+        if not trend_decision:
+            trend_decision = {
+                "id": "macro_fights",
+                "name": "Anime Fight Scenes & Clashes",
+                "mode": "MACRO_THEME",
+                "harvest_queries": ["anime fight scenes 4k edit short", "anime combat sakuga edit short"]
+            }
 
-        # Pick 5 distinct anime entries from the roster to guarantee diversity
-        selected_roster = random.sample(ANIME_DISCOVERY_ROSTER, target_clips_count)
+        mode = trend_decision.get("mode", "MACRO_THEME")
+        target_name = trend_decision.get("name", "Anime Fight Scenes")
+        franchise_lock = trend_decision.get("franchise") # e.g. "Naruto" if micro
+        theme_id = trend_decision.get("id", "macro_fights")
+
+        print(f"\n[Master Anime Harvester] Mode: {mode} | Target: '{target_name}' (ID: {theme_id})...")
+
         collected_candidates = []
         seen_ids = set()
 
-        for idx, entry in enumerate(selected_roster):
-            char = random.choice(entry["characters"])
-            anime_name = entry["anime"]
-            print(f"  • Scouting Rank #{target_clips_count - idx}: {anime_name} ({char})...")
-
-            queries = [
-                f"{char} {anime_name} viral edit tiktok 4k",
-                f"{char} anime 4k edit phonk short",
-                f"{char} {anime_name} best edit shorts",
-                f"{anime_name} 4k 60fps sakuga edit"
-            ]
-
-            found_for_slot = False
-            for q in queries:
-                if found_for_slot:
-                    break
-                cmd = [
-                    sys.executable, "-m", "yt_dlp",
-                    f"ytsearch5:{q}",
-                    "--dump-json",
-                    "--flat-playlist",
-                    "--no-warnings"
+        if mode == "MICRO_FRANCHISE" and franchise_lock:
+            # Check if franchise has curated semantic reference pool
+            ref_pool = MICRO_FRANCHISE_REFERENCE_POOLS.get(franchise_lock)
+            if ref_pool and len(ref_pool) >= target_clips_count:
+                selected_refs = random.sample(ref_pool, target_clips_count)
+            else:
+                entry = next((e for e in ANIME_DISCOVERY_ROSTER if e["anime"].lower() == franchise_lock.lower()), None)
+                chars = entry["characters"] if entry else [franchise_lock]
+                selected_refs = [
+                    {"character": chars[i % len(chars)], "form": "Peak Moment", "query": f"{chars[i % len(chars)]} {franchise_lock} fight scene edit 4k"}
+                    for i in range(target_clips_count)
                 ]
+
+            for idx, ref in enumerate(selected_refs):
+                char = ref["character"]
+                q = ref["query"]
+                print(f"  • Scouting Rank #{target_clips_count - idx}: {franchise_lock} ({char}) - '{ref.get('form', '')}'...")
+                
+                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch5:{q}", "--dump-json", "--flat-playlist", "--no-warnings"]
                 res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
                 for line in res.stdout.strip().split("\n"):
-                    if not line:
-                        continue
+                    if not line: continue
                     try:
                         d = json.loads(line)
                         vid_id = d.get("id")
                         vid_title = d.get("title") or ""
                         uploader = d.get("uploader") or d.get("channel") or "Unknown"
                         dur = d.get("duration") or 0
-
-                        if vid_id in seen_ids:
-                            continue
-                        if not (15 <= dur <= 120):
-                            continue
-                        
-                        # Strict Anime Verification Gate
-                        if not self.is_strictly_anime(vid_title, uploader):
-                            continue
-
+                        if vid_id in seen_ids or not (14 <= dur <= 120): continue
+                        if not self.is_strictly_anime(vid_title, uploader, required_anime=franchise_lock): continue
                         seen_ids.add(vid_id)
                         collected_candidates.append({
-                            "id": vid_id,
-                            "title": vid_title,
-                            "anime": anime_name,
-                            "character": char,
-                            "uploader": uploader,
-                            "duration": dur,
+                            "id": vid_id, "title": vid_title, "anime": franchise_lock,
+                            "character": char, "form": ref.get("form", char),
+                            "uploader": uploader, "duration": dur,
                             "url": f"https://www.youtube.com/watch?v={vid_id}"
                         })
-                        found_for_slot = True
                         break
-                    except Exception:
-                        pass
+                    except: pass
+        else:
+            # Macro Theme: Check if theme has curated semantic reference pool
+            macro_pool = MACRO_THEME_REFERENCE_POOLS.get(theme_id)
+            if macro_pool and len(macro_pool) >= target_clips_count:
+                selected_refs = random.sample(macro_pool, target_clips_count)
+            else:
+                selected_roster = random.sample(ANIME_DISCOVERY_ROSTER, target_clips_count)
+                selected_refs = [
+                    {"anime": e["anime"], "character": random.choice(e["characters"]), "form": "Viral Climax", "query": f"{random.choice(e['characters'])} {e['anime']} viral edit 4k"}
+                    for e in selected_roster
+                ]
 
-        print(f"[Master Anime Harvester] Found {len(collected_candidates)} verified 100% anime candidates.")
-        if len(collected_candidates) < target_clips_count:
-            print(f"[Warning] Only collected {len(collected_candidates)} anime clips.")
+            for idx, ref in enumerate(selected_refs):
+                anime_name = ref["anime"]
+                char = ref["character"]
+                q = ref["query"]
+                print(f"  • Scouting Rank #{target_clips_count - idx}: {anime_name} ({char}) - '{ref.get('form', '')}'...")
 
+                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch5:{q}", "--dump-json", "--flat-playlist", "--no-warnings"]
+                res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
+                for line in res.stdout.strip().split("\n"):
+                    if not line: continue
+                    try:
+                        d = json.loads(line)
+                        vid_id = d.get("id")
+                        vid_title = d.get("title") or ""
+                        uploader = d.get("uploader") or d.get("channel") or "Unknown"
+                        dur = d.get("duration") or 0
+                        if vid_id in seen_ids or not (14 <= dur <= 120): continue
+                        if not self.is_strictly_anime(vid_title, uploader): continue
+                        seen_ids.add(vid_id)
+                        collected_candidates.append({
+                            "id": vid_id, "title": vid_title, "anime": anime_name,
+                            "character": char, "form": ref.get("form", char),
+                            "uploader": uploader, "duration": dur,
+                            "url": f"https://www.youtube.com/watch?v={vid_id}"
+                        })
+                        break
+                    except: pass
+
+        print(f"[Master Anime Harvester] Harvested {len(collected_candidates)} verified 100% anime candidates.")
         prepared_clips = []
         for rank_idx, cand in enumerate(collected_candidates[:target_clips_count]):
             rank = target_clips_count - rank_idx
@@ -243,22 +259,45 @@ class MasterAnimeGroupAHarvester:
             hud_png = os.path.join(self.cuts_dir, f"hud_rank_{rank}.png")
             out_clip = os.path.join(self.cuts_dir, f"prepared_rank_{rank}_{cand['id']}.mp4")
 
-            # 1. Generate HUD Overlay
+            # Dynamic HUD Titles based on Mode
+            if mode == "MICRO_FRANCHISE":
+                h_line1 = f"TOP 5 {franchise_lock.upper()} FIGHTS"
+                h_line2 = f"{cand['character'].upper()}"
+            else:
+                if "aura" in theme_id:
+                    h_line1 = "COLDEST AURA WALKS"
+                elif "rage" in theme_id:
+                    h_line1 = "ANIME RAGE AWAKENINGS"
+                elif "beat_drop" in theme_id:
+                    h_line1 = "HARDEST BEAT DROPS"
+                elif "villain" in theme_id:
+                    h_line1 = "COLDEST ANIME VILLAINS"
+                elif "transform" in theme_id:
+                    h_line1 = "PEAK TRANSFORMATIONS"
+                elif "disrespect" in theme_id:
+                    h_line1 = "COLDEST DISRESPECTS"
+                elif "speed" in theme_id:
+                    h_line1 = "FASTEST SPEEDSTERS"
+                elif "sword" in theme_id:
+                    h_line1 = "BADASS SWORD DRAWS"
+                else:
+                    h_line1 = "TOP 5 ANIME FIGHTS"
+                h_line2 = f"{cand['anime'].upper()} • {cand['character'].upper()}"
+
             self.generate_hud_overlay_image(
                 rank=rank,
-                title_line1="TOP 5 GREATEST",
-                title_line2=f"{cand['anime'].upper()} EDITS"[:22],
+                title_line1=h_line1,
+                title_line2=h_line2,
                 creator=f"@{cand['uploader'][:12]}",
-                views="2.4M Views",
+                views="Viral",
                 output_path=hud_png
             )
 
-            # 2. Download full container to preserve full audio stream
+            # Download full container to ensure full audio stream
             if not os.path.exists(raw_full) or os.path.getsize(raw_full) < 500000:
                 print(f"[Harvester] Downloading Pure Anime #{rank}: {cand['anime']} - {cand['character']} (@{cand['uploader']})...")
                 dl_cmd = [
-                    sys.executable, "-m", "yt_dlp",
-                    cand["url"],
+                    sys.executable, "-m", "yt_dlp", cand["url"],
                     "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
                     "-o", raw_full,
                     "--no-warnings"
@@ -268,27 +307,26 @@ class MasterAnimeGroupAHarvester:
             if not os.path.exists(raw_full):
                 continue
 
-            # 3. Slice sweet spot (15.0s)
-            start_sec = 3.0 if cand["duration"] > 22 else 0.0
             clip_dur = 15.0
+            # Safe start_sec calculation: ensure we NEVER seek past duration - clip_dur
+            if cand["duration"] > (clip_dur + 3.0):
+                # Seek slightly into the edit for the action/climax, but bounded
+                start_sec = max(0.0, min(5.0, (cand["duration"] - clip_dur) * 0.4))
+            else:
+                start_sec = 0.0
 
-            # 4. Composite: Dynamic Blurred BG + 16:9 uncropped + HUD + Anti-Copyright Audio Protection
-            # Anti-Copyright Audio Protection:
-            # - Pitch/tempo shifted by +2.5% (asetrate=48000*1.025,aresample=48000)
-            # - Loudness normalized to EBU R128 (-14.0 LUFS)
-            # This completely evades Content ID automated audio fingerprinting!
+            # Dynamic blurred background + 16:9 uncropped + HUD + Anti-Copyright Audio Protection with TEMPO COMPENSATION
             filter_complex = (
                 f"[0:v]fps=30,split=2[fg_raw][bg_raw];"
                 f"[bg_raw]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,eq=brightness=-0.15:saturation=1.2[bg_blur];"
                 f"[fg_raw]scale=1080:-2,setsar=1[fg_scaled];"
                 f"[bg_blur][fg_scaled]overlay=0:(1920-h)/2[base_comp];"
                 f"[base_comp][1:v]overlay=0:0[vout];"
-                f"[0:a]asetrate=48000*1.025,aresample=48000,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,loudnorm=I=-14:TP=-1.5:LRA=7[aout]"
+                f"[0:a]aresample=48000,asetrate=48000*1.025,atempo=1/1.025,aresample=48000,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,loudnorm=I=-14:TP=-1.5:LRA=7[aout]"
             )
             comp_cmd = [
                 "ffmpeg", "-y",
-                "-ss", str(start_sec),
-                "-t", str(clip_dur),
+                "-ss", f"{start_sec:.2f}", "-t", f"{clip_dur:.2f}",
                 "-i", raw_full,
                 "-i", hud_png,
                 "-filter_complex", filter_complex,
@@ -302,10 +340,9 @@ class MasterAnimeGroupAHarvester:
                 prepared_clips.append(out_clip)
 
         if not prepared_clips:
-            print("[Master Anime Harvester] Failed to prepare pure anime clips.")
             return None
 
-        # 5. Stitch all clips
+        # Stitch 5 clips
         concat_txt = os.path.join(self.workspace_root, "output", "group_a_concat_list.txt")
         with open(concat_txt, "w", encoding="utf-8") as f:
             for p in prepared_clips:
@@ -324,9 +361,21 @@ class MasterAnimeGroupAHarvester:
 
         if os.path.exists(final_stitched) and os.path.getsize(final_stitched) > 1000000:
             print(f"[Master Anime Harvester] SUCCESS: Created {len(prepared_clips)}-clip Pure Anime compilation: {final_stitched}")
+            # Generate contact sheet proof for instant visual verification
+            proof_sheet = os.path.join(self.workspace_root, "output", "group_a_local_proof_sheet.jpg")
+            ps_cmd = [
+                "ffmpeg", "-y",
+                "-i", final_stitched,
+                "-vf", "select='not(mod(n\\,120))',scale=270:480,tile=5x3",
+                "-frames:v", "1",
+                proof_sheet
+            ]
+            subprocess.run(ps_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if os.path.exists(proof_sheet):
+                print(f"[Master Anime Harvester] QA Contact Sheet generated: {proof_sheet}")
             return final_stitched
         return None
 
 if __name__ == "__main__":
     h = MasterAnimeGroupAHarvester(r"c:\Users\saumy\OneDrive\Desktop\anime compiation")
-    print("MasterAnimeGroupAHarvester initialized with 100% Pure Anime Engine.")
+    print("MasterAnimeGroupAHarvester ready with Multi-Scale Macro/Micro support.")

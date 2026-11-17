@@ -2,85 +2,50 @@ import React from 'react';
 import {
   AbsoluteFill,
   OffthreadVideo,
-  Audio,
-  Sequence,
   useCurrentFrame,
-  useVideoConfig,
   staticFile,
-  interpolate,
+  spring,
+  useVideoConfig
 } from 'remotion';
 
-export interface RankingClipItem {
-  videoPath: string;
+export interface RankingClipMeta {
   durationInFrames: number;
-  rankNumber: number; // 5 down to 1
-  label: string; // e.g. "GET OUT!!!" or "Domain Clash" or "Sukuna Mahoraga"
-  viewCountText?: string; // e.g. "970K", "1.8M", "3.1M"
-  commentaryText?: string; // e.g. "TS AHH 🙏", "TRASH INTRO ✅", "WATERMARK SO PEAK 🙏"
-  creatorCredit?: string; // e.g. "@waiyanchanmoe", "@bankaivzn"
-  animeTitle?: string; // e.g. "Jujutsu Kaisen"
+  rankNumber: number;
+  label: string;
+  viewCountText?: string;
+  creatorCredit: string;
 }
 
 export interface RankingShortProps {
-  topTitleLine1: string; // e.g. "RANKING THE BEST"
-  topTitleLine2: string; // e.g. "JJK EDITS" or "UNEXPECTED ANIME EDITS"
-  accentWord?: string; // e.g. "JJK" or "UNEXPECTED"
-  accentColor?: string; // e.g. "#FF0000" or "#39FF14" or "#FFE600"
-  clips: RankingClipItem[];
-  audioPath?: string; // phonk / bass bed
-  backgroundMode?: 'blur-clone' | 'painterly-art';
-  painterlyArtBgPath?: string; // optional path to painterly anime art (e.g. your uploaded aesthetic sky art)
+  topTitleLine1?: string;
+  topTitleLine2?: string;
+  accentWord?: string;
+  accentColor?: string;
+  masterVideoPath?: string;
+  clips: RankingClipMeta[];
 }
 
 export const RankingShort: React.FC<RankingShortProps> = ({
-  topTitleLine1 = "RANKING THE BEST",
+  topTitleLine1 = "TOP 5 GREATEST",
   topTitleLine2 = "JJK EDITS",
   accentWord = "JJK",
   accentColor = "#FF0000",
-  clips = [
-    {
-      videoPath: "public/clips/gojo.mp4",
-      durationInFrames: 150,
-      rankNumber: 5,
-      label: "Hollow Purple 200%",
-      viewCountText: "970K",
-      commentaryText: "TS AHH 🙏",
-      creatorCredit: "@bankaivzn",
-      animeTitle: "Jujutsu Kaisen"
-    },
-    {
-      videoPath: "public/clips/sukuna.mp4",
-      durationInFrames: 180,
-      rankNumber: 4,
-      label: "Malevolent Shrine",
-      viewCountText: "1.8M",
-      commentaryText: "WATERMARK SO PEAK 🙏",
-      creatorCredit: "@waiyanchanmoe",
-      animeTitle: "Jujutsu Kaisen"
-    }
-  ],
-  audioPath = "public/audio/stems/versus_phonk_bed.mp3",
-  backgroundMode = "blur-clone",
-  painterlyArtBgPath
+  masterVideoPath = "public/clips/ranking_base_master.mp4",
+  clips = []
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const resolvePath = (rawPath: string) => {
-    if (!rawPath) return '';
-    if (rawPath.startsWith('http://') || rawPath.startsWith('https://') || rawPath.startsWith('file:')) {
-      return rawPath;
-    }
-    let rel = rawPath;
-    if (rel.includes('public\\')) {
-      rel = rel.split('public\\')[1].replace(/\\/g, '/');
-    } else if (rel.includes('public/')) {
-      rel = rel.split('public/')[1];
-    }
+  const resolvePath = (p: string) => {
+    if (!p) return "";
+    if (p.startsWith("http://") || p.startsWith("https://")) return p;
+    let rel = p.replace(/\\/g, "/");
+    if (rel.startsWith("public/")) rel = rel.substring(7);
+    if (rel.startsWith("/")) rel = rel.substring(1);
     return staticFile(rel);
   };
 
-  // Compute accumulated frame boundaries to determine active clip
+  // Determine active clip metadata based on frame
   let accumulated = 0;
   let activeIndex = 0;
   for (let i = 0; i < clips.length; i++) {
@@ -96,173 +61,146 @@ export const RankingShort: React.FC<RankingShortProps> = ({
 
   const activeClip = clips[activeIndex] || clips[0];
 
-  // Rank number colors (1=Gold, 2=Orange, 3=Red, 4/5=Gray/White)
   const getRankColor = (num: number) => {
     switch (num) {
-      case 1: return '#FFD700'; // Gold
-      case 2: return '#FF8C00'; // Orange
-      case 3: return '#FF3333'; // Red
-      case 4: return '#C0C0C0'; // Silver
-      default: return '#FFE600'; // Yellow/White
+      case 1: return '#FFD700'; // Climax Gold
+      case 2: return '#FF6B00'; // Hyper Orange
+      case 3: return '#FF2A2A'; // Intense Crimson
+      case 4: return '#00E5FF'; // Electric Cyan
+      case 5: return '#FFEB3B'; // Vibrant Yellow
+      default: return '#FFFFFF';
     }
   };
 
-  // Render title with accent word coloring
-  const renderTitle = () => {
-    if (!topTitleLine2.includes(accentWord)) {
-      return (
-        <>
-          <div style={{ color: '#FFFFFF' }}>{topTitleLine1}</div>
-          <div style={{ color: accentColor }}>{topTitleLine2}</div>
-        </>
-      );
-    }
-    const parts = topTitleLine2.split(accentWord);
-    return (
-      <>
-        <div style={{ color: '#FFFFFF' }}>{topTitleLine1}</div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-          {parts[0] && <span style={{ color: '#FFFFFF' }}>{parts[0]}</span>}
-          <span style={{ color: accentColor }}>{accentWord}</span>
-          {parts[1] && <span style={{ color: '#FFFFFF' }}>{parts[1]}</span>}
-        </div>
-      </>
-    );
-  };
+  const activeColor = getRankColor(activeClip.rankNumber);
+  const pulseIntensity = 0.5 + 0.5 * Math.sin(frame * 0.15);
+
+  const titleEntrance = spring({
+    frame,
+    fps,
+    config: { damping: 14, stiffness: 120 }
+  });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: '#0A0A0C', fontFamily: "'Impact', 'Arial Black', sans-serif" }}>
-      {/* Audio bed */}
-      {audioPath && <Audio src={resolvePath(audioPath)} volume={0.8} />}
+    <AbsoluteFill style={{ backgroundColor: '#050508', overflow: 'hidden' }}>
+      {/* 1. SINGLE HIGH-PERFORMANCE VIDEO STREAM (Plays seamlessly across all 5 edits) */}
+      <OffthreadVideo
+        src={resolvePath(masterVideoPath)}
+        style={{
+          width: '1080px',
+          height: '1920px',
+          objectFit: 'cover'
+        }}
+      />
 
-      {/* Render clips sequentially */}
-      {clips.map((clip, idx) => {
-        let startFrame = 0;
-        for (let j = 0; j < idx; j++) {
-          startFrame += clips[j].durationInFrames;
-        }
-
-        return (
-          <Sequence key={idx} from={startFrame} durationInFrames={clip.durationInFrames}>
-            {/* Background Layer: either blur-clone or painterly art */}
-            {backgroundMode === 'painterly-art' && painterlyArtBgPath ? (
-              <AbsoluteFill style={{ overflow: 'hidden' }}>
-                <img
-                  src={resolvePath(painterlyArtBgPath)}
-                  alt="Atmospheric Anime Background"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    filter: 'brightness(0.7) blur(4px)'
-                  }}
-                />
-              </AbsoluteFill>
-            ) : (
-              /* Blur-Clone Background: 200% zoom, heavy blur, slightly desaturated */
-              <AbsoluteFill style={{ overflow: 'hidden' }}>
-                <OffthreadVideo
-                  src={resolvePath(clip.videoPath)}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transform: 'scale(2.2)',
-                    filter: 'blur(45px) brightness(0.65) saturate(0.8)'
-                  }}
-                />
-                {/* Subtle soft dark overlay */}
-                <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.25)' }} />
-              </AbsoluteFill>
-            )}
-
-            {/* Foreground Video: centered at exact 16:9 or native aspect ratio */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: 0,
-                width: '1080px',
-                transform: 'translateY(-50%)',
-                boxShadow: '0 0 50px rgba(0,0,0,0.85)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <OffthreadVideo
-                src={resolvePath(clip.videoPath)}
-                style={{
-                  width: '1080px',
-                  maxHeight: '1350px',
-                  objectFit: 'contain'
-                }}
-              />
-            </div>
-          </Sequence>
-        );
-      })}
-
-      {/* TOP PINNED TITLE (Snlper & TopBringer style: Heavy bold Impact with black outline) */}
+      {/* 2. DYNAMIC RANK NEON PERIMETER PULSE (Reacts to active edit color) */}
       <div
         style={{
           position: 'absolute',
-          top: '50px',
+          top: '50%',
           left: '50%',
-          transform: 'translateX(-50%)',
+          transform: 'translate(-50%, -50%)',
+          width: '1080px',
+          height: '610px',
+          borderTop: `3px solid ${activeColor}`,
+          borderBottom: `3px solid ${activeColor}`,
+          boxShadow: `0 0 ${35 + pulseIntensity * 25}px ${activeColor}50`,
+          pointerEvents: 'none',
+          zIndex: 10
+        }}
+      />
+
+      {/* 3. TOP PINNED TITLE */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '60px',
+          left: '50%',
+          transform: `translateX(-50%) scale(${titleEntrance})`,
           width: '980px',
           textAlign: 'center',
-          fontSize: '78px',
-          letterSpacing: '2px',
-          lineHeight: '1.05',
+          fontFamily: "'Impact', 'Arial Black', sans-serif",
           textTransform: 'uppercase',
-          textShadow: '0 0 10px #000, 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000',
+          letterSpacing: '2px',
           zIndex: 100
         }}
       >
-        {renderTitle()}
+        <div
+          style={{
+            fontSize: '66px',
+            color: '#FFFFFF',
+            lineHeight: '1.05',
+            textShadow: '0 4px 15px rgba(0,0,0,0.9), 3px 3px 0 #000, -3px -3px 0 #000'
+          }}
+        >
+          {topTitleLine1}
+        </div>
+        <div
+          style={{
+            fontSize: '78px',
+            color: accentColor,
+            lineHeight: '1.05',
+            letterSpacing: '3px',
+            textShadow: `0 0 25px ${accentColor}80, 4px 4px 0 #000, -3px -3px 0 #000`
+          }}
+        >
+          {topTitleLine2}
+        </div>
       </div>
 
-      {/* LEFT SIDEBAR RANK LIST (Snlper & TopBringer style) */}
+      {/* 4. LEFT COUNTDOWN STACK (5 to 1 Progressive Reveal) */}
       <div
         style={{
           position: 'absolute',
-          top: '260px',
-          left: '50px',
+          top: '250px',
+          left: '55px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '14px',
+          gap: '12px',
           zIndex: 110,
-          textShadow: '2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000'
+          fontFamily: "'Impact', 'Arial Black', sans-serif"
         }}
       >
-        {/* Render ranks in reverse 1 to 5 */}
         {[1, 2, 3, 4, 5].map((num) => {
-          // Find matching clip for this rank
           const matchingClip = clips.find(c => c.rankNumber === num);
           const isCurrentActive = activeClip && activeClip.rankNumber === num;
           const hasBeenPlayed = clips.findIndex(c => c.rankNumber === num) <= activeIndex;
+          const rankColor = getRankColor(num);
 
           return (
-            <div key={num} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div
+              key={num}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                opacity: isCurrentActive ? 1.0 : (hasBeenPlayed ? 0.6 : 0.25),
+                transform: isCurrentActive ? 'scale(1.08)' : 'scale(1.0)',
+                transformOrigin: 'left center',
+                transition: 'all 0.2s ease-out'
+              }}
+            >
               <div
                 style={{
-                  fontSize: '68px',
+                  fontSize: '64px',
+                  color: rankColor,
                   fontWeight: 900,
-                  color: getRankColor(num),
-                  minWidth: '55px'
+                  minWidth: '55px',
+                  textShadow: isCurrentActive
+                    ? `0 0 20px ${rankColor}, 3px 3px 0 #000, -2px -2px 0 #000`
+                    : '2px 2px 0 #000, -2px -2px 0 #000'
                 }}
               >
                 {num}.
               </div>
 
-              {/* Revealed view count or label */}
               {matchingClip && hasBeenPlayed && (
                 <div
                   style={{
-                    fontSize: '44px',
-                    color: isCurrentActive ? '#FFFFFF' : 'rgba(255,255,255,0.7)',
-                    letterSpacing: '1px'
+                    fontSize: '40px',
+                    color: isCurrentActive ? '#FFFFFF' : '#B0B0C0',
+                    letterSpacing: '1px',
+                    textShadow: '2px 2px 0 #000, -2px -2px 0 #000'
                   }}
                 >
                   {matchingClip.viewCountText || matchingClip.label}
@@ -273,45 +211,69 @@ export const RankingShort: React.FC<RankingShortProps> = ({
         })}
       </div>
 
-      {/* BOTTOM COMMENTARY / REACTION TEXT (Snlper style: "TS AHH 🙏", "TRASH INTRO ✅") */}
-      {activeClip.commentaryText && (
-        <div
+      {/* 5. CHANNEL BRAND WATERMARK (Top Right Frosted Pill) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '75px',
+          right: '50px',
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '30px',
+          padding: '8px 22px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          zIndex: 100
+        }}
+      >
+        <span
           style={{
-            position: 'absolute',
-            bottom: '150px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            textAlign: 'center',
-            fontSize: '66px',
-            color: '#39FF14', // Neon Green
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            textShadow: '0 0 15px rgba(57,255,20,0.6), 3px 3px 0 #000, -3px -3px 0 #000',
-            zIndex: 120,
-            whiteSpace: 'nowrap'
+            fontFamily: "'Segoe UI', 'Montserrat', sans-serif",
+            fontSize: '26px',
+            fontWeight: 800,
+            color: '#FFFFFF',
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase'
           }}
         >
-          {activeClip.commentaryText}
-        </div>
-      )}
+          @animefandom0_0
+        </span>
+      </div>
 
-      {/* BOTTOM CREDIT TAG (e.g. CC:@BANKAIVZN or sc:@forveiled) */}
+      {/* 6. BOTTOM TWO-TIER CREATOR ATTRIBUTION (Cyan Neon Tag) */}
       {activeClip.creatorCredit && (
         <div
           style={{
             position: 'absolute',
-            bottom: '70px',
+            bottom: '75px',
             left: '50%',
             transform: 'translateX(-50%)',
-            fontSize: '42px',
-            color: '#00F0FF', // Cyan
-            fontWeight: 800,
-            letterSpacing: '1px',
-            textShadow: '2px 2px 0 #000, -2px -2px 0 #000',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            background: 'rgba(5, 5, 12, 0.88)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(0, 240, 255, 0.4)',
+            boxShadow: '0 8px 30px rgba(0, 240, 255, 0.3)',
+            borderRadius: '40px',
+            padding: '12px 32px',
             zIndex: 120
           }}
         >
-          CC: {activeClip.creatorCredit}
+          <span
+            style={{
+              fontFamily: "'Segoe UI', 'Montserrat', sans-serif",
+              fontSize: '32px',
+              fontWeight: 800,
+              color: '#00F0FF',
+              letterSpacing: '2px',
+              textTransform: 'uppercase'
+            }}
+          >
+            EDIT BY {activeClip.creatorCredit}
+          </span>
         </div>
       )}
     </AbsoluteFill>

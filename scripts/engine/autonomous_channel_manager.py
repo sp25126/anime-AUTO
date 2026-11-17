@@ -29,6 +29,7 @@ sys.path.append(ENGINE_DIR)
 from omni_radar import OmniPlatformTrendRadar
 from stream_harvester import StreamHarvester
 from group_a_harvester import MasterAnimeGroupAHarvester
+from trend_gate import IntelligentTrendGate
 from dsp_engine import ForensicDSPEngine
 from qa_scheduler import QAGatekeeper, YouTubeScheduler
 from metadata_engine import MetadataComplianceEngine
@@ -42,6 +43,7 @@ class AutonomousChannelManager:
         self.radar = OmniPlatformTrendRadar()
         self.harvester = StreamHarvester()
         self.group_a_harvester = MasterAnimeGroupAHarvester(WORKSPACE_ROOT)
+        self.trend_gate = IntelligentTrendGate()
         self.dsp = ForensicDSPEngine()
         self.qa = QAGatekeeper()
         self.metadata_engine = MetadataComplianceEngine(youtube_creds_path=os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json"))
@@ -128,39 +130,30 @@ class AutonomousChannelManager:
             "label": "Jujutsu Kaisen"
         }
 
-    def produce_group_a_ranking(self, output_path: str, target: Dict[str, Any]):
+    def produce_group_a_ranking(self, output_path: str, target: Dict[str, Any], trend_decision: Dict[str, Any] = None):
         """
         Group A: Multi-Clip Viral Ranking (75-80s).
-        Uses MultiPlatformGroupAHarvester to scout, download, and stitch 5 distinct clips
-        across TikTok, Instagram, and YouTube.
+        Uses MasterAnimeGroupAHarvester to scout, download, and stitch 5 distinct clips
+        based on live internet Trend Gate intelligence (Macro vs Micro).
         """
-        theme_data = target.get("data", {})
         theme_label = target.get("label", "Viral Edits")
-        print(f"[Group A Production] Generating 75-80s Multi-Platform Ranking Edit for: '{theme_label}'...")
+        print(f"[Group A Production] Generating 75-80s Multi-Scale Ranking Edit for: '{theme_label}'...")
 
-        # 1. Harvest multi-clip pack across TikTok, Instagram, and YouTube
+        # 1. Harvest multi-clip pack based on trend_decision
         stitched_master = self.group_a_harvester.harvest_ranking_pack(
-            theme_title=theme_label,
+            trend_decision=trend_decision,
             target_clips_count=5
         )
 
         if stitched_master and os.path.exists(stitched_master):
-            # Apply EBU R128 mastering and copy to output_path
-            master_cmd = [
-                "ffmpeg", "-y", "-i", stitched_master,
-                "-af", "loudnorm=I=-14:TP=-1.5:LRA=7",
-                "-c:v", "copy",
-                "-c:a", "aac", "-b:a", "192k",
-                output_path
-            ]
-            subprocess.run(master_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            if os.path.exists(output_path):
-                return output_path
+            import shutil
+            shutil.copy2(stitched_master, output_path)
+            return output_path
 
-        # Fallback to existing villain aura master if live harvest was interrupted
-        villain_base = os.path.join(WORKSPACE_ROOT, "output", "ranking_villain_aura_mastered.mp4")
-        if os.path.exists(villain_base):
-            return villain_base
+        # Fallback to existing ranking master if live harvest was interrupted
+        ranking_base = os.path.join(WORKSPACE_ROOT, "output", "ranking_pure_anime_80s_master.mp4")
+        if os.path.exists(ranking_base):
+            return ranking_base
         return None
 
     def produce_group_b_rotate(self, output_path: str, target: Dict[str, Any]):
@@ -238,23 +231,36 @@ class AutonomousChannelManager:
 
         return None
 
-    def run_zero_touch_cycle(self, force_group: str = None) -> bool:
+    def run_zero_touch_cycle(self, force_group: str = None, local_only: bool = False) -> bool:
         group = force_group or self.get_next_group()
         now_utc = datetime.datetime.now(datetime.timezone.utc)
         print(f"\n==================================================================")
         print(f"🎬 ZERO-TOUCH VIRAL ENGINE ACTIVE: PRODUCING {group}")
         print(f"Timestamp: {now_utc.isoformat()}")
+        print(f"Mode: {'LOCAL VALIDATION ONLY' if local_only else 'LIVE AUTONOMOUS SCHEDULE'}")
         print(f"==================================================================\n")
 
         # Step 1: Select viral theme / audio trend (independent of single anime lock)
-        target = self.select_viral_theme_or_show(group)
-        print(f"[Viral Selection] Active Trend / Audio Winner: 🔥 {target['label']} 🔥")
+        trend_decision = None
+        if group == "GROUP_A":
+            # Live internet velocity research across Macro vs Micro niches
+            trend_decision = self.trend_gate.evaluate_live_market(history=self.state.get("recent_themes", []))
+            target = {
+                "type": trend_decision.get("mode"),
+                "key": trend_decision.get("id"),
+                "data": trend_decision,
+                "label": trend_decision.get("name")
+            }
+        else:
+            target = self.select_viral_theme_or_show(group)
+
+        print(f"[Viral Selection] Active Trend / Audio Winner: 🔥 {target['label']} ({target['type']}) 🔥")
 
         out_master = os.path.join(WORKSPACE_ROOT, "output", f"auto_{group.lower()}_{target['key']}_master.mp4")
 
         # Step 2: Render corresponding group with fresh viral content
         if group == "GROUP_A":
-            master_file = self.produce_group_a_ranking(out_master, target=target)
+            master_file = self.produce_group_a_ranking(out_master, target=target, trend_decision=trend_decision)
         elif group == "GROUP_B":
             master_file = self.produce_group_b_rotate(out_master, target=target)
         else: # GROUP_C
@@ -276,7 +282,7 @@ class AutonomousChannelManager:
         print("\n[Metadata Engine] Researching trending tags, disclaimers, and open slot...")
         custom_title = target.get("data", {}).get("title_template")
         meta = self.metadata_engine.generate_metadata(
-            anime_title=target["label"],
+            anime_title=target.get("data", {}).get("franchise") or target["label"],
             moment_label=f"Peak {target['label']}",
             group_type=group,
             custom_hook=custom_title
@@ -285,8 +291,8 @@ class AutonomousChannelManager:
         print(f"  • Title: {meta['title']}")
         print(f"  • Safe Release Slot: {meta['scheduled_utc'].isoformat()} (7:30 PM IST)")
 
-        # Step 5: Schedule via YouTube API
-        if os.path.exists(os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json")):
+        # Step 5: Schedule via YouTube API (Skip if local_only is True)
+        if not local_only and os.path.exists(os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json")):
             video_id = self.scheduler.schedule_upload(
                 video_path=master_file,
                 title=meta["title"],
@@ -301,14 +307,27 @@ class AutonomousChannelManager:
                 "group": group,
                 "theme": target["label"]
             })
+            # Advance Rotation Cycle & Save Theme to Variety History
+            self.advance_cycle(theme_key=target["key"], franchise=target["label"])
+            print(f"\n✅ SUCCESS: Autonomous production for {group} ({target['label']}) verified & scheduled.")
+            print(f"Next automated turn will produce: {self.get_next_group()}\n")
+        else:
+            print(f"\n✅ LOCAL PRODUCTION COMPLETE: Video ready at: {master_file}")
+            proof_sheet = os.path.join(WORKSPACE_ROOT, "output", "group_a_local_proof_sheet.jpg")
+            if os.path.exists(proof_sheet):
+                print(f"📸 Proof Contact Sheet: {proof_sheet}")
+            print("Ready for manual inspection prior to scheduling.\n")
 
-        # Advance Rotation Cycle & Save Theme to Variety History
-        self.advance_cycle(theme_key=target["key"], franchise=target["label"])
-        print(f"\n✅ SUCCESS: Autonomous production for {group} ({target['label']}) verified.")
-        print(f"Next automated turn will produce: {self.get_next_group()}\n")
         return True
 
 if __name__ == "__main__":
-    force_grp = sys.argv[1].upper() if len(sys.argv) > 1 else None
+    import argparse
+    parser = argparse.ArgumentParser(description="Master Channel Autonomous Daemon")
+    parser.add_argument("--group", "-g", type=str, default="GROUP_A", help="Force specific group (GROUP_A, GROUP_B, GROUP_C)")
+    parser.add_argument("--local", "-l", action="store_true", default=True, help="Run local production only without uploading")
+    parser.add_argument("--upload", "-u", action="store_true", help="Enable live YouTube scheduling/upload")
+    args = parser.parse_args()
+
+    is_local = not args.upload
     manager = AutonomousChannelManager()
-    manager.run_zero_touch_cycle(force_group=force_grp)
+    manager.run_zero_touch_cycle(force_group=args.group.upper(), local_only=is_local)
