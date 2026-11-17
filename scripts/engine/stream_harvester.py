@@ -72,9 +72,26 @@ class StreamHarvester:
     def fast_harvest_direct(self, search_query: str, start_time: float, duration: float, output_path: str):
         """
         Direct micro-clipper utilizing yt-dlp native download sections to harvest exact 1080p clip.
+        Handles container extensions (.webm, .mkv, .mp4) and converts cleanly to .mp4 if needed.
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         end_time = start_time + duration
+        
+        # Remove any stale output or intermediate files
+        base_no_ext = os.path.splitext(output_path)[0]
+        for candidate_ext in [".mp4", ".webm", ".mkv", ".mp4.webm", ".mp4.mkv"]:
+            p = base_no_ext + candidate_ext
+            if os.path.exists(p):
+                try:
+                    os.remove(p)
+                except Exception:
+                    pass
+        if os.path.exists(output_path):
+            try:
+                os.remove(output_path)
+            except Exception:
+                pass
+
         cmd = [
             sys.executable, "-m", "yt_dlp",
             f"ytsearch1:{search_query}",
@@ -85,12 +102,37 @@ class StreamHarvester:
             "--no-warnings"
         ]
         res = subprocess.run(cmd, capture_output=True, text=True)
-        if res.returncode == 0:
+        
+        # Check if output exists directly
+        if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
             print(f"[SUCCESS] Harvested direct clip: {output_path}")
             return output_path
-        else:
-            print(f"[ERROR] Direct harvest failed: {res.stderr[:200]}")
-            return None
+            
+        # Check if yt-dlp appended an extension like .webm or .mkv
+        parent = os.path.dirname(output_path)
+        base_name = os.path.basename(output_path)
+        for fname in os.listdir(parent):
+            if fname.startswith(base_name) and fname != base_name:
+                alt_path = os.path.join(parent, fname)
+                if os.path.getsize(alt_path) > 100000:
+                    print(f"[Transcode] Remuxing {alt_path} to {output_path}...")
+                    remux_cmd = [
+                        "ffmpeg", "-y", "-i", alt_path,
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+                        "-c:a", "aac", "-b:a", "192k",
+                        output_path
+                    ]
+                    subprocess.run(remux_cmd, capture_output=True)
+                    if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
+                        try:
+                            os.remove(alt_path)
+                        except Exception:
+                            pass
+                        print(f"[SUCCESS] Harvested & Transcoded direct clip: {output_path}")
+                        return output_path
+
+        print(f"[ERROR] Direct harvest failed for query: '{search_query}'")
+        return None
 
 if __name__ == "__main__":
     harvester = StreamHarvester()

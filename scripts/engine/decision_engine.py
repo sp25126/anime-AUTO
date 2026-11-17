@@ -45,6 +45,36 @@ class MultiHorizonDecisionEngine:
         self.anilist_url = "https://graphql.anilist.co"
         self.session = cffi_requests.Session(impersonate="chrome131")
 
+    def fetch_trending_anime_pool(self, min_popularity: int = 20000) -> List[Dict]:
+        """
+        Fetches top trending mainstream anime from AniList GraphQL, 
+        filtered for Japanese TV anime with high community popularity and viral velocity.
+        """
+        query = '''
+        query {
+          Page(page: 1, perPage: 40) {
+            media(sort: TRENDING_DESC, type: ANIME, countryOfOrigin: "JP", format_in: [TV, TV_SHORT, MOVIE]) {
+              id
+              title { romaji english }
+              genres
+              popularity
+              trending
+              averageScore
+            }
+          }
+        }
+        '''
+        try:
+            resp = self.session.post(self.anilist_url, json={'query': query}, timeout=10)
+            if resp.status_code == 200:
+                media_list = resp.json().get('data', {}).get('Page', {}).get('media', [])
+                # Filter for mainstream popularity so obscure releases are excluded
+                valid = [m for m in media_list if (m.get('popularity') or 0) >= min_popularity or (m.get('trending') or 0) >= 30]
+                return valid if valid else media_list
+        except Exception as e:
+            print(f"[ERROR] GraphQL Trending Fetch Failed: {str(e)}")
+        return []
+
     def fetch_daily_airing_schedule(self) -> List[Dict]:
         """Ingests daily broadcasting schedule via AniList GraphQL."""
         query = '''
@@ -59,6 +89,7 @@ class MultiHorizonDecisionEngine:
                 genres
                 popularity
                 trending
+                countryOfOrigin
               }
             }
           }
@@ -67,7 +98,10 @@ class MultiHorizonDecisionEngine:
         try:
             resp = self.session.post(self.anilist_url, json={'query': query}, timeout=10)
             if resp.status_code == 200:
-                return resp.json().get('data', {}).get('Page', {}).get('airingSchedules', [])
+                schedules = resp.json().get('data', {}).get('Page', {}).get('airingSchedules', [])
+                # Filter out non-Japanese obscure donghua
+                jp_schedules = [s for s in schedules if s.get('media', {}).get('countryOfOrigin') == 'JP' and (s.get('media', {}).get('popularity') or 0) > 10000]
+                return jp_schedules if jp_schedules else schedules
         except Exception as e:
             print(f"[ERROR] GraphQL Fetch Failed: {str(e)}")
         return []

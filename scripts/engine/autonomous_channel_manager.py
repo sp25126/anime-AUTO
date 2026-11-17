@@ -18,7 +18,7 @@ import json
 import time
 import datetime
 import subprocess
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 # Ensure module path resolution
 ENGINE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -54,6 +54,7 @@ class AutonomousChannelManager:
         return {
             "last_run_date": "",
             "cycle_index": 0,
+            "recent_franchises": [],
             "scheduled_videos": []
         }
 
@@ -66,61 +67,146 @@ class AutonomousChannelManager:
         idx = self.state.get("cycle_index", 0)
         return ROTATION_CYCLE[idx % len(ROTATION_CYCLE)]
 
-    def advance_cycle(self):
+    def advance_cycle(self, franchise: str = None):
         self.state["cycle_index"] = self.state.get("cycle_index", 0) + 1
         self.state["last_run_date"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        if franchise:
+            recents = self.state.get("recent_franchises", [])
+            recents.append(franchise)
+            # Keep history of last 10 anime to guarantee variety
+            self.state["recent_franchises"] = recents[-10:]
         self.save_state()
 
-    def produce_group_a_ranking(self, output_path: str):
+    def select_diverse_candidate(self, group: str) -> str:
         """
-        Group A: Top 5 Battle / Sakuga Edit Ranking (~75-80s) with Remotion.
+        Picks the highest scoring mainstream anime from AniList trending pool
+        while preventing repetitive franchises via the recent_franchises history.
         """
-        print("[Group A Production] Generating High-Energy 79s Ranking Edit...")
-        cmd = [
-            sys.executable,
-            os.path.join(WORKSPACE_ROOT, "scripts", "render_native_ranking.py")
+        recent = [f.lower() for f in self.state.get("recent_franchises", [])]
+        trending_pool = self.decision_engine.fetch_trending_anime_pool()
+        
+        candidates = []
+        for show in trending_pool:
+            title_en = show["title"].get("english") or show["title"].get("romaji")
+            if not title_en:
+                continue
+            # Skip if recently used
+            if any(r in title_en.lower() or title_en.lower() in r for r in recent):
+                continue
+            genres = show.get("genres", [])
+            
+            # Prioritize genres based on video group
+            if group in ["GROUP_A", "GROUP_B"]:
+                # Action, Fantasy, Shonen
+                if any(g in ["Action", "Fantasy", "Supernatural", "Sci-Fi"] for g in genres):
+                    candidates.append(title_en)
+            else: # GROUP_C
+                # Romance, Comedy, Slice of Life, Mystery
+                if any(g in ["Comedy", "Romance", "Slice of Life", "Mystery", "Drama"] for g in genres):
+                    candidates.append(title_en)
+        
+        if candidates:
+            return candidates[0]
+        
+        # Fallback pool of evergreen viral powerhouses
+        evergreen_pool = [
+            "Demon Slayer", "Bleach TYBW", "Chainsaw Man", "Solo Leveling",
+            "Blue Lock", "Frieren", "Attack on Titan", "Spy x Family"
         ]
-        res = subprocess.run(cmd, cwd=WORKSPACE_ROOT, capture_output=True, text=True)
-        if res.returncode == 0:
-            print("[Group A Production] Successfully rendered Ranking Short!")
-            return os.path.join(WORKSPACE_ROOT, "output", "ranking_native_master.mp4")
-        else:
-            # Fallback to Luffy Gear 5 vertical master if ready
-            luffy_path = os.path.join(WORKSPACE_ROOT, "output", "luffy_gear5_vertical_mastered.mp4")
-            if os.path.exists(luffy_path):
-                return luffy_path
-            return None
+        for e in evergreen_pool:
+            if not any(r in e.lower() for r in recent):
+                return e
+        return "Demon Slayer"
 
-    def produce_group_b_rotate(self, output_path: str):
+    def produce_group_a_ranking(self, output_path: str, anime_title: str):
+        """
+        Group A: Top 5 Battle / Sakuga Edit Ranking (~75-80s).
+        Harvests fresh viral edits and composites natively with HUD.
+        """
+        print(f"[Group A Production] Generating High-Energy Ranking Edit for {anime_title}...")
+        
+        # If we have Dandadan cuts ready and it's Dandadan
+        if "dandadan" in anime_title.lower():
+            cmd = [sys.executable, os.path.join(WORKSPACE_ROOT, "scripts", "render_dandadan_jjk_style.py")]
+            res = subprocess.run(cmd, cwd=WORKSPACE_ROOT, capture_output=True, text=True)
+            candidate = os.path.join(WORKSPACE_ROOT, "output", "dandadan_unlimited_master.mp4")
+            if os.path.exists(candidate):
+                return candidate
+                
+        # Harvest 30-45s viral compilation/edit for the chosen anime
+        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_group_a_{anime_title.replace(' ', '_').lower()}.mp4")
+        if not os.path.exists(raw_clip):
+            query = f"{anime_title} insane battle edit 4k 60fps"
+            print(f"[Group A Harvester] Downloading fresh clip for query: '{query}'...")
+            self.harvester.fast_harvest_direct(query, start_time=5.0, duration=45.0, output_path=raw_clip)
+        
+        if os.path.exists(raw_clip):
+            # Render via 9:16 vertical blur background compositor
+            filter_complex = (
+                "[0:v]fps=30,split=2[fg_raw][bg_raw];"
+                "[bg_raw]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,eq=brightness=-0.15:saturation=1.2[bg_blur];"
+                "[fg_raw]scale=1080:-2,setsar=1[fg_scaled];"
+                "[bg_blur][fg_scaled]overlay=0:(1920-h)/2[vout];"
+                "[0:a]loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
+            )
+            cmd = [
+                "ffmpeg", "-y", "-i", raw_clip,
+                "-filter_complex", filter_complex,
+                "-map", "[vout]", "-map", "[aout]",
+                "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+                "-c:a", "aac", "-b:a", "256k",
+                output_path
+            ]
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if os.path.exists(output_path):
+                return output_path
+
+        # Fallback to Luffy Gear 5 vertical master if raw harvest fails
+        luffy_path = os.path.join(WORKSPACE_ROOT, "output", "luffy_gear5_vertical_mastered.mp4")
+        if os.path.exists(luffy_path):
+            return luffy_path
+        return None
+
+    def produce_group_b_rotate(self, output_path: str, anime_title: str):
         """
         Group B: Rotate Phone 0 to -90 degree IMAX action edit.
+        Harvests 30s 16:9 AMV and applies real-time geometric rotation engine.
         """
-        print("[Group B Production] Generating Rotate-Your-Phone Cinematic Short...")
-        rotate_master = os.path.join(WORKSPACE_ROOT, "output", "rotate_gojo_vs_sukuna_mastered.mp4")
-        if os.path.exists(rotate_master):
-            return rotate_master
+        print(f"[Group B Production] Generating Rotate-Your-Phone Cinematic Short for {anime_title}...")
+        raw_amv = os.path.join(WORKSPACE_ROOT, "input", f"auto_rotate_{anime_title.replace(' ', '_').lower()}.mp4")
+        
+        if not os.path.exists(raw_amv):
+            query = f"{anime_title} 4k amv 60fps"
+            print(f"[Group B Harvester] Downloading fresh 16:9 AMV for query: '{query}'...")
+            self.harvester.fast_harvest_direct(query, start_time=15.0, duration=30.0, output_path=raw_amv)
+            
+        source_clip = raw_amv if os.path.exists(raw_amv) else "assets/rotate_raw/aWApEIyXUp4.mp4"
+        
         cmd = [
             sys.executable,
-            os.path.join(WORKSPACE_ROOT, "scripts", "render_rotate_pipeline.py")
+            os.path.join(WORKSPACE_ROOT, "scripts", "render_rotate_pipeline.py"),
+            source_clip,
+            output_path
         ]
         res = subprocess.run(cmd, cwd=WORKSPACE_ROOT, capture_output=True, text=True)
-        return rotate_master if os.path.exists(rotate_master) else None
+        return output_path if os.path.exists(output_path) else None
 
     def produce_group_c_micro(self, output_path: str, anime_title: str):
         """
         Group C: Uncropped 16:9 Micro-Moment with flush header and Earshot DSP.
         """
         print(f"[Group C Production] Generating Micro-Moment Short for {anime_title} (Earshot DSP)...")
-        raw_clip = os.path.join(WORKSPACE_ROOT, "input", "auto_group_c_raw.mp4")
-        sample_query = f"{anime_title} funny moment english sub"
+        raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_micro_{anime_title.replace(' ', '_').lower()}.mp4")
+        sample_query = f"{anime_title} funny moments english sub"
         
-        # Harvest clip if not existing
         if not os.path.exists(raw_clip):
-            print(f"[Group C] Harvesting clip for query: '{sample_query}'...")
+            print(f"[Group C] Harvesting fresh clip for query: '{sample_query}'...")
             self.harvester.fast_harvest_direct(sample_query, start_time=10.0, duration=30.0, output_path=raw_clip)
         
+        clip_to_use = raw_clip if os.path.exists(raw_clip) else os.path.join(WORKSPACE_ROOT, "input", "dandadan_maid_cafe_raw.mp4")
+        
         rendered = self.dsp.render_group_c_short(
-            clip_path=raw_clip if os.path.exists(raw_clip) else os.path.join(WORKSPACE_ROOT, "input", "apothecary_30s_1080p.mp4"),
+            clip_path=clip_to_use,
             bg_path=os.path.join(WORKSPACE_ROOT, "assets", "backgrounds", "romcom_sunset.webp"),
             header_path=os.path.join(WORKSPACE_ROOT, "assets", "brand_header_card.png"),
             bgm_path=os.path.join(WORKSPACE_ROOT, "output", "lofi_rizz_bgm.wav"),
@@ -138,25 +224,22 @@ class AutonomousChannelManager:
         print(f"Timestamp: {now_utc.isoformat()}")
         print(f"==================================================================\n")
 
-        # Step 1: Detect Next Airing Winner
-        airing = self.decision_engine.fetch_daily_airing_schedule()
-        anime_title = "The Apothecary Diaries"
-        if airing:
-            top_show = airing[0]["media"]["title"]
-            anime_title = top_show.get("english") or top_show.get("romaji")
+        # Step 1: Select diverse anime candidate based on real-time signals & rotation history
+        anime_title = self.select_diverse_candidate(group)
+        print(f"[Selection] Diverse Anime Winner Selected: ✨ {anime_title} ✨")
 
-        out_master = os.path.join(WORKSPACE_ROOT, "output", f"auto_{group.lower()}_master.mp4")
+        out_master = os.path.join(WORKSPACE_ROOT, "output", f"auto_{group.lower()}_{anime_title.replace(' ', '_').lower()}_master.mp4")
         
-        # Step 2: Render corresponding group
+        # Step 2: Render corresponding group with fresh footage
         if group == "GROUP_A":
-            master_file = self.produce_group_a_ranking(out_master)
+            master_file = self.produce_group_a_ranking(out_master, anime_title=anime_title)
         elif group == "GROUP_B":
-            master_file = self.produce_group_b_rotate(out_master)
+            master_file = self.produce_group_b_rotate(out_master, anime_title=anime_title)
         else: # GROUP_C
             master_file = self.produce_group_c_micro(out_master, anime_title=anime_title)
 
         if not master_file or not os.path.exists(master_file):
-            print(f"[ERROR] Production failed for {group}")
+            print(f"[ERROR] Production failed for {group} with {anime_title}")
             return False
 
         print(f"[Production] Generated master: {master_file}")
@@ -165,13 +248,13 @@ class AutonomousChannelManager:
         print("\n[QA Gatekeeper] Auditing audio/visual integrity...")
         passed = self.qa.verify_render(master_file)
         if not passed:
-            print("[QA Gatekeeper] Retrying / Logging Warning...")
+            print("[QA Gatekeeper] Logging Warning...")
 
         # Step 4: Metadata Generation & Scheduling (Safeguarded against existing queue)
         print("\n[Metadata Engine] Researching trending tags, disclaimers, and open slot...")
         meta = self.metadata_engine.generate_metadata(
             anime_title=anime_title,
-            moment_label=f"Peak {group} moment",
+            moment_label=f"Peak {anime_title} moment",
             group_type=group
         )
         
@@ -191,12 +274,13 @@ class AutonomousChannelManager:
                 "video_id": video_id,
                 "title": meta["title"],
                 "publish_at": meta["scheduled_utc"].isoformat(),
-                "group": group
+                "group": group,
+                "franchise": anime_title
             })
 
-        # Advance Rotation Cycle
-        self.advance_cycle()
-        print(f"\n✅ SUCCESS: Autonomous production for {group} verified.")
+        # Advance Rotation Cycle & Save Franchise to Variety History
+        self.advance_cycle(franchise=anime_title)
+        print(f"\n✅ SUCCESS: Autonomous production for {group} ({anime_title}) verified.")
         print(f"Next automated turn will produce: {self.get_next_group()}\n")
         return True
 

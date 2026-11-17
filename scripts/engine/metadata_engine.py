@@ -84,15 +84,18 @@ class MetadataComplianceEngine:
             ]
             chosen_title = custom_hook if custom_hook else titles[0]
         elif group_type == "GROUP_B": # Rotate Phone
-            chosen_title = f"ROTATE YOUR PHONE for the Coldest {anime_title} Edit! 📱🔄⚡ #shorts #animeedit"
+            chosen_title = custom_hook if custom_hook else f"ROTATE YOUR PHONE for the Coldest {anime_title} Edit! 📱🔄⚡ #shorts #animeedit"
         else: # GROUP_C Micro-Moment
             titles = [
                 f"These two are hilarious 🤣 | {anime_title} #shorts #anime",
                 f"Bro really didn't hesitate 💀 | {anime_title} #shorts",
                 f"The way she looked at him is insane 😭 | {anime_title} #shorts",
-                f"Protect them at all costs 🥹 | {anime_title} #shorts"
+                f"Protect them at all costs 🥹 | {anime_title} #shorts",
+                f"He thought he was smooth 😭 | {anime_title} #shorts",
+                f"Her reaction is priceless 🤣 | {anime_title} #shorts"
             ]
-            chosen_title = custom_hook if custom_hook else titles[0]
+            import random
+            chosen_title = custom_hook if custom_hook else random.choice(titles)
 
         # 2. Viral Hashtags String for Description (boosted discovery)
         hashtags_block = " ".join(GLOBAL_VIRAL_MEGA_HASHTAGS)

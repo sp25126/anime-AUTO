@@ -1,24 +1,19 @@
 {
-  "last_run_date": "2026-11-17T06:13:17.687482+00:00",
-  "cycle_index": 4,
+  "last_run_date": "2026-11-17T06:49:02.646013+00:00",
+  "cycle_index": 1,
+  "recent_franchises": [
+    "Jujutsu Kaisen",
+    "Dandadan",
+    "One Piece",
+    "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!"
+  ],
   "scheduled_videos": [
     {
-      "video_id": "g42MNe58IgE",
-      "title": "These two are hilarious \ud83e\udd23 | Jueshi Zhan Hun 2 #shorts #anime",
+      "video_id": "Xs6XNooi6CU",
+      "title": "Top 5 GREATEST Hello, I am a Witch and my Crush Wants me to Make a Love Potion! Edits on YouTube! \ud83d\udd25\ud83d\udc80",
       "publish_at": "2026-11-21T14:00:00+00:00",
-      "group": "GROUP_C"
-    },
-    {
-      "video_id": "Wp5xTTe6dCE",
-      "title": "ROTATE YOUR PHONE for the Coldest Jueshi Zhan Hun 2 Edit! \ud83d\udcf1\ud83d\udd04\u26a1 #shorts #animeedit",
-      "publish_at": "2026-11-22T14:00:00+00:00",
-      "group": "GROUP_B"
-    },
-    {
-      "video_id": "J45Yvua388E",
-      "title": "These two are hilarious \ud83e\udd23 | Jueshi Zhan Hun 2 #shorts #anime",
-      "publish_at": "2026-11-23T14:00:00+00:00",
-      "group": "GROUP_C"
+      "group": "GROUP_A",
+      "franchise": "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!"
     }
   ]
 }
