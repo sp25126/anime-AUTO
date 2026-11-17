@@ -106,47 +106,51 @@ class StreamHarvester:
 
             # Clean previous outputs
             base_no_ext = os.path.splitext(output_path)[0]
-            for ext in [".mp4", ".webm", ".mkv", ".mp4.webm", ".mp4.mkv"]:
+            temp_full = base_no_ext + "_temp_full.mp4"
+            for ext in [".mp4", ".webm", ".mkv", ".mp4.webm", ".mp4.mkv", "_temp_full.mp4"]:
                 p = base_no_ext + ext
                 if os.path.exists(p):
                     try: os.remove(p)
                     except: pass
 
-            cmd = [
+            # Download full video cleanly with audio muxing to avoid DASH slice audio truncation
+            dl_cmd = [
                 sys.executable, "-m", "yt_dlp",
                 chosen["url"],
-                "--download-sections", f"*{effective_start:.1f}-{effective_end:.1f}",
-                "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]",
-                "-o", output_path,
-                "--force-keyframes-at-cuts",
+                "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
+                "-o", temp_full,
                 "--no-warnings"
             ]
-            res = subprocess.run(cmd, capture_output=True, text=True)
-            
-            # Verify file on disk
-            if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
-                print(f"[Harvester Gate] Successfully harvested: {output_path}")
-                return output_path
-                
-            # Check for alternative extensions
-            parent = os.path.dirname(output_path)
-            base_name = os.path.basename(output_path)
-            for fname in os.listdir(parent):
-                if fname.startswith(base_name) and fname != base_name:
-                    alt_path = os.path.join(parent, fname)
-                    if os.path.getsize(alt_path) > 100000:
-                        print(f"[Transcode] Remuxing {alt_path} to {output_path}...")
-                        remux_cmd = [
-                            "ffmpeg", "-y", "-i", alt_path,
-                            "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
-                            "-c:a", "aac", "-b:a", "192k",
-                            output_path
-                        ]
-                        subprocess.run(remux_cmd, capture_output=True)
-                        if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
-                            try: os.remove(alt_path)
-                            except: pass
-                            return output_path
+            subprocess.run(dl_cmd, capture_output=True)
+
+            # If yt-dlp appended an alternate extension
+            actual_dl = temp_full
+            if not os.path.exists(temp_full):
+                parent = os.path.dirname(output_path)
+                base_name = os.path.basename(temp_full)
+                for fname in os.listdir(parent):
+                    if fname.startswith(base_name.split(".")[0]):
+                        actual_dl = os.path.join(parent, fname)
+                        break
+
+            if os.path.exists(actual_dl) and os.path.getsize(actual_dl) > 100000:
+                # Slice cleanly with FFmpeg keeping synchronized video and audio
+                slice_cmd = [
+                    "ffmpeg", "-y",
+                    "-ss", str(effective_start),
+                    "-t", str(duration),
+                    "-i", actual_dl,
+                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+                    "-c:a", "aac", "-b:a", "256k",
+                    output_path
+                ]
+                subprocess.run(slice_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                try: os.remove(actual_dl)
+                except: pass
+
+                if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
+                    print(f"[Harvester Gate] Successfully harvested with synced audio: {output_path}")
+                    return output_path
 
         print(f"[Harvester Gate] Could not harvest verified anime clip for {anime_title}")
         return None

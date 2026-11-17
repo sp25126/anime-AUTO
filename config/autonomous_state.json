@@ -1,5 +1,5 @@
 {
-  "last_run_date": "2026-11-17T08:21:45.777800+00:00",
+  "last_run_date": "2026-11-17T09:04:13.979527+00:00",
   "cycle_index": 4,
   "recent_franchises": [
     "Jujutsu Kaisen",
@@ -9,7 +9,8 @@
     "Overgeared",
     "Trending Phonk: Slava Funk / Montagem",
     "Accidental Rizz & Flustered Encounters",
-    "Coldest 1,000,000+ Aura Walks in Anime"
+    "Coldest 1,000,000+ Aura Walks in Anime",
+    "Hardest Anime Beat Drops & Speed Ramps"
   ],
   "scheduled_videos": [
     {
@@ -27,23 +28,24 @@
       "franchise": "Overgeared"
     },
     {
-      "video_id": "91NRXeUzUzw",
-      "title": "ROTATE YOUR PHONE for the Hardest Phonk Battle Edit! \ud83d\udcf1\ud83d\udd04\u26a1 #shorts #animeedit",
+      "video_id": "O4_lwDerHTI",
+      "title": "ROTATE YOUR PHONE for Chills! (Memory Reboot Peak Cinema) \ud83d\udcf1\ud83d\udd04\u2728 #shorts #animeedit",
       "publish_at": "2026-11-22T14:00:00+00:00",
       "group": "GROUP_B",
-      "theme": "Trending Phonk: Slava Funk / Montagem"
+      "theme": "Trending Audio: Timeless Guitar / Memory Reboot"
     },
     {
-      "video_id": "TfVVXkZC8wk",
-      "title": "Top 5 COLDEST Anime Aura Walks That Broke The Internet! \ud83d\udc80\ud83e\udd76 #shorts #anime",
+      "video_id": "Yqa8DbPCiTA",
+      "title": "Top 5 HARDEST Anime Beat Drops on TikTok & YouTube! \ud83d\udd25\ud83d\udd0a #shorts #animeedit",
       "publish_at": "2026-11-23T14:00:00+00:00",
       "group": "GROUP_A",
-      "theme": "Coldest 1,000,000+ Aura Walks in Anime"
+      "theme": "Hardest Anime Beat Drops & Speed Ramps"
     }
   ],
   "recent_themes": [
     "rotate_slava_phonk",
     "moment_accidental_rizz",
-    "ranking_coldest_aura"
+    "ranking_coldest_aura",
+    "ranking_hardest_beat_drops"
   ]
 }
