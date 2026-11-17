@@ -70,32 +70,45 @@ class MetadataComplianceEngine:
         anime_title: str,
         moment_label: str,
         group_type: str = "GROUP_C",
-        custom_hook: str = ""
+        custom_hook: str = "",
+        clip_source_title: str = ""
     ) -> Dict[str, any]:
         """
         Constructs high-CTR curiosity titles, mega-trend hashtags, tags, and takedown disclaimers.
+        If clip_source_title is provided, uses context clues (e.g. dub, fight, hilarious, rage)
+        to make sure the title accurately describes the video action.
         """
         # 1. High-CTR Title Generation
-        if group_type == "GROUP_A": # Edit Ranking
+        if custom_hook:
+            chosen_title = custom_hook
+        elif group_type == "GROUP_A": # Edit Ranking
             titles = [
                 f"Top 5 GREATEST {anime_title} Edits on YouTube! 🔥💀 #shorts #anime",
                 f"Top 5 Coldest {anime_title} Moments That Broke The Internet! 🥶⚡ #shorts",
                 f"Ranking The Most Insane {anime_title} Sakuga Moments! 👑 #shorts #animeedit"
             ]
-            chosen_title = custom_hook if custom_hook else titles[0]
+            chosen_title = titles[0]
         elif group_type == "GROUP_B": # Rotate Phone
-            chosen_title = custom_hook if custom_hook else f"ROTATE YOUR PHONE for the Coldest {anime_title} Edit! 📱🔄⚡ #shorts #animeedit"
+            chosen_title = f"ROTATE YOUR PHONE for the Coldest {anime_title} Edit! 📱🔄⚡ #shorts #animeedit"
         else: # GROUP_C Micro-Moment
-            titles = [
-                f"These two are hilarious 🤣 | {anime_title} #shorts #anime",
-                f"Bro really didn't hesitate 💀 | {anime_title} #shorts",
-                f"The way she looked at him is insane 😭 | {anime_title} #shorts",
-                f"Protect them at all costs 🥹 | {anime_title} #shorts",
-                f"He thought he was smooth 😭 | {anime_title} #shorts",
-                f"Her reaction is priceless 🤣 | {anime_title} #shorts"
-            ]
-            import random
-            chosen_title = custom_hook if custom_hook else random.choice(titles)
+            src_lower = clip_source_title.lower() if clip_source_title else ""
+            if "dub" in src_lower or "unhinged" in src_lower:
+                chosen_title = f"The {anime_title} Dub is Actually Unhinged 😭💀 | {anime_title} #shorts"
+            elif "flustered" in src_lower or "blush" in src_lower or "rizz" in src_lower:
+                chosen_title = f"Bro Rizzed Her Without Even Realizing 😭💀 | {anime_title} #shorts"
+            elif "fight" in src_lower or "beatdown" in src_lower:
+                chosen_title = f"Bro Really Didn't Hesitate For A Second 💀⚡ | {anime_title} #shorts"
+            elif "cute" in src_lower or "wholesome" in src_lower:
+                chosen_title = f"Protect Them At All Costs 🥹 | {anime_title} #shorts"
+            else:
+                titles = [
+                    f"These two are hilarious 🤣 | {anime_title} #shorts #anime",
+                    f"Bro really didn't hesitate 💀 | {anime_title} #shorts",
+                    f"The way they reacted is insane 😭 | {anime_title} #shorts",
+                    f"He thought he was slick 😭 | {anime_title} #shorts"
+                ]
+                import random
+                chosen_title = random.choice(titles)
 
         # 2. Viral Hashtags String for Description (boosted discovery)
         hashtags_block = " ".join(GLOBAL_VIRAL_MEGA_HASHTAGS)
