@@ -121,7 +121,6 @@ class MetadataComplianceEngine:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 FEATURED ANIME:
 • Title: {anime_title}
-• Production Category: {group_type}
 • Channel: @animefandom0_0
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
