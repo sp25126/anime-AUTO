@@ -28,7 +28,7 @@ sys.path.append(ENGINE_DIR)
 
 from omni_radar import OmniPlatformTrendRadar
 from stream_harvester import StreamHarvester
-from group_a_harvester import MultiPlatformGroupAHarvester
+from group_a_harvester import MasterAnimeGroupAHarvester
 from dsp_engine import ForensicDSPEngine
 from qa_scheduler import QAGatekeeper, YouTubeScheduler
 from metadata_engine import MetadataComplianceEngine
@@ -41,7 +41,7 @@ class AutonomousChannelManager:
     def __init__(self):
         self.radar = OmniPlatformTrendRadar()
         self.harvester = StreamHarvester()
-        self.group_a_harvester = MultiPlatformGroupAHarvester(WORKSPACE_ROOT)
+        self.group_a_harvester = MasterAnimeGroupAHarvester(WORKSPACE_ROOT)
         self.dsp = ForensicDSPEngine()
         self.qa = QAGatekeeper()
         self.metadata_engine = MetadataComplianceEngine(youtube_creds_path=os.path.join(WORKSPACE_ROOT, "config", "youtube_token.json"))
@@ -140,7 +140,7 @@ class AutonomousChannelManager:
 
         # 1. Harvest multi-clip pack across TikTok, Instagram, and YouTube
         stitched_master = self.group_a_harvester.harvest_ranking_pack(
-            anime_title=theme_label,
+            theme_title=theme_label,
             target_clips_count=5
         )
 
