@@ -17,13 +17,15 @@ WORKSPACE_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = WORKSPACE_ROOT / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-def render_group_c_short(input_clip: str, output_path: str, creator_tag: str, anime_name: str, max_dur: float = 28.0) -> str:
+def render_group_c_short(input_clip: str, output_path: str, creator_tag: str, anime_name: str, max_dur: float = 57.5) -> str:
     print(f"\n[Group C Renderer] Processing: {Path(input_clip).name} -> {Path(output_path).name}")
     probe_cmd = ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', str(input_clip)]
     d = json.loads(subprocess.check_output(probe_cmd).decode('utf-8'))
     tot = float(d['format']['duration'])
+    
+    # User directive: Show the full scene or as much as possible, leaving 2.0s for the branded attribution outro card (YouTube Shorts limit = 60s)
     trim_dur = min(tot, max_dur)
-    print(f"  Duration: {tot:.2f}s | Trimming to: {trim_dur:.2f}s")
+    print(f"  Raw Duration: {tot:.2f}s | Preserving Full Scene: {trim_dur:.2f}s (+ 2.0s outro card)")
     
     # 1. 16:9 uncropped over dynamic blurred background + EBU R128 audio (-14.0 LUFS, -1.5 TP)
     temp_base = output_path.replace('.mp4', '_base.mp4')
@@ -152,7 +154,7 @@ def batch_render_c3_to_c7():
             output_path=out,
             creator_tag=target["creator"],
             anime_name=target["anime"],
-            max_dur=25.0
+            max_dur=57.5
         )
         rendered.append((target, res))
     print(f"\n🎉 Successfully rendered {len(rendered)} Group C masters!")

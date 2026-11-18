@@ -4,12 +4,13 @@ import json
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
 
-def render_group_c_short(input_clip, output_path, creator_tag, anime_name):
+def render_group_c_short(input_clip, output_path, creator_tag, anime_name, max_dur=57.5):
     # 1. Probe duration
     probe_cmd = ['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'json', input_clip]
     d = json.loads(subprocess.check_output(probe_cmd).decode('utf-8'))
     tot = float(d['format']['duration'])
-    trim_dur = min(tot, 28.0)
+    trim_dur = min(tot, max_dur)
+    print(f"  Raw Duration: {tot:.2f}s | Full Scene Preserved: {trim_dur:.2f}s (+ 2.0s outro)")
     
     # 2. Render 16:9 uncropped over dynamic blurred background + EBU R128 audio
     temp_base = output_path.replace('.mp4', '_base.mp4')
