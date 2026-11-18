@@ -19,11 +19,13 @@ config/client_secrets.json
 .env.local
 *.log
 
-# Video binaries (heavy files)
+# Video binaries (heavy files) & QA Proofs
 output/*.mp4
 output/*.wav
 output/*.jpg
 output/*.png
+output/*.txt
+output/qa_proofs/
 public/clips/*.mp4
 *.mp4
 
