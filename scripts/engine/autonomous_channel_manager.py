@@ -327,11 +327,12 @@ class AutonomousChannelManager:
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Master Channel Autonomous Daemon")
-    parser.add_argument("--group", "-g", type=str, default="GROUP_A", help="Force specific group (GROUP_A, GROUP_B, GROUP_C)")
+    parser.add_argument("--group", "-g", type=str, default=None, help="Force specific group (GROUP_A, GROUP_B, GROUP_C) or omit to auto-cycle")
     parser.add_argument("--local", "-l", action="store_true", default=True, help="Run local production only without uploading")
     parser.add_argument("--upload", "-u", action="store_true", help="Enable live YouTube scheduling/upload")
     args = parser.parse_args()
 
     is_local = not args.upload
     manager = AutonomousChannelManager()
-    manager.run_zero_touch_cycle(force_group=args.group.upper(), local_only=is_local)
+    force_grp = args.group.upper() if args.group else None
+    manager.run_zero_touch_cycle(force_group=force_grp, local_only=is_local)

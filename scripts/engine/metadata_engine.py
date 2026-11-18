@@ -29,7 +29,7 @@ class MetadataComplianceEngine:
     def get_next_available_release_slot(self) -> datetime.datetime:
         """
         Scans YouTube Studio's scheduled videos, finds the latest scheduled release,
-        and schedules the new video for the NEXT DAY at 14:00:00Z (7:30 PM IST).
+        and schedules the new video for the NEXT DAY at 02:00:00Z (7:30 AM IST, between 7:00 AM - 8:00 AM).
         Guarantees zero overlap or collision with existing scheduled videos!
         """
         try:
@@ -37,7 +37,7 @@ class MetadataComplianceEngine:
             youtube = build("youtube", "v3", credentials=creds)
             
             uploads_id = youtube.channels().list(part="contentDetails", mine=True).execute()['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-            p_res = youtube.playlistItems().list(part="contentDetails", playlistId=uploads_id, maxResults=20).execute()
+            p_res = youtube.playlistItems().list(part="contentDetails", playlistId=uploads_id, maxResults=50).execute()
             video_ids = [it['contentDetails']['videoId'] for it in p_res.get('items', [])]
             
             latest_scheduled = None
@@ -46,24 +46,24 @@ class MetadataComplianceEngine:
                 for it in v_res.get('items', []):
                     pub_at = it['status'].get('publishAt')
                     if pub_at:
-                        # Parse ISO 8601 (e.g., 2026-11-20T14:00:00Z)
+                        # Parse ISO 8601 (e.g., 2026-11-20T02:00:00Z)
                         dt = datetime.datetime.fromisoformat(pub_at.replace("Z", "+00:00"))
                         if latest_scheduled is None or dt > latest_scheduled:
                             latest_scheduled = dt
 
             now_utc = datetime.datetime.now(datetime.timezone.utc)
             if latest_scheduled and latest_scheduled > now_utc:
-                # Add exactly 1 day to the latest scheduled video at 14:00 UTC (7:30 PM IST)
-                next_slot = (latest_scheduled + datetime.timedelta(days=1)).replace(hour=14, minute=0, second=0, microsecond=0)
+                # Add exactly 1 day to the latest scheduled video at 02:00 UTC (7:30 AM IST)
+                next_slot = (latest_scheduled + datetime.timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
             else:
-                # If no scheduled queue, schedule for tomorrow at 14:00 UTC
-                next_slot = (now_utc + datetime.timedelta(days=1)).replace(hour=14, minute=0, second=0, microsecond=0)
+                # If no scheduled queue, schedule for tomorrow at 02:00 UTC (7:30 AM IST)
+                next_slot = (now_utc + datetime.timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
 
             return next_slot
         except Exception as e:
             print(f"[MetadataEngine] Error fetching schedule queue: {e}. Fallback to Nov 21.")
             # Fallback safe date
-            return datetime.datetime(2026, 11, 21, 14, 0, 0, tzinfo=datetime.timezone.utc)
+            return datetime.datetime(2026, 11, 21, 2, 0, 0, tzinfo=datetime.timezone.utc)
 
     def generate_metadata(
         self,

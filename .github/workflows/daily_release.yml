@@ -2,7 +2,9 @@ name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
 
 on:
   schedule:
-    # Runs everyday at 02:00 UTC (7:30 AM IST)
+    # Runs everyday at 2:00 AM IST (20:30 UTC)
+    - cron: '30 20 * * *'
+    # Also fallback trigger at 02:00 UTC
     - cron: '0 2 * * *'
   push:
     branches:
@@ -62,9 +64,9 @@ jobs:
         run: |
           python -u scripts/engine/batch_schedule_existing.py || true
 
-      - name: Run Master Autonomous Pipeline
+      - name: Run Master Autonomous Pipeline & Schedule (Release window: 7:00 AM - 8:00 AM IST)
         run: |
-          python -u scripts/engine/autonomous_channel_manager.py
+          python -u scripts/engine/autonomous_channel_manager.py --upload
 
       - name: Persist Cycle State Back to Repo
         if: always()
