@@ -748,6 +748,46 @@
       "hook_formula": "When Two Monsters Acknowledge Each Other Without A Word \ud83e\udd1d | [Anime]",
       "duration": "25-40s",
       "audio": "Wind howling with subtle ambient theme swell"
+    },
+    "moment_cold_indifference_walkaway": {
+      "title": "Cold Indifference Walkaway / Utter Disregard",
+      "type": "single_peak_anime_moment",
+      "description": "A fighter walks away while the opponent prepares their ultimate move, completely unbothered because the fight is already over.",
+      "hook_formula": "Bro Walked Away Before The Attack Even Landed \ud83d\udc80 | [Anime]",
+      "duration": "25-40s",
+      "audio": "Crisp footsteps into explosive explosion echo"
+    },
+    "moment_villain_apologizes_in_terror": {
+      "title": "Arrogant Villain Apologizes In Pure Terror",
+      "type": "single_peak_anime_moment",
+      "description": "The antagonist transitions instantly from sadistic laughter to uncontrollable shaking and begging as true power awakens.",
+      "hook_formula": "The Exact Second The Villain Realized He Was Cooked \ud83d\ude2d | [Anime]",
+      "duration": "30-45s",
+      "audio": "Stuttering vocal dialogue into heavy sub-bass drop"
+    },
+    "moment_one_finger_block_shock": {
+      "title": "The Effortless One-Finger Block Humiliation",
+      "type": "single_peak_anime_moment",
+      "description": "A supposedly world-ending blade or energy strike is stopped with a single index finger with zero recoil.",
+      "hook_formula": "He Stopped Their Strongest Attack With ONE FINGER \ud83d\ude31 | [Anime]",
+      "duration": "25-40s",
+      "audio": "Colossal buildup into high-pitched metallic ping and silence"
+    },
+    "moment_battle_iq_counter_trap": {
+      "title": "The 200 IQ Reverse Counter Trap",
+      "type": "single_peak_anime_moment",
+      "description": "The opponent thinks they cornered the protagonist, only to learn every move for the last 10 minutes was planned.",
+      "hook_formula": "Bro Calculated This 50 Moves Ahead \ud83e\udde0\u26a1 | [Anime]",
+      "duration": "35-50s",
+      "audio": "Chilling monologue pause into theme climax"
+    },
+    "moment_unhinged_english_dub_masterpiece": {
+      "title": "Unhinged / Out-of-Pocket English Dub Delivery",
+      "type": "single_peak_anime_moment",
+      "description": "Dub voice actors delivering hilariously unfiltered, out-of-pocket, or legendary unhinged lines.",
+      "hook_formula": "The English Dub Voice Actors Had ZERO Chill Here \ud83d\ude2d\ud83d\udc80 | [Anime]",
+      "duration": "20-35s",
+      "audio": "Loud expressive English dub voice acting and punchy comedic foley"
     }
   }
 }
