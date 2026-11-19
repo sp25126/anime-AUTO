@@ -1,6 +1,6 @@
 {
-  "last_run_date": "2026-11-17T09:04:13.979527+00:00",
-  "cycle_index": 4,
+  "last_run_date": "2026-11-19T09:52:19.983514+00:00",
+  "cycle_index": 5,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
@@ -10,7 +10,8 @@
     "Trending Phonk: Slava Funk / Montagem",
     "Accidental Rizz & Flustered Encounters",
     "Coldest 1,000,000+ Aura Walks in Anime",
-    "Hardest Anime Beat Drops & Speed Ramps"
+    "Hardest Anime Beat Drops & Speed Ramps",
+    "Insane Anime Transformations"
   ],
   "scheduled_videos": [
     {
@@ -33,12 +34,20 @@
       "publish_at": "2026-11-22T14:00:00+00:00",
       "group": "GROUP_B",
       "theme": "Trending Audio: Timeless Guitar / Memory Reboot"
+    },
+    {
+      "video_id": "p8ttiSOLc1k",
+      "title": "Top 5 Most CHILLING Anime Transformations! \u26a1\ud83d\udd25 #shorts #anime",
+      "publish_at": "2027-01-02T02:00:00+00:00",
+      "group": "GROUP_A",
+      "theme": "Insane Anime Transformations"
     }
   ],
   "recent_themes": [
     "rotate_slava_phonk",
     "moment_accidental_rizz",
     "ranking_coldest_aura",
-    "ranking_hardest_beat_drops"
+    "ranking_hardest_beat_drops",
+    "macro_transformations"
   ]
 }
