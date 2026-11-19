@@ -387,13 +387,14 @@ class MasterAnimeGroupAHarvester:
                 accent_color=dynamic_accent
             )
 
-            clip_dur = 20.0
-            # Safe start_sec calculation: ensure we NEVER seek past duration - clip_dur
-            if cand["duration"] > (clip_dur + 3.0):
-                # Seek slightly into the edit for the action/climax, but bounded
-                start_sec = max(0.0, min(5.0, (cand["duration"] - clip_dur) * 0.35))
-            else:
-                start_sec = 0.0
+            # Intelligently determine climax window without loops or premature climax cutoffs
+            from climax_detector import detect_climax_window
+            start_sec, clip_dur = detect_climax_window(
+                raw_clip=raw_full,
+                title=cand.get("title", ""),
+                anime=cand.get("anime", ""),
+                character=cand.get("character", "")
+            )
 
             # Dynamic blurred background + 16:9 uncropped + HUD + Anti-Copyright Audio Protection with TEMPO COMPENSATION
             filter_complex = (
@@ -404,9 +405,9 @@ class MasterAnimeGroupAHarvester:
                 f"[base_comp][1:v]overlay=0:0[vout];"
                 f"[0:a]aresample=48000,asetrate=48000*1.025,atempo=1/1.025,aresample=48000,apad,aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,loudnorm=I=-14:TP=-1.5:LRA=7[aout]"
             )
+            # ZERO stream looping: never repeat the first few seconds at the end!
             comp_cmd = [
                 "ffmpeg", "-y",
-                "-stream_loop", "1",
                 "-ss", f"{start_sec:.2f}", "-t", f"{clip_dur:.2f}",
                 "-i", raw_full,
                 "-i", hud_png,
