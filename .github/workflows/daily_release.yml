@@ -2,10 +2,17 @@ name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
 
 "on":
   schedule:
-    # Run 1: 1:00 PM IST = 07:30 UTC
-    - cron: '30 7 * * *'
-    # Run 2: 9:00 PM IST = 15:30 UTC
-    - cron: '30 15 * * *'
+    # ── 1:00 PM IST Slot (Target: 13:00 IST = 07:30 UTC) ──
+    - cron: '30 7 * * *'   # 1:00 PM IST (Primary)
+    - cron: '45 7 * * *'   # 1:15 PM IST (Retry 1)
+    - cron: '0 8 * * *'    # 1:30 PM IST (Retry 2)
+    - cron: '30 8 * * *'   # 2:00 PM IST (Retry 3 / Catch-up)
+
+    # ── 9:00 PM IST Slot (Target: 21:00 IST = 15:30 UTC) ──
+    - cron: '30 15 * * *'  # 9:00 PM IST (Primary)
+    - cron: '45 15 * * *'  # 9:15 PM IST (Retry 1)
+    - cron: '0 16 * * *'   # 9:30 PM IST (Retry 2)
+    - cron: '30 16 * * *'  # 10:00 PM IST (Retry 3 / Catch-up)
   push:
     branches:
       - main
@@ -15,6 +22,7 @@ name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   produce-and-schedule:
@@ -26,31 +34,63 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node.js 20 (For Remotion React Engine)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Set up Python 3.11 (For Autonomous Pipeline & DSP)
+      - name: Set up Python 3.11 (For Jitter Guard & Production)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
+      - name: "Determine Active Slot & Check If Already Executed"
+        id: jitter_guard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          # Calculate current IST hour (UTC + 5.5 hours)
+          CURRENT_HOUR_UTC=$(date -u +%H)
+          CURRENT_MIN_UTC=$(date -u +%M)
+          
+          # Convert UTC to total minutes of the day and shift to IST (+330 mins)
+          TOTAL_MINS=$(( (10#$CURRENT_HOUR_UTC * 60) + 10#$CURRENT_MIN_UTC + 330 ))
+          IST_MINS=$(( TOTAL_MINS % 1440 ))
+          IST_HOUR=$(( IST_MINS / 60 ))
+          
+          echo "Current IST Hour: $IST_HOUR"
+          
+          # Assign slot window
+          if [ "$IST_HOUR" -ge 12 ] && [ "$IST_HOUR" -lt 17 ]; then
+            SLOT="1PM"
+          else
+            SLOT="9PM"
+          fi
+          
+          echo "Evaluated Slot: $SLOT"
+          python scripts/engine/check_scheduled_run.py "$SLOT"
+
+      - name: Set up Node.js 20 (For Remotion React Engine)
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install System Dependencies & FFmpeg
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update || true
           sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 chromium-browser || sudo apt-get install -y ffmpeg
 
       - name: Install NPM & Remotion Dependencies
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           npm ci || npm install
 
       - name: Install Python Dependencies
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           pip install -r requirements.txt
 
       - name: Restore YouTube Token Secret
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p config
           if [ -n "${{ secrets.YOUTUBE_TOKEN_JSON }}" ]; then
@@ -61,15 +101,17 @@ jobs:
           fi
 
       - name: Schedule All Existing Master Outputs
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           python -u scripts/engine/batch_schedule_existing.py || true
 
       - name: "Run Master Autonomous Pipeline and Schedule (Release window 7:00 AM - 8:00 AM IST)"
+        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           python -u scripts/engine/autonomous_channel_manager.py --upload
 
       - name: Persist Cycle State Back to Repo
-        if: always()
+        if: always() && (steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch')
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
