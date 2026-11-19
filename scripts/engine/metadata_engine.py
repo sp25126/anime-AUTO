@@ -40,6 +40,7 @@ class MetadataComplianceEngine:
             p_res = youtube.playlistItems().list(part="contentDetails", playlistId=uploads_id, maxResults=50).execute()
             video_ids = [it['contentDetails']['videoId'] for it in p_res.get('items', [])]
             
+            scheduled_dates = set()
             latest_scheduled = None
             if video_ids:
                 v_res = youtube.videos().list(part="status", id=",".join(video_ids)).execute()
@@ -48,15 +49,27 @@ class MetadataComplianceEngine:
                     if pub_at:
                         # Parse ISO 8601 (e.g., 2026-11-20T02:00:00Z)
                         dt = datetime.datetime.fromisoformat(pub_at.replace("Z", "+00:00"))
+                        scheduled_dates.add(dt.date())
                         if latest_scheduled is None or dt > latest_scheduled:
                             latest_scheduled = dt
 
             now_utc = datetime.datetime.now(datetime.timezone.utc)
-            if latest_scheduled and latest_scheduled > now_utc:
-                # Add exactly 1 day to the latest scheduled video at 02:00 UTC (7:30 AM IST)
+            
+            # First priority: check for any vacant / missing slot between tomorrow and latest_scheduled
+            curr = (now_utc + datetime.timedelta(days=1)).date()
+            if latest_scheduled:
+                end_date = latest_scheduled.date()
+                while curr <= end_date:
+                    if curr not in scheduled_dates:
+                        # Found a vacant slot to backfill!
+                        vacant_slot = datetime.datetime(curr.year, curr.month, curr.day, 2, 0, 0, tzinfo=datetime.timezone.utc)
+                        print(f"[MetadataEngine] Backfilling vacant scheduled slot: {vacant_slot.isoformat()} (7:30 AM IST)")
+                        return vacant_slot
+                    curr += datetime.timedelta(days=1)
+                
+                # If no gaps, append to the end of queue
                 next_slot = (latest_scheduled + datetime.timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
             else:
-                # If no scheduled queue, schedule for tomorrow at 02:00 UTC (7:30 AM IST)
                 next_slot = (now_utc + datetime.timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
 
             return next_slot
