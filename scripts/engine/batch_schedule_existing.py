@@ -9,7 +9,7 @@ import google.oauth2.credentials
 from googleapiclient.http import MediaFileUpload
 
 # Inject script engine directory to import viral_growth_booster
-sys.path.insert(0, str(Path(__file__).resolve().parent / "engine"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from viral_growth_booster import ViralGrowthBoosterWorkflow
 
 CONFIG_DIR = Path("config")
