@@ -6,3 +6,5 @@ google-auth-oauthlib
 opencv-python-headless
 numpy
 yt-dlp
+
+Pillow
