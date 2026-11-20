@@ -1,6 +1,6 @@
 {
-  "last_run_date": "2026-11-19T09:52:19.983514+00:00",
-  "cycle_index": 5,
+  "last_run_date": "2026-11-20T06:03:09.562817+00:00",
+  "cycle_index": 7,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
@@ -11,7 +11,9 @@
     "Accidental Rizz & Flustered Encounters",
     "Coldest 1,000,000+ Aura Walks in Anime",
     "Hardest Anime Beat Drops & Speed Ramps",
-    "Insane Anime Transformations"
+    "Insane Anime Transformations",
+    "Brutal Reality Checks & Emotional Violations",
+    "Trending Audio: Timeless Guitar Remix / Memory Reboot"
   ],
   "scheduled_videos": [
     {
@@ -41,6 +43,13 @@
       "publish_at": "2027-01-02T02:00:00+00:00",
       "group": "GROUP_A",
       "theme": "Insane Anime Transformations"
+    },
+    {
+      "video_id": "W0lHN9KBQS0",
+      "title": "He Really Didn't Hesitate For A Second \ud83d\udc80\ud83d\ude02 #shorts #anime",
+      "publish_at": "2027-01-04T02:00:00+00:00",
+      "group": "GROUP_C",
+      "theme": "Brutal Reality Checks & Emotional Violations"
     }
   ],
   "recent_themes": [
@@ -48,6 +57,8 @@
     "moment_accidental_rizz",
     "ranking_coldest_aura",
     "ranking_hardest_beat_drops",
-    "macro_transformations"
+    "macro_transformations",
+    "moment_brutal_reality_check",
+    "rotate_timeless_guitar"
   ]
 }
