@@ -335,4 +335,7 @@ if __name__ == "__main__":
     is_local = not args.upload
     manager = AutonomousChannelManager()
     force_grp = args.group.upper() if args.group else None
-    manager.run_zero_touch_cycle(force_group=force_grp, local_only=is_local)
+    success = manager.run_zero_touch_cycle(force_group=force_grp, local_only=is_local)
+    if not success:
+        print("[FATAL] Autonomous production cycle failed.")
+        sys.exit(1)
