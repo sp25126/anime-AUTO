@@ -1,6 +1,6 @@
 {
-  "last_run_date": "2026-11-22T06:48:21.363308+00:00",
-  "cycle_index": 8,
+  "last_run_date": "2026-11-23T08:34:30.482621+00:00",
+  "cycle_index": 9,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
@@ -14,7 +14,8 @@
     "Insane Anime Transformations",
     "Brutal Reality Checks & Emotional Violations",
     "Trending Audio: Timeless Guitar Remix / Memory Reboot",
-    "Pure Unhinged Comedy & Chaotic Banter"
+    "Pure Unhinged Comedy & Chaotic Banter",
+    "Bleach TYBW Bankai Clashes"
   ],
   "scheduled_videos": [
     {
@@ -58,6 +59,13 @@
       "publish_at": "2027-01-06T02:00:00+00:00",
       "group": "GROUP_C",
       "theme": "Pure Unhinged Comedy & Chaotic Banter"
+    },
+    {
+      "video_id": "WFQ_EIfPRUQ",
+      "title": "Top 5 Coldest Bleach TYBW Moments Ranked! \ud83d\udde1\ufe0f\u26a1 #shorts #bleach #anime",
+      "publish_at": "2027-01-07T02:00:00+00:00",
+      "group": "GROUP_A",
+      "theme": "Bleach TYBW Bankai Clashes"
     }
   ],
   "recent_themes": [
@@ -68,6 +76,7 @@
     "macro_transformations",
     "moment_brutal_reality_check",
     "rotate_timeless_guitar",
-    "moment_unhinged_comedy"
+    "moment_unhinged_comedy",
+    "micro_bleach"
   ]
 }
