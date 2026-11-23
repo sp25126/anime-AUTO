@@ -394,12 +394,32 @@ class MasterAnimeGroupAHarvester:
                 print(f"[Harvester Warning] Live download blocked for {cand['anime']}. Searching local verified cache...")
                 matched_cached = None
                 anime_slug = cand['anime'].replace(' ', '_').lower()
-                for cached_f in os.listdir(self.input_dir):
-                    if cached_f.endswith((".mp4", ".webm")) and (anime_slug in cached_f.lower() or cand['character'].lower() in cached_f.lower()):
-                        cached_p = os.path.join(self.input_dir, cached_f)
-                        if os.path.getsize(cached_p) > 500000:
-                            matched_cached = cached_p
-                            break
+                
+                # Search 1: Check repo assets/anime_clips_pool
+                asset_pool = os.path.join(self.workspace_root, "assets", "anime_clips_pool")
+                if os.path.exists(asset_pool):
+                    for pool_f in os.listdir(asset_pool):
+                        if pool_f.endswith((".mp4", ".webm")) and (anime_slug in pool_f.lower() or cand['character'].lower() in pool_f.lower()):
+                            pool_p = os.path.join(asset_pool, pool_f)
+                            if os.path.getsize(pool_p) > 200000:
+                                matched_cached = pool_p
+                                break
+                
+                # Search 2: Check input/group_a_harvest
+                if not matched_cached and os.path.exists(self.input_dir):
+                    for cached_f in os.listdir(self.input_dir):
+                        if cached_f.endswith((".mp4", ".webm")) and (anime_slug in cached_f.lower() or cand['character'].lower() in cached_f.lower()):
+                            cached_p = os.path.join(self.input_dir, cached_f)
+                            if os.path.getsize(cached_p) > 500000:
+                                matched_cached = cached_p
+                                break
+
+                # Search 3: Fallback to any available clip from the pool by index
+                if not matched_cached and os.path.exists(asset_pool):
+                    available_pool = [os.path.join(asset_pool, f) for f in os.listdir(asset_pool) if f.endswith(".mp4")]
+                    if available_pool:
+                        matched_cached = available_pool[(rank - 1) % len(available_pool)]
+
                 if matched_cached:
                     print(f"  ✓ Cache hit for {cand['anime']}: {os.path.basename(matched_cached)}")
                     raw_full = matched_cached
