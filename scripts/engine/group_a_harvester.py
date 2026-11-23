@@ -302,29 +302,39 @@ class MasterAnimeGroupAHarvester:
                 current_rank = target_clips_count - len(collected_candidates)
                 print(f"  • Scouting Rank #{current_rank}: {anime_name} ({char}) - '{ref.get('form', '')}'...")
 
-                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch8:{q}", "--dump-json", "--flat-playlist", "--no-warnings"]
-                res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
-                for line in res.stdout.strip().split("\n"):
-                    if not line: continue
-                    try:
-                        d = json.loads(line)
-                        vid_id = d.get("id")
-                        vid_title = d.get("title") or ""
-                        uploader = d.get("uploader") or d.get("channel") or "Unknown"
-                        dur = d.get("duration") or 0
-                        # Accept clips >= 10s; if clip is shorter than 20s, it will loop seamlessly to 20s
-                        if vid_id in seen_ids or not (10 <= dur <= 180): continue
-                        if not self.is_strictly_anime(vid_title, uploader): continue
-                        seen_ids.add(vid_id)
-                        collected_candidates.append({
-                            "id": vid_id, "title": vid_title, "anime": anime_name,
-                            "character": char, "form": ref.get("form", char),
-                            "uploader": uploader, "duration": dur,
-                            "url": f"https://www.youtube.com/watch?v={vid_id}"
-                        })
-                        print(f"    ✓ Found candidate for Rank #{current_rank}: {vid_title[:45]} ({dur}s)")
-                        break
-                    except: pass
+                # Search across TikTok, Instagram Reels, and YouTube Shorts syndications
+                scout_queries = [
+                    f"{q} tiktok edit",
+                    f"{q} instagram reels amv 4k",
+                    f"{q} amv 4k"
+                ]
+                candidate_found = False
+                for sq in scout_queries:
+                    if candidate_found: break
+                    cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch4:{sq}", "--dump-json", "--flat-playlist", "--no-warnings"]
+                    res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
+                    for line in res.stdout.strip().split("\n"):
+                        if not line: continue
+                        try:
+                            d = json.loads(line)
+                            vid_id = d.get("id")
+                            vid_title = d.get("title") or ""
+                            uploader = d.get("uploader") or d.get("channel") or "Unknown"
+                            dur = d.get("duration") or 0
+                            # Accept clips >= 10s
+                            if vid_id in seen_ids or not (10 <= dur <= 180): continue
+                            if not self.is_strictly_anime(vid_title, uploader): continue
+                            seen_ids.add(vid_id)
+                            collected_candidates.append({
+                                "id": vid_id, "title": vid_title, "anime": anime_name,
+                                "character": char, "form": ref.get("form", char),
+                                "uploader": uploader, "duration": dur,
+                                "url": f"https://www.youtube.com/watch?v={vid_id}"
+                            })
+                            print(f"    ✓ Found candidate for Rank #{current_rank}: {vid_title[:45]} ({dur}s)")
+                            candidate_found = True
+                            break
+                        except: pass
 
         print(f"[Master Anime Harvester] Harvested {len(collected_candidates)} verified 100% anime candidates.")
         prepared_clips = []
@@ -370,8 +380,31 @@ class MasterAnimeGroupAHarvester:
                 ]
                 subprocess.run(dl_cmd, capture_output=True)
 
+            # Check if yt-dlp produced an alternate extension or name
             if not os.path.exists(raw_full):
-                continue
+                base_no_ext = os.path.splitext(raw_full)[0]
+                for ext in [".webm", ".mkv", ".mp4.webm", ".mp4.mkv"]:
+                    alt_p = base_no_ext + ext
+                    if os.path.exists(alt_p) and os.path.getsize(alt_p) > 200000:
+                        raw_full = alt_p
+                        break
+
+            # Cloud Runner Fallback: If live web download was blocked, use pre-harvested clip for this anime
+            if not os.path.exists(raw_full) or os.path.getsize(raw_full) < 200000:
+                print(f"[Harvester Warning] Live download blocked for {cand['anime']}. Searching local verified cache...")
+                matched_cached = None
+                anime_slug = cand['anime'].replace(' ', '_').lower()
+                for cached_f in os.listdir(self.input_dir):
+                    if cached_f.endswith((".mp4", ".webm")) and (anime_slug in cached_f.lower() or cand['character'].lower() in cached_f.lower()):
+                        cached_p = os.path.join(self.input_dir, cached_f)
+                        if os.path.getsize(cached_p) > 500000:
+                            matched_cached = cached_p
+                            break
+                if matched_cached:
+                    print(f"  ✓ Cache hit for {cand['anime']}: {os.path.basename(matched_cached)}")
+                    raw_full = matched_cached
+                else:
+                    continue
 
             # Extract dynamic background accent color from the clip
             dynamic_accent = self.extract_clip_vibrant_accent(raw_full, seek_sec=3.0)

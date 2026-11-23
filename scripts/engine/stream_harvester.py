@@ -78,13 +78,24 @@ class StreamHarvester:
 
     def harvest_validated_clip(self, anime_title: str, search_queries: List[str], start_time: float, duration: float, output_path: str) -> Optional[str]:
         """
-        Tries queries in order, validates against cartoon pollution, 
-        and extracts the exact 1080p micro-clip.
+        Tries queries in order across multi-platform sources (TikTok, Instagram Reels, YouTube Shorts),
+        validates against cartoon pollution, and extracts the exact 1080p micro-clip.
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         
+        # Multi-Platform Query Expansion: Automatically search TikTok & Instagram Reel AMV syndications
+        expanded_queries = []
         for q in search_queries:
-            print(f"[Harvester Gate] Searching and auditing query: '{q}'...")
+            clean_q = q.replace("english sub", "").strip()
+            # 1. High-engagement TikTok AMV edits
+            expanded_queries.append(f"{clean_q} tiktok edit")
+            # 2. Instagram 4K 60FPS AMV Reels
+            expanded_queries.append(f"{clean_q} instagram reels amv 4k")
+            # 3. Direct original query
+            expanded_queries.append(q)
+
+        for q in expanded_queries:
+            print(f"[Harvester Gate] Searching and auditing cross-platform query (TikTok/Reels/Shorts): '{q}'...")
             candidates = self.search_and_validate_candidates(anime_title=anime_title, query=q)
             
             if not candidates:
