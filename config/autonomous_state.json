@@ -1,8 +1,7 @@
 {
-  "last_run_date": "2026-11-25T09:27:56.570090+00:00",
-  "cycle_index": 10,
+  "last_run_date": "2026-11-25T09:41:39.254864+00:00",
+  "cycle_index": 11,
   "recent_franchises": [
-    "Jujutsu Kaisen",
     "Dandadan",
     "One Piece",
     "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
@@ -16,7 +15,8 @@
     "Trending Audio: Timeless Guitar Remix / Memory Reboot",
     "Pure Unhinged Comedy & Chaotic Banter",
     "Bleach TYBW Bankai Clashes",
-    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
+    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
+    "Trending Sound: Drums of Liberation / Phonk Remix"
   ],
   "scheduled_videos": [
     {
@@ -74,6 +74,13 @@
       "publish_at": "2026-11-29T02:00:00+00:00",
       "group": "GROUP_C",
       "theme": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
+    },
+    {
+      "video_id": "AwFQQN-14y4",
+      "title": "ROTATE YOUR PHONE for the Drums of Liberation! \ud83d\udcf1\ud83d\udd04\ud83e\udd41 #shorts #animeedit",
+      "publish_at": "2026-12-02T02:00:00+00:00",
+      "group": "GROUP_B",
+      "theme": "Trending Sound: Drums of Liberation / Phonk Remix"
     }
   ],
   "recent_themes": [
@@ -86,6 +93,7 @@
     "rotate_timeless_guitar",
     "moment_unhinged_comedy",
     "micro_bleach",
-    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
+    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
+    "rotate_drums_of_liberation"
   ]
 }
