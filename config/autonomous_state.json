@@ -1,6 +1,6 @@
 {
-  "last_run_date": "2026-11-23T09:05:19.041955+00:00",
-  "cycle_index": 9,
+  "last_run_date": "2026-11-25T09:27:56.570090+00:00",
+  "cycle_index": 10,
   "recent_franchises": [
     "Jujutsu Kaisen",
     "Dandadan",
@@ -15,7 +15,8 @@
     "Brutal Reality Checks & Emotional Violations",
     "Trending Audio: Timeless Guitar Remix / Memory Reboot",
     "Pure Unhinged Comedy & Chaotic Banter",
-    "Bleach TYBW Bankai Clashes"
+    "Bleach TYBW Bankai Clashes",
+    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
   ],
   "scheduled_videos": [
     {
@@ -66,6 +67,13 @@
       "publish_at": "2027-01-07T02:00:00+00:00",
       "group": "GROUP_A",
       "theme": "Bleach TYBW Bankai Clashes"
+    },
+    {
+      "video_id": "j1iXor6R9so",
+      "title": "The Way They Reacted Is Actually Insane \ud83d\ude2d\ud83d\udc80 | The Laid-Off Cheat-Granting Mage Enjoys a Second Lease ",
+      "publish_at": "2026-11-29T02:00:00+00:00",
+      "group": "GROUP_C",
+      "theme": "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
     }
   ],
   "recent_themes": [
@@ -77,6 +85,7 @@
     "moment_brutal_reality_check",
     "rotate_timeless_guitar",
     "moment_unhinged_comedy",
-    "micro_bleach"
+    "micro_bleach",
+    "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life"
   ]
 }
