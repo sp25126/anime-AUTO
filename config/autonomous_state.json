@@ -1,8 +1,7 @@
 {
-  "last_run_date": "2026-11-25T09:41:39.254864+00:00",
-  "cycle_index": 11,
+  "last_run_date": "2026-11-25T18:32:11.981676+00:00",
+  "cycle_index": 12,
   "recent_franchises": [
-    "Dandadan",
     "One Piece",
     "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
     "Overgeared",
@@ -16,7 +15,8 @@
     "Pure Unhinged Comedy & Chaotic Banter",
     "Bleach TYBW Bankai Clashes",
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
-    "Trending Sound: Drums of Liberation / Phonk Remix"
+    "Trending Sound: Drums of Liberation / Phonk Remix",
+    "Veezha Veera  [Tamil] Viral Edit"
   ],
   "scheduled_videos": [
     {
@@ -81,6 +81,13 @@
       "publish_at": "2026-12-02T02:00:00+00:00",
       "group": "GROUP_B",
       "theme": "Trending Sound: Drums of Liberation / Phonk Remix"
+    },
+    {
+      "video_id": "-Z7UvZoIZTY",
+      "title": "Veezha Veera  [Tamil] Anime Edit That Broke TikTok & Reels! \ud83d\udcf1\ud83d\udd25 #shorts #anime",
+      "publish_at": "2026-12-05T02:00:00+00:00",
+      "group": "GROUP_C",
+      "theme": "Veezha Veera  [Tamil] Viral Edit"
     }
   ],
   "recent_themes": [
@@ -94,6 +101,7 @@
     "moment_unhinged_comedy",
     "micro_bleach",
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
-    "rotate_drums_of_liberation"
+    "rotate_drums_of_liberation",
+    "sound_veezha_veera__[tamil]"
   ]
 }
