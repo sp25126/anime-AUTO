@@ -59,10 +59,30 @@ def render_rotating_phone_amv(raw_amv_path="assets/rotate_raw/aWApEIyXUp4.mp4", 
     ]
     write_proc = subprocess.Popen(write_video_cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Fonts & Branding
-    font_impact = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 64)
-    font_sub = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 44)
-    font_credit = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 24)
+    # Fonts & Branding (Cross-platform fallback for Ubuntu runners & Windows)
+    def _load_font(preferred_paths, default_names, size):
+        for p in preferred_paths:
+            if os.path.exists(p):
+                try:
+                    return ImageFont.truetype(p, size)
+                except Exception:
+                    pass
+        for d in default_names:
+            for prefix in ["/usr/share/fonts/truetype/dejavu/", "/usr/share/fonts/truetype/liberation/", "/usr/share/fonts/truetype/freefont/", "/usr/share/fonts/truetype/"]:
+                full_p = os.path.join(prefix, d)
+                if os.path.exists(full_p):
+                    try:
+                        return ImageFont.truetype(full_p, size)
+                    except Exception:
+                        pass
+        try:
+            return ImageFont.load_default(size=size)
+        except Exception:
+            return ImageFont.load_default()
+
+    font_impact = _load_font(["C:/Windows/Fonts/impact.ttf"], ["DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf", "FreeSansBold.ttf"], 64)
+    font_sub = _load_font(["C:/Windows/Fonts/impact.ttf"], ["DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf", "FreeSansBold.ttf"], 44)
+    font_credit = _load_font(["C:/Windows/Fonts/segoeuib.ttf", "C:/Windows/Fonts/arialbd.ttf"], ["DejaVuSans.ttf", "LiberationSans-Regular.ttf", "FreeSans.ttf"], 24)
 
     # Small corner logo (64x64 badge)
     logo_path = "branding/watermark_badge_128.png"

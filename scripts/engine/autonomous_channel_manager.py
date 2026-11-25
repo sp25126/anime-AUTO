@@ -189,7 +189,12 @@ class AutonomousChannelManager:
                 harvested,
                 output_path
             ]
+            print(f"[Group B Production] Running render pipeline: {' '.join(cmd)}")
             res = subprocess.run(cmd, cwd=WORKSPACE_ROOT, capture_output=True, text=True)
+            if res.returncode != 0:
+                print(f"[Group B Production] Render failed (code {res.returncode}):")
+                print(f"STDOUT: {res.stdout}")
+                print(f"STDERR: {res.stderr}")
             return output_path if os.path.exists(output_path) else None
 
         return None

@@ -78,7 +78,7 @@ jobs:
         if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           sudo apt-get update || true
-          sudo apt-get install -y --no-install-recommends ffmpeg libasound2t64 chromium-browser || sudo apt-get install -y ffmpeg
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-freefont-ttf libasound2t64 chromium-browser || sudo apt-get install -y ffmpeg fonts-dejavu-core
 
       - name: Install NPM & Remotion Dependencies
         if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
