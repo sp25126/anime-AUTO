@@ -174,8 +174,9 @@ class AutonomousChannelManager:
         ]
 
         raw_amv = os.path.join(WORKSPACE_ROOT, "input", f"auto_rotate_{target['key']}.mp4")
+        franchise_hint = theme_data.get("franchise") or theme_label
         harvested = self.harvester.harvest_validated_clip(
-            anime_title="Anime",
+            anime_title=franchise_hint,
             search_queries=queries,
             start_time=15.0,
             duration=30.0,
@@ -216,8 +217,9 @@ class AutonomousChannelManager:
         ]
 
         raw_clip = os.path.join(WORKSPACE_ROOT, "input", f"auto_micro_{target['key']}.mp4")
+        franchise_hint = theme_data.get("franchise") or theme_label
         harvested = self.harvester.harvest_validated_clip(
-            anime_title="Anime",
+            anime_title=franchise_hint,
             search_queries=queries,
             start_time=10.0,
             duration=30.0,

@@ -163,29 +163,39 @@ class StreamHarvester:
                     print(f"[Harvester Gate] Successfully harvested with synced audio: {output_path}")
                     return output_path
 
-        print(f"[Harvester Gate] Could not harvest live web clip for {anime_title}. Checking local verified pool...")
-        # Cloud Runner Fallback: Check assets/anime_clips_pool and input directories
+        print(f"[Harvester Gate] Could not harvest live web clip for '{anime_title}'. Checking local verified pool...")
+        # Cloud Runner Fallback: Check assets/anime_clips_pool with franchise-awareness & rotation
         workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         pool_dir = os.path.join(workspace_root, "assets", "anime_clips_pool")
         input_dir = os.path.join(workspace_root, "input")
         
-        # Check pool for micro or matching clips
-        candidate_fallbacks = []
+        all_pool_files = []
         if os.path.exists(pool_dir):
-            for f in os.listdir(pool_dir):
-                if f.startswith("micro_") and f.endswith(".mp4"):
-                    candidate_fallbacks.append(os.path.join(pool_dir, f))
-                elif f.endswith(".mp4"):
-                    candidate_fallbacks.append(os.path.join(pool_dir, f))
+            all_pool_files = [os.path.join(pool_dir, f) for f in os.listdir(pool_dir) if f.endswith(".mp4")]
         
-        if not candidate_fallbacks and os.path.exists(input_dir):
-            for f in os.listdir(input_dir):
-                if ("micro" in f or "apothecary" in f or "dandadan" in f) and f.endswith(".mp4"):
-                    candidate_fallbacks.append(os.path.join(input_dir, f))
+        # 1. First, search for exact franchise or query keyword match in pool
+        matched_fallbacks = []
+        target_tokens = [t.lower() for t in anime_title.split() if len(t) > 3 and t.lower() != "anime"]
+        for q in search_queries:
+            for token in q.lower().split():
+                if len(token) > 3 and token not in ["anime", "edit", "shorts", "tiktok", "reels", "4k", "60fps", "amv"]:
+                    target_tokens.append(token)
+        
+        target_tokens = list(set(target_tokens))
+
+        for f_path in all_pool_files:
+            fname = os.path.basename(f_path).lower()
+            if any(t in fname for t in target_tokens):
+                matched_fallbacks.append(f_path)
+                
+        candidate_fallbacks = matched_fallbacks if matched_fallbacks else all_pool_files
 
         if candidate_fallbacks:
-            chosen_fallback = candidate_fallbacks[0]
-            print(f"[Harvester Gate] ✓ Using verified offline anime clip: {os.path.basename(chosen_fallback)}")
+            # Deterministic pseudo-random rotation based on output_path or current minute
+            import hashlib
+            seed_val = int(hashlib.md5(output_path.encode()).hexdigest(), 16)
+            chosen_fallback = candidate_fallbacks[seed_val % len(candidate_fallbacks)]
+            print(f"[Harvester Gate] ✓ Selected non-repetitive offline anime clip: {os.path.basename(chosen_fallback)}")
             import shutil
             shutil.copy2(chosen_fallback, output_path)
             if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
