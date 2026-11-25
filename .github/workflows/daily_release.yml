@@ -12,10 +12,15 @@ name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
     - cron: '15 8 * * *'   # 1:45 PM IST (Retry 1)
     - cron: '30 8 * * *'   # 2:00 PM IST (Retry 2)
 
-    # ── Slot 3: 8:30 PM IST (Target: 20:30 IST = 15:00 UTC) ──
-    - cron: '0 15 * * *'   # 8:30 PM IST (Primary)
-    - cron: '15 15 * * *'  # 8:45 PM IST (Retry 1)
-    - cron: '30 15 * * *'  # 9:00 PM IST (Retry 2)
+    # ── Slot 3: 8:00 PM IST (Target: 20:00 IST = 14:30 UTC) ──
+    - cron: '30 14 * * *'  # 8:00 PM IST (Primary)
+    - cron: '45 14 * * *'  # 8:15 PM IST (Retry 1)
+    - cron: '0 15 * * *'   # 8:30 PM IST (Retry 2)
+
+    # ── Slot 4: 12:00 AM Midnight IST (Target: 00:00 IST = 18:30 UTC) ──
+    - cron: '30 18 * * *'  # 12:00 AM Midnight IST (Primary)
+    - cron: '45 18 * * *'  # 12:15 AM Midnight IST (Retry 1)
+    - cron: '0 19 * * *'   # 12:30 AM Midnight IST (Retry 2)
   push:
     branches:
       - main
@@ -61,13 +66,15 @@ jobs:
           
           echo "Current IST Hour: $IST_HOUR"
           
-          # Assign 3-slot window across the day
-          if [ "$IST_HOUR" -ge 7 ] && [ "$IST_HOUR" -lt 12 ]; then
+          # Assign 4-slot window across the day (Morning, Afternoon, Evening, Midnight)
+          if [ "$IST_HOUR" -ge 6 ] && [ "$IST_HOUR" -lt 12 ]; then
             SLOT="SLOT_MORNING"
           elif [ "$IST_HOUR" -ge 12 ] && [ "$IST_HOUR" -lt 17 ]; then
             SLOT="SLOT_AFTERNOON"
-          else
+          elif [ "$IST_HOUR" -ge 17 ] && [ "$IST_HOUR" -lt 22 ]; then
             SLOT="SLOT_EVENING"
+          else
+            SLOT="SLOT_MIDNIGHT"
           fi
           
           echo "Evaluated Slot: $SLOT"
