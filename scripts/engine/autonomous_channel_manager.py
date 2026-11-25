@@ -220,11 +220,15 @@ class AutonomousChannelManager:
         )
 
         if harvested and os.path.exists(harvested):
+            bgm_track = os.path.join(WORKSPACE_ROOT, "assets", "audio", "trending_comedy_lofi_bed.mp3")
+            if not os.path.exists(bgm_track):
+                bgm_track = os.path.join(WORKSPACE_ROOT, "output", "lofi_rizz_bgm.wav")
+
             rendered = self.dsp.render_group_c_short(
                 clip_path=harvested,
                 bg_path=os.path.join(WORKSPACE_ROOT, "assets", "backgrounds", "romcom_sunset.webp"),
                 header_path=os.path.join(WORKSPACE_ROOT, "assets", "brand_header_card.png"),
-                bgm_path=os.path.join(WORKSPACE_ROOT, "output", "lofi_rizz_bgm.wav"),
+                bgm_path=bgm_track,
                 output_path=output_path,
                 duration=30.0,
                 mute_timestamps=(16.0, 17.5)
