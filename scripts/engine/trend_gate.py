@@ -266,16 +266,44 @@ class IntelligentTrendGate:
 
     def evaluate_live_market(self, history: List[str] = None) -> Dict[str, Any]:
         """
-        Executes live market velocity research across all Macro Themes and Micro Franchises.
+        Executes live market velocity research across:
+        1. Sound-First Radar: Trending Instagram Reels / TikTok songs (e.g. Dilruba Dilnasheen).
+        2. Macro Themes (Cross-anime fights, aura, rage, beat drops).
+        3. Micro Franchises (Bleach, Naruto, Dandadan, etc.).
         Picks the highest velocity candidate not in recent history.
         """
         history = [h.lower() for h in (history or [])]
-        candidates = self.macro_themes + self.micro_franchises
-        scored_results = []
 
         print("\n==================================================================")
         print("🔍 INTELLIGENT TREND GATE: PROBING REAL-TIME INTERNET VIRALITY")
         print("==================================================================")
+
+        # 1. First probe Sound-First Virality Radar (Instagram / TikTok)
+        try:
+            from viral_sound_radar import ViralSoundRadar
+            sound_radar = ViralSoundRadar()
+            sound_winner = sound_radar.discover_hottest_viral_sound(history=history)
+            if sound_winner and sound_winner.get("candidates") and len(sound_winner["candidates"]) >= 2:
+                s_name = sound_winner["sound_name"]
+                print(f"[Trend Gate] 🎵 SOUND-FIRST WINNER IDENTIFIED: '{s_name}'")
+                return {
+                    "id": f"sound_{s_name.replace(' ', '_').lower()}",
+                    "name": f"{s_name} Viral Anime Edits",
+                    "mode": "VIRAL_SOUND",
+                    "viral_sound": s_name,
+                    "artist": sound_winner.get("artist"),
+                    "title_template": f"Top 5 {s_name} Anime Edits That Broke The Internet! 🔥🎵 #shorts #anime",
+                    "harvest_queries": [
+                        f"{s_name} anime edit 4k",
+                        f"{s_name} anime edit tiktok",
+                        f"{s_name} amv edit shorts"
+                    ]
+                }
+        except Exception as e:
+            print(f"[Trend Gate] Sound radar fallback note: {e}")
+
+        candidates = self.macro_themes + self.micro_franchises
+        scored_results = []
 
         for item in candidates:
             if item["id"].lower() in history or item["name"].lower() in history:

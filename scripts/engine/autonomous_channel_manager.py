@@ -91,10 +91,39 @@ class AutonomousChannelManager:
 
     def select_viral_theme_or_show(self, group: str) -> Dict[str, Any]:
         """
-        Selects the optimal viral theme or trending anime based on virality, 
-        trending songs, and cross-anime moments rather than a single franchise.
+        Sound-First & Multi-Scale Selection Engine:
+        1. Probes real-time trending Instagram / TikTok audio via ViralSoundRadar.
+        2. If a breakout viral sound is found (e.g. Dilruba Dilnasheen, Phonk remix), adapts the turn to that sound.
+        3. Otherwise rotates through cross-anime viral themes & multi-horizon anime.
         """
         recent_themes = self.state.get("recent_themes", [])
+
+        # Step 1: Sound-First Check for Group B & C
+        try:
+            from viral_sound_radar import ViralSoundRadar
+            s_radar = ViralSoundRadar()
+            s_winner = s_radar.discover_hottest_viral_sound(history=recent_themes)
+            if s_winner and s_winner.get("sound_name"):
+                s_name = s_winner["sound_name"]
+                print(f"[Sound-First Gate] 🎵 Active viral audio selected for {group}: '{s_name}'")
+                return {
+                    "type": "VIRAL_SOUND_THEME",
+                    "key": f"sound_{s_name.replace(' ', '_').lower()}",
+                    "data": {
+                        "theme_name": f"{s_name} Viral Anime Edit",
+                        "franchise": s_name,
+                        "sound_name": s_name,
+                        "title_template": f"{s_name} Anime Edit That Broke TikTok & Reels! 📱🔥 #shorts #anime",
+                        "search_queries": [
+                            f"{s_name} anime edit 4k",
+                            f"{s_name} anime edit tiktok",
+                            f"{s_name} amv edit shorts 60fps"
+                        ]
+                    },
+                    "label": f"{s_name} Viral Edit"
+                }
+        except Exception as e:
+            print(f"[Sound Gate Notice]: {e}")
         
         # Filter viral themes matching current group
         matching_themes = [

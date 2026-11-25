@@ -10,8 +10,9 @@ def check_execution_status(repo: str, window_slot: str, token: str = None, curre
     successfully during the target window for today.
     
     window_slot:
-      - '1PM': checks 1:00 PM IST slot (12:00 to 17:00 IST)
-      - '9PM': checks 9:00 PM IST slot (20:00 to 02:00 IST)
+      - 'SLOT_MORNING': checks 9:00 AM IST slot (07:00 to 12:00 IST)
+      - 'SLOT_AFTERNOON': checks 1:30 PM IST slot (12:00 to 17:00 IST)
+      - 'SLOT_EVENING': checks 8:30 PM IST slot (17:00 to 02:00 IST)
     
     Returns True if already run / currently running (so skip).
     Returns False if missed (needs to run now).
@@ -57,11 +58,14 @@ def check_execution_status(repo: str, window_slot: str, token: str = None, curre
             # Check if created on the same calendar day (IST)
             if created_ist.date() == today_date:
                 h = created_ist.hour
-                if window_slot == "1PM" and (12 <= h < 17):
-                    print(f"[Jitter Guard] ✅ 1:00 PM IST slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
+                if window_slot in ["SLOT_MORNING", "9AM"] and (7 <= h < 12):
+                    print(f"[Jitter Guard] ✅ Morning (9 AM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
                     return True
-                elif window_slot == "9PM" and (20 <= h <= 23 or h == 0 or h == 1):
-                    print(f"[Jitter Guard] ✅ 9:00 PM IST slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
+                elif window_slot in ["SLOT_AFTERNOON", "1PM"] and (12 <= h < 17):
+                    print(f"[Jitter Guard] ✅ Afternoon (1:30 PM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
+                    return True
+                elif window_slot in ["SLOT_EVENING", "9PM"] and (17 <= h <= 23 or h == 0 or h == 1):
+                    print(f"[Jitter Guard] ✅ Evening (8:30 PM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
                     return True
 
     print(f"[Jitter Guard] ⚡ No completed execution detected for {window_slot} slot today. Triggering production!")

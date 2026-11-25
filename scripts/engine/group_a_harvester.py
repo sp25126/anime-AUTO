@@ -145,73 +145,96 @@ class MasterAnimeGroupAHarvester:
             return (0, 240, 255)
 
     def generate_hud_overlay_image(self, rank: int, title_line1: str, title_line2: str, creator: str, views: str, output_path: str, accent_color: tuple = None):
+        """
+        Generates an ultra-clean, minimal aesthetic HUD overlay:
+        - Sleek floating title badge with glassmorphism border and dynamic tint.
+        - Channel branding logo watermark (top-right).
+        - Minimalist rank pill (#5 ... #1).
+        - Subtle creator credit pill (bottom-left safe area) attributing the edit creator.
+        - 100% Cross-platform font fallback (Windows + Linux/Ubuntu runners).
+        """
         img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
         draw = ImageDraw.Draw(img)
 
-        try:
-            font_title = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 62)
-            font_sub = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 70)
-            font_rank = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 95)
-            font_small = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 32)
-        except Exception:
-            font_title = ImageFont.load_default()
-            font_sub = ImageFont.load_default()
-            font_rank = ImageFont.load_default()
-            font_small = ImageFont.load_default()
+        def _load_font(font_name_candidates, size):
+            for name in font_name_candidates:
+                for prefix in ["C:/Windows/Fonts/", "/usr/share/fonts/truetype/", "/usr/share/fonts/truetype/dejavu/", "/usr/share/fonts/truetype/liberation/", "/usr/share/fonts/truetype/freefont/"]:
+                    fp = os.path.join(prefix, name)
+                    if os.path.exists(fp):
+                        try:
+                            return ImageFont.truetype(fp, size)
+                        except Exception:
+                            pass
+            try:
+                return ImageFont.load_default(size=size)
+            except Exception:
+                return ImageFont.load_default()
+
+        font_title = _load_font(["impact.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"], 54)
+        font_sub = _load_font(["impact.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"], 60)
+        font_rank = _load_font(["impact.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"], 80)
+        font_small = _load_font(["segoeuib.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf", "arialbd.ttf"], 26)
 
         if accent_color is None:
             accent_color = (0, 240, 255)
 
-        # Top Header Box: tinted background from fight aura + vibrant neon border + glow
-        card_bg = (
-            int(accent_color[0] * 0.14) + 8,
-            int(accent_color[1] * 0.14) + 8,
-            int(accent_color[2] * 0.14) + 12,
-            238
-        )
-        outer_glow = (accent_color[0], accent_color[1], accent_color[2], 70)
-        border_color = (accent_color[0], accent_color[1], accent_color[2], 240)
+        # 1. Minimal Header Card: Sleek, thin glassmorphism header
+        card_bg = (10, 10, 18, 205)
+        border_color = (accent_color[0], accent_color[1], accent_color[2], 210)
         
-        # Soft atmospheric outer glow rim
-        draw.rounded_rectangle([(66, 126), (1014, 319)], radius=26, outline=outer_glow, width=3)
-        # Main solid card
-        draw.rounded_rectangle([(70, 130), (1010, 315)], radius=24, fill=card_bg, outline=border_color, width=4)
-        draw.text((540, 185), title_line1, font=font_title, fill=(255, 255, 255), anchor="mm")
+        # Compact, clean header geometry
+        draw.rounded_rectangle([(100, 130), (980, 280)], radius=20, fill=card_bg, outline=border_color, width=2)
+        draw.text((540, 175), title_line1, font=font_title, fill=(255, 255, 255), anchor="mm")
         
         # Scale down font_sub if title_line2 is long
-        sub_len = font_sub.getlength(title_line2)
-        if sub_len > 860:
-            scale_ratio = 860 / sub_len
-            new_size = max(38, int(70 * scale_ratio))
-            font_sub_scaled = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", new_size)
+        try:
+            sub_len = font_sub.getlength(title_line2)
+        except Exception:
+            sub_len = len(title_line2) * 30
+
+        if sub_len > 800:
+            scale_ratio = 800 / sub_len
+            new_size = max(34, int(60 * scale_ratio))
+            font_sub_scaled = _load_font(["impact.ttf", "DejaVuSans-Bold.ttf"], new_size)
         else:
             font_sub_scaled = font_sub
-        draw.text((540, 260), title_line2, font=font_sub_scaled, fill=accent_color, anchor="mm")
+        draw.text((540, 240), title_line2, font=font_sub_scaled, fill=accent_color, anchor="mm")
 
-        # Rank Badge: Clean "#1" without "CLIMAX" text, tinted to background
-        rank_bg = (
-            int(accent_color[0] * 0.18) + 10 if rank == 1 else 20,
-            int(accent_color[1] * 0.18) + 10 if rank == 1 else 20,
-            int(accent_color[2] * 0.18) + 15 if rank == 1 else 30,
-            240
-        )
+        # 2. Minimal Rank Pill (#1, #2, etc.)
+        rank_bg = (10, 10, 18, 220)
         rank_fg = accent_color if rank == 1 else (255, 255, 255)
         rank_label = f"#{rank}"
+        try:
+            badge_w = int(font_rank.getlength(rank_label)) + 50
+        except Exception:
+            badge_w = 160
 
-        badge_w = int(font_rank.getlength(rank_label)) + 60
         box_left = 60
-        box_right = box_left + max(200, badge_w)
-        badge_border = (accent_color[0], accent_color[1], accent_color[2], 240) if rank == 1 else (accent_color[0], accent_color[1], accent_color[2], 140)
-        draw.rounded_rectangle([(box_left, 470), (box_right, 595)], radius=20, fill=rank_bg, outline=badge_border, width=4)
-        draw.text(((box_left + box_right)//2, 532), rank_label, font=font_rank, fill=rank_fg, anchor="mm")
+        box_right = box_left + max(160, badge_w)
+        badge_border = (accent_color[0], accent_color[1], accent_color[2], 220) if rank == 1 else (255, 255, 255, 120)
+        draw.rounded_rectangle([(box_left, 490), (box_right, 590)], radius=18, fill=rank_bg, outline=badge_border, width=3)
+        draw.text(((box_left + box_right)//2, 540), rank_label, font=font_rank, fill=rank_fg, anchor="mm")
 
-        # Creator Credit
-        credit_text = f"Edit: {creator} • {views}"
-        credit_w = int(font_small.getlength(credit_text)) + 40
+        # 3. Channel Logo (Clean Top-Right Corner Watermark)
+        logo_path = os.path.join(self.workspace_root, "branding", "watermark_badge_128.png")
+        if os.path.exists(logo_path):
+            try:
+                logo_img = Image.open(logo_path).convert("RGBA").resize((72, 72), Image.Resampling.LANCZOS)
+                img.paste(logo_img, (940, 495), logo_img)
+            except Exception:
+                pass
+
+        # 4. Clean Creator Credit Pill (Bottom Safe Area, Left-Aligned)
+        credit_text = f"Edit by {creator}"
+        try:
+            credit_w = int(font_small.getlength(credit_text)) + 40
+        except Exception:
+            credit_w = 340
+            
         c_left = 60
-        c_right = min(1000, c_left + max(480, credit_w))
-        draw.rounded_rectangle([(c_left, 1340), (c_right, 1410)], radius=18, fill=(15, 15, 25, 210), outline=(255, 255, 255, 40), width=2)
-        draw.text(((c_left + c_right)//2, 1375), credit_text, font=font_small, fill=(240, 240, 240), anchor="mm")
+        c_right = min(900, c_left + max(300, credit_w))
+        draw.rounded_rectangle([(c_left, 1370), (c_right, 1425)], radius=14, fill=(10, 10, 18, 190), outline=(255, 255, 255, 60), width=1)
+        draw.text(((c_left + c_right)//2, 1397), credit_text, font=font_small, fill=(240, 240, 240), anchor="mm")
 
         img.save(output_path, "PNG")
         return output_path
@@ -234,13 +257,61 @@ class MasterAnimeGroupAHarvester:
         target_name = trend_decision.get("name", "Anime Fight Scenes")
         franchise_lock = trend_decision.get("franchise") # e.g. "Naruto" if micro
         theme_id = trend_decision.get("id", "macro_fights")
+        viral_sound = trend_decision.get("viral_sound") # e.g. "Dilruba Dilnasheen"
 
-        print(f"\n[Master Anime Harvester] Mode: {mode} | Target: '{target_name}' (ID: {theme_id})...")
+        print(f"\n[Master Anime Harvester] Mode: {mode} | Target: '{target_name}' (ID: {theme_id}) | Sound: '{viral_sound or 'Default'}'...")
 
         collected_candidates = []
         seen_ids = set()
 
-        if mode == "MICRO_FRANCHISE" and franchise_lock:
+        # MODE 1: VIRAL_SOUND (Sound-First: Find anime edits featuring the trending sound e.g. Dilruba Dilnasheen)
+        if mode == "VIRAL_SOUND" or viral_sound:
+            sound_query = viral_sound or target_name
+            print(f"  🎵 Sound-First Mode: Harvesting edits using viral track '{sound_query}'...")
+            sound_scouts = [
+                f"{sound_query} anime edit 4k",
+                f"{sound_query} anime edit tiktok",
+                f"{sound_query} anime amv edit shorts",
+                f"{sound_query} anime girls edit amv 4k",
+                f"{sound_query} anime edit 60fps"
+            ]
+            for sq in sound_scouts:
+                if len(collected_candidates) >= target_clips_count:
+                    break
+                cmd = [sys.executable, "-m", "yt_dlp", f"ytsearch6:{sq}", "--dump-json", "--flat-playlist", "--no-warnings"]
+                res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
+                for line in res.stdout.strip().split("\n"):
+                    if not line: continue
+                    try:
+                        d = json.loads(line)
+                        vid_id = d.get("id")
+                        vid_title = d.get("title") or ""
+                        uploader = d.get("uploader") or d.get("channel") or "Unknown"
+                        dur = d.get("duration") or 0
+                        if vid_id in seen_ids or not (8 <= dur <= 240): continue
+                        if not self.is_strictly_anime(vid_title, uploader): continue
+                        seen_ids.add(vid_id)
+                        
+                        # Infer anime name or default to Sound title
+                        matched_anime = "Anime"
+                        for entry in ANIME_DISCOVERY_ROSTER:
+                            if entry["anime"].lower() in vid_title.lower():
+                                matched_anime = entry["anime"]
+                                break
+
+                        collected_candidates.append({
+                            "id": vid_id, "title": vid_title, "anime": matched_anime,
+                            "character": sound_query, "form": "Viral Sound Edit",
+                            "uploader": uploader, "duration": dur,
+                            "url": f"https://www.youtube.com/watch?v={vid_id}"
+                        })
+                        print(f"    ✓ Found candidate #{len(collected_candidates)} for '{sound_query}': {vid_title[:45]} (@{uploader})")
+                        if len(collected_candidates) >= target_clips_count:
+                            break
+                    except Exception:
+                        pass
+
+        elif mode == "MICRO_FRANCHISE" and franchise_lock:
             # Check if franchise has curated semantic reference pool
             ref_pool = MICRO_FRANCHISE_REFERENCE_POOLS.get(franchise_lock)
             if ref_pool and len(ref_pool) >= target_clips_count:
@@ -345,7 +416,11 @@ class MasterAnimeGroupAHarvester:
             out_clip = os.path.join(self.cuts_dir, f"prepared_rank_{rank}_{cand['id']}.mp4")
 
             # Dynamic HUD Titles based on Mode
-            if mode == "MICRO_FRANCHISE":
+            if mode == "VIRAL_SOUND" or viral_sound:
+                clean_sname = (viral_sound or target_name).upper()
+                h_line1 = f"{clean_sname}"
+                h_line2 = f"RANK #{rank} • VIRAL EDIT"
+            elif mode == "MICRO_FRANCHISE":
                 h_line1 = f"TOP 5 {franchise_lock.upper()} FIGHTS"
                 h_line2 = f"{cand['character'].upper()}"
             else:
