@@ -1,8 +1,7 @@
 {
-  "last_run_date": "2026-11-26T02:02:23.977892+00:00",
-  "cycle_index": 13,
+  "last_run_date": "2026-11-26T12:59:10.142928+00:00",
+  "cycle_index": 14,
   "recent_franchises": [
-    "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
     "Overgeared",
     "Trending Phonk: Slava Funk / Montagem",
     "Accidental Rizz & Flustered Encounters",
@@ -16,7 +15,8 @@
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
     "Trending Sound: Drums of Liberation / Phonk Remix",
     "Veezha Veera  [Tamil] Viral Edit",
-    "Jailer 2 Theme Viral Anime Edits"
+    "Jailer 2 Theme Viral Anime Edits",
+    "SWIM Viral Edit"
   ],
   "scheduled_videos": [
     {
@@ -95,6 +95,13 @@
       "publish_at": "2026-12-14T02:00:00+00:00",
       "group": "GROUP_A",
       "theme": "Jailer 2 Theme Viral Anime Edits"
+    },
+    {
+      "video_id": "Koo1UZoNSwM",
+      "title": "SWIM Anime Edit That Broke TikTok & Reels! \ud83d\udcf1\ud83d\udd25 #shorts #anime",
+      "publish_at": "2026-12-12T02:00:00+00:00",
+      "group": "GROUP_C",
+      "theme": "SWIM Viral Edit"
     }
   ],
   "recent_themes": [
@@ -110,6 +117,7 @@
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
     "rotate_drums_of_liberation",
     "sound_veezha_veera__[tamil]",
-    "sound_jailer_2_theme"
+    "sound_jailer_2_theme",
+    "sound_swim"
   ]
 }
