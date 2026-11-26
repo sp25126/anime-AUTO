@@ -7,13 +7,11 @@ import datetime
 def check_execution_status(repo: str, window_slot: str, token: str = None, current_run_id: str = None) -> bool:
     """
     Checks GitHub Actions runs to determine if the workflow has already run
-    successfully during the target window for today.
+    successfully during the target window for today (2x daily slots: Afternoon & Evening).
     
     window_slot:
-      - 'SLOT_MORNING': checks 9:00 AM IST slot (06:00 to 12:00 IST)
-      - 'SLOT_AFTERNOON': checks 1:30 PM IST slot (12:00 to 17:00 IST)
-      - 'SLOT_EVENING': checks 8:00 PM IST slot (17:00 to 22:00 IST)
-      - 'SLOT_MIDNIGHT': checks 12:00 AM Midnight IST slot (22:00 to 06:00 IST)
+      - 'SLOT_AFTERNOON': checks 1:30 PM IST slot (08:00 UTC) (checks 06:00 to 17:00 IST)
+      - 'SLOT_EVENING': checks 8:30 PM IST slot (15:00 UTC) (checks 17:00 to 06:00 IST)
     
     Returns True if already run / currently running (so skip).
     Returns False if missed (needs to run now).
@@ -25,7 +23,7 @@ def check_execution_status(repo: str, window_slot: str, token: str = None, curre
         
     try:
         req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, timeout=8) as resp:
             data = json.loads(resp.read().decode())
             runs = data.get("workflow_runs", [])
     except Exception as e:
@@ -41,7 +39,7 @@ def check_execution_status(repo: str, window_slot: str, token: str = None, curre
     for r in runs:
         run_id_str = str(r.get("id"))
         
-        # CRITICAL: Ignore the current running workflow execution so it does not check itself!
+        # CRITICAL: Ignore current workflow execution
         if curr_id_str and run_id_str == curr_id_str:
             continue
 
@@ -56,38 +54,29 @@ def check_execution_status(repo: str, window_slot: str, token: str = None, curre
             created = datetime.datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
             created_ist = created + datetime.timedelta(hours=5, minutes=30)
             
-            # For midnight slot spanning across 22:00 to 06:00, check within the last 6 hours
-            if window_slot in ["SLOT_MIDNIGHT", "MIDNIGHT"]:
-                diff_hours = (now_ist - created_ist).total_seconds() / 3600.0
-                if 0 <= diff_hours < 5.0 and (created_ist.hour >= 22 or created_ist.hour < 6):
-                    print(f"[Jitter Guard] ✅ Midnight slot already completed by run {r.get('id')} at {created_ist.strftime('%d %b %H:%M IST')}.")
+            # Afternoon slot check
+            if window_slot in ["SLOT_AFTERNOON", "AFTERNOON", "SLOT_MORNING"]:
+                if created_ist.date() == today_date and (6 <= created_ist.hour < 17):
+                    print(f"[Jitter Guard] ✅ Afternoon slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
                     return True
-            else:
-                # Same calendar day (IST) check for Morning, Afternoon, Evening
-                if created_ist.date() == today_date:
-                    h = created_ist.hour
-                    if window_slot in ["SLOT_MORNING", "9AM"] and (6 <= h < 12):
-                        print(f"[Jitter Guard] ✅ Morning (9 AM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
-                        return True
-                    elif window_slot in ["SLOT_AFTERNOON", "1PM"] and (12 <= h < 17):
-                        print(f"[Jitter Guard] ✅ Afternoon (1:30 PM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
-                        return True
-                    elif window_slot in ["SLOT_EVENING", "8PM", "9PM"] and (17 <= h < 22):
-                        print(f"[Jitter Guard] ✅ Evening (8:00 PM IST) slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
-                        return True
+
+            # Evening slot check
+            elif window_slot in ["SLOT_EVENING", "EVENING", "SLOT_NIGHT"]:
+                if created_ist.date() == today_date and (17 <= created_ist.hour <= 23):
+                    print(f"[Jitter Guard] ✅ Evening slot already completed today by run {r.get('id')} at {created_ist.strftime('%H:%M IST')}.")
+                    return True
 
     print(f"[Jitter Guard] ⚡ No completed execution detected for {window_slot} today. Triggering production!")
     return False
 
 if __name__ == "__main__":
-    slot = sys.argv[1] if len(sys.argv) > 1 else "1PM"
+    slot = sys.argv[1] if len(sys.argv) > 1 else "SLOT_AFTERNOON"
     repo = os.environ.get("GITHUB_REPOSITORY", "sp25126/anime-AUTO")
     token = os.environ.get("GITHUB_TOKEN", None)
     current_run_id = os.environ.get("GITHUB_RUN_ID", None)
     
     already_ran = check_execution_status(repo, slot, token, current_run_id)
     
-    # Write output variable for GitHub Actions step
     github_output = os.environ.get("GITHUB_OUTPUT")
     if github_output:
         with open(github_output, "a") as f:

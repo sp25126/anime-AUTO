@@ -2,25 +2,15 @@ name: Daily Autonomous Anime Shorts Release (Remotion + FFmpeg Engine)
 
 "on":
   schedule:
-    # ── Slot 1: 9:00 AM IST (Target: 09:00 IST = 03:30 UTC) ──
-    - cron: '30 3 * * *'   # 9:00 AM IST (Primary)
-    - cron: '45 3 * * *'   # 9:15 AM IST (Retry 1)
-    - cron: '0 4 * * *'    # 9:30 AM IST (Retry 2)
-
-    # ── Slot 2: 1:30 PM IST (Target: 13:30 IST = 08:00 UTC) ──
+    # ── Slot 1: 1:30 PM IST (Target: 13:30 IST = 08:00 UTC) ──
     - cron: '0 8 * * *'    # 1:30 PM IST (Primary)
     - cron: '15 8 * * *'   # 1:45 PM IST (Retry 1)
     - cron: '30 8 * * *'   # 2:00 PM IST (Retry 2)
 
-    # ── Slot 3: 8:00 PM IST (Target: 20:00 IST = 14:30 UTC) ──
-    - cron: '30 14 * * *'  # 8:00 PM IST (Primary)
-    - cron: '45 14 * * *'  # 8:15 PM IST (Retry 1)
-    - cron: '0 15 * * *'   # 8:30 PM IST (Retry 2)
-
-    # ── Slot 4: 12:00 AM Midnight IST (Target: 00:00 IST = 18:30 UTC) ──
-    - cron: '30 18 * * *'  # 12:00 AM Midnight IST (Primary)
-    - cron: '45 18 * * *'  # 12:15 AM Midnight IST (Retry 1)
-    - cron: '0 19 * * *'   # 12:30 AM Midnight IST (Retry 2)
+    # ── Slot 2: 8:30 PM IST (Target: 20:30 IST = 15:00 UTC) ──
+    - cron: '0 15 * * *'   # 8:30 PM IST (Primary)
+    - cron: '15 15 * * *'  # 8:45 PM IST (Retry 1)
+    - cron: '30 15 * * *'  # 9:00 PM IST (Retry 2)
   push:
     branches:
       - main
@@ -55,26 +45,19 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
-          # Calculate current IST hour (UTC + 5.5 hours)
           CURRENT_HOUR_UTC=$(date -u +%H)
           CURRENT_MIN_UTC=$(date -u +%M)
-          
-          # Convert UTC to total minutes of the day and shift to IST (+330 mins)
           TOTAL_MINS=$(( (10#$CURRENT_HOUR_UTC * 60) + 10#$CURRENT_MIN_UTC + 330 ))
           IST_MINS=$(( TOTAL_MINS % 1440 ))
           IST_HOUR=$(( IST_MINS / 60 ))
           
           echo "Current IST Hour: $IST_HOUR"
           
-          # Assign 4-slot window across the day (Morning, Afternoon, Evening, Midnight)
-          if [ "$IST_HOUR" -ge 6 ] && [ "$IST_HOUR" -lt 12 ]; then
-            SLOT="SLOT_MORNING"
-          elif [ "$IST_HOUR" -ge 12 ] && [ "$IST_HOUR" -lt 17 ]; then
+          # Target 2 runs a day: Afternoon (1:30 PM IST) and Evening (8:30 PM IST)
+          if [ "$IST_HOUR" -lt 17 ]; then
             SLOT="SLOT_AFTERNOON"
-          elif [ "$IST_HOUR" -ge 17 ] && [ "$IST_HOUR" -lt 22 ]; then
-            SLOT="SLOT_EVENING"
           else
-            SLOT="SLOT_MIDNIGHT"
+            SLOT="SLOT_EVENING"
           fi
           
           echo "Evaluated Slot: $SLOT"
@@ -113,21 +96,15 @@ jobs:
             echo "WARNING: YOUTUBE_TOKEN_JSON secret is empty or missing in repo settings!"
           fi
 
-      - name: Schedule All Existing Master Outputs
-        if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
-        run: |
-          python -u scripts/engine/batch_schedule_existing.py || true
-
-      - name: "Run Master Autonomous Pipeline and Schedule (Release window 7:00 AM - 8:00 AM IST)"
+      - name: Run Autonomous Production & Scheduling Cycle
         if: steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           python -u scripts/engine/autonomous_channel_manager.py --upload
 
-      - name: Persist Cycle State Back to Repo
-        if: always() && (steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch')
+      - name: Commit & Persist Channel State Back to Repo
+        if: (steps.jitter_guard.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch') && always()
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add config/autonomous_state.json config/scheduled_upload_registry.json || true
-          git status
+          git add config/autonomous_state.json || true
           git diff --staged --quiet || (git commit -m "chore: advance autonomous rotation & scheduling state [skip ci]" && git push origin main)
