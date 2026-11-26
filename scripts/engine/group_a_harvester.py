@@ -490,8 +490,8 @@ class MasterAnimeGroupAHarvester:
                                 matched_cached = cached_p
                                 break
 
-                # Search 3: For MACRO_THEME cross-anime rankings, if this specific anime is missing, pick any other authentic anime clip from pool
-                if not matched_cached and mode == "MACRO_THEME" and os.path.exists(asset_pool):
+                # Search 3: For MACRO_THEME or VIRAL_SOUND cross-anime rankings, if this specific anime is missing, pick from verified authentic pool
+                if not matched_cached and mode in ["MACRO_THEME", "VIRAL_SOUND"] and os.path.exists(asset_pool):
                     available_pool = [os.path.join(asset_pool, f) for f in os.listdir(asset_pool) if f.endswith(".mp4")]
                     if available_pool:
                         matched_cached = available_pool[(rank - 1) % len(available_pool)]
