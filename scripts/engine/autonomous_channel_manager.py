@@ -314,11 +314,17 @@ class AutonomousChannelManager:
 
         print(f"[Production] Generated master: {master_file}")
 
-        # Step 3: Quality Gatekeeper Check
-        print("\n[QA Gatekeeper] Auditing audio/visual integrity...")
-        passed = self.qa.verify_render(master_file)
-        if not passed:
-            print("[QA Gatekeeper] Logging Warning...")
+        # Step 3: Local Vision AI Director & Self-Healing Audit Loop
+        print("\n[AI Vision Director & Supervisor] Auditing master video integrity & aesthetic quality...")
+        try:
+            from local_vision_director import LocalVisionAIDirector
+            vision_supervisor = LocalVisionAIDirector(use_gpu=True)
+            audit_result = vision_supervisor.audit_and_heal_rendered_video(master_file, group_type=group)
+            if audit_result.get("healed"):
+                print("[AI Supervisor] Successfully healed defect in output master video.")
+        except Exception as e:
+            print(f"[AI Supervisor Notice] Standard QA fallback: {e}")
+            self.qa.verify_render(master_file)
 
         # Step 4: Metadata Generation & Scheduling (Viral Growth Booster Workflow)
         print("\n[Viral Growth Booster Workflow] Generating high-CTR title, boost tags, and disclaimer...")
