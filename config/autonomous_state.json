@@ -1,8 +1,7 @@
 {
-  "last_run_date": "2026-11-25T18:32:11.981676+00:00",
-  "cycle_index": 12,
+  "last_run_date": "2026-11-26T02:02:23.977892+00:00",
+  "cycle_index": 13,
   "recent_franchises": [
-    "One Piece",
     "Hello, I am a Witch and my Crush Wants me to Make a Love Potion!",
     "Overgeared",
     "Trending Phonk: Slava Funk / Montagem",
@@ -16,7 +15,8 @@
     "Bleach TYBW Bankai Clashes",
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
     "Trending Sound: Drums of Liberation / Phonk Remix",
-    "Veezha Veera  [Tamil] Viral Edit"
+    "Veezha Veera  [Tamil] Viral Edit",
+    "Jailer 2 Theme Viral Anime Edits"
   ],
   "scheduled_videos": [
     {
@@ -88,6 +88,13 @@
       "publish_at": "2026-12-05T02:00:00+00:00",
       "group": "GROUP_C",
       "theme": "Veezha Veera  [Tamil] Viral Edit"
+    },
+    {
+      "video_id": "w3T1ou0SUOM",
+      "title": "Top 5 Jailer 2 Theme Anime Edits That Broke The Internet! \ud83d\udd25\ud83c\udfb5 #shorts #anime",
+      "publish_at": "2026-12-14T02:00:00+00:00",
+      "group": "GROUP_A",
+      "theme": "Jailer 2 Theme Viral Anime Edits"
     }
   ],
   "recent_themes": [
@@ -102,6 +109,7 @@
     "micro_bleach",
     "The Laid-Off Cheat-Granting Mage Enjoys a Second Lease on Life",
     "rotate_drums_of_liberation",
-    "sound_veezha_veera__[tamil]"
+    "sound_veezha_veera__[tamil]",
+    "sound_jailer_2_theme"
   ]
 }
