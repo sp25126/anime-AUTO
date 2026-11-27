@@ -1,10 +1,10 @@
 """
-Autonomous Dynamic Viral Audio & Trend Radar (Zero Hardcoding)
-Discovers real-time breakout songs and viral audio tracks:
+Autonomous Dynamic Viral Audio & Trend Radar (Zero Hardcoding & Anti-Pollution Gate)
+Ported from Otaku Production Standards:
 1. Queries live Apple Music / iTunes RSS charts (India + Global/US).
-2. Probes live YouTube Shorts & Instagram Reels trending audio compilations dynamically.
-3. Automatically evaluates anime edit adoption velocity.
-4. Dynamically scores and picks the hottest viral sound with ZERO hardcoded sound names or artists.
+2. Cleans titles and filters out non-anime/devotional noise (e.g. Bhajans, Aarti, film dialogue).
+3. Evaluates genuine anime edit adoption velocity across YouTube Shorts & TikTok.
+4. Validates that actual anime edits exist for the sound before selecting it.
 """
 
 import os
@@ -15,14 +15,36 @@ import subprocess
 import re
 from typing import Dict, Any, List, Optional
 
+ENGINE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ENGINE_DIR)
+
+try:
+    from proxy_harvester import is_valid_anime_clip, scout_youtube_anime_edits, scout_tiktok_anime_edits
+except ImportError:
+    pass
+
+NON_ANIME_MUSIC_KEYWORDS = [
+    "bhajan", "aarti", "chalisa", "ramayana", "hanuman", "krishna", "sitaram",
+    "shree ram", "mantra", "katha", "stotra", "devotional", "movie scene", "trailer",
+    "dialogue", "speech", "interview", "podcast", "vlog", "prank", "news"
+]
+
 class ViralSoundRadar:
     def __init__(self):
         self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
 
+    def is_clean_sound_candidate(self, title: str, artist: str = "") -> bool:
+        """Filters out non-musical or devotional audio that doesn't fit anime edits."""
+        combined = f"{title} {artist}".lower()
+        if any(w in combined for w in NON_ANIME_MUSIC_KEYWORDS):
+            return False
+        # Must be at least 3 chars
+        return len(title.strip()) >= 3
+
     def fetch_live_itunes_viral_songs(self, country: str = "in", limit: int = 30) -> List[Dict[str, Any]]:
         """
         Fetches official real-time top viral songs from Apple Music / iTunes RSS.
-        100% dynamic - no hardcoded track lists.
+        Filters out devotional/spoken tracks.
         """
         url = f"https://itunes.apple.com/{country}/rss/topsongs/limit={limit}/json"
         songs = []
@@ -34,13 +56,13 @@ class ViralSoundRadar:
                 for e in entries:
                     raw_title = e.get("im:name", {}).get("label", "")
                     artist = e.get("im:artist", {}).get("label", "")
-                    # Clean title of movie/soundtrack parenthetical noise
                     clean_name = re.sub(r"\(From [^\)]+\)", "", raw_title, flags=re.IGNORECASE).strip()
                     clean_name = re.sub(r"\[From [^\]]+\]", "", clean_name, flags=re.IGNORECASE).strip()
                     clean_name = re.sub(r"\(feat\.[^\)]+\)", "", clean_name, flags=re.IGNORECASE).strip()
                     clean_name = re.sub(r"\[feat\.[^\]]+\]", "", clean_name, flags=re.IGNORECASE).strip()
                     clean_name = clean_name.strip(" -")
-                    if clean_name and len(clean_name) >= 2:
+                    
+                    if self.is_clean_sound_candidate(clean_name, artist):
                         songs.append({
                             "sound_name": clean_name,
                             "artist": artist,
@@ -54,13 +76,13 @@ class ViralSoundRadar:
 
     def fetch_live_trending_phonk_and_reels(self) -> List[Dict[str, Any]]:
         """
-        Dynamically searches live YouTube Shorts trends for top trending background audio / phonk / reels tracks.
+        Dynamically searches live YouTube Shorts trends for top trending anime phonk / edit audios.
         """
         discovered = []
         queries = [
-            "trending reels audio viral shorts",
             "trending anime phonk audio edit shorts",
-            "viral tiktok sound anime edit shorts"
+            "viral anime edit song shorts 2026",
+            "hottest anime audio edit trend"
         ]
         for q in queries:
             cmd = [
@@ -77,14 +99,12 @@ class ViralSoundRadar:
                         continue
                     d = json.loads(line)
                     title = d.get("title") or ""
-                    # Extract song or phonk title candidate using regex patterns
-                    # e.g. "Song Name - Artist", "Montagem ...", "... (Phonk Remix)"
                     cleaned = re.sub(r"[\(\[\{].*?[\)\]\}]", "", title)
-                    cleaned = re.sub(r"(amv|edit|4k|60fps|shorts|status|tiktok|reels)", "", cleaned, flags=re.IGNORECASE).strip(" -|#")
-                    if len(cleaned) >= 3 and not any(w in cleaned.lower() for w in ["top", "best", "compilation", "episode", "season"]):
+                    cleaned = re.sub(r"(amv|edit|4k|60fps|shorts|status|tiktok|reels|anime)", "", cleaned, flags=re.IGNORECASE).strip(" -|#")
+                    if len(cleaned) >= 3 and self.is_clean_sound_candidate(cleaned):
                         discovered.append({
                             "sound_name": cleaned,
-                            "artist": d.get("uploader") or "Viral Sound",
+                            "artist": d.get("uploader") or "Phonk Creator",
                             "source": "live_yt_shorts",
                             "tagline": f"{cleaned.upper()} VIRAL EDITS",
                             "search_keywords": [cleaned, f"{cleaned} anime edit"]
@@ -96,12 +116,12 @@ class ViralSoundRadar:
     def probe_anime_velocity_for_sound(self, sound_name: str) -> Dict[str, Any]:
         """
         Probes how actively viral the anime editing community is using this sound right now.
-        Returns total views, candidate anime edits, and average velocity.
+        STRICT REQUIREMENT: At least 2 candidate clips must pass genuine anime verification.
         """
         query = f"{sound_name} anime edit"
         cmd = [
             sys.executable, "-m", "yt_dlp",
-            f"ytsearch5:{query}",
+            f"ytsearch8:{query}",
             "--dump-json",
             "--flat-playlist",
             "--no-warnings"
@@ -121,8 +141,11 @@ class ViralSoundRadar:
                 title = d.get("title") or ""
                 uploader = d.get("uploader") or ""
                 
-                # Check for genuine anime edit markers
-                if any(w in title.lower() for w in ["edit", "amv", "anime", "4k", "status", "shorts"]):
+                # Enforce strict anime filter: reject non-anime or devotional clips
+                if not is_valid_anime_clip(title, uploader):
+                    continue
+
+                if dur <= 90:
                     total_views += views
                     edits_count += 1
                     top_candidates.append({
@@ -147,32 +170,27 @@ class ViralSoundRadar:
 
     def discover_hottest_viral_sound(self, history: List[str] = None) -> Optional[Dict[str, Any]]:
         """
-        Main 100% Zero-Hardcoding Sound-First discovery:
-        1. Aggregates live music charts (iTunes India + Global/US).
-        2. Aggregates live YouTube Shorts trending audio.
-        3. Dynamically probes anime adoption velocity.
-        4. Returns the winning live sound with verified candidate clips.
+        Main Sound-First discovery:
+        Scans charts and requires genuine anime edits to exist before selecting.
         """
         history = [h.lower() for h in (history or [])]
         print("\n==================================================================")
-        print("🎵 ZERO-HARDCODING SOUND RADAR: SCANNING LIVE INTERNET CHARTS & REELS")
+        print("🎵 VIRAL SOUND RADAR: SCANNING LIVE INTERNET CHARTS & ANIME BUZZ")
         print("==================================================================")
 
-        # 1. Harvest live songs from charts
         raw_candidates = []
-        itunes_in = self.fetch_live_itunes_viral_songs(country="in", limit=25)
+        itunes_in = self.fetch_live_itunes_viral_songs(country="in", limit=20)
         itunes_us = self.fetch_live_itunes_viral_songs(country="us", limit=15)
         shorts_trends = self.fetch_live_trending_phonk_and_reels()
 
-        for pool in [itunes_in, itunes_us, shorts_trends]:
+        for pool in [shorts_trends, itunes_us, itunes_in]:
             for s in pool:
                 name = s["sound_name"].strip()
                 if not any(c["sound_name"].lower() == name.lower() for c in raw_candidates):
                     raw_candidates.append(s)
 
-        print(f"[Sound Radar] Gathered {len(raw_candidates)} live sound candidates from real-time charts.")
+        print(f"[Sound Radar] Gathered {len(raw_candidates)} clean candidate tracks.")
 
-        # Filter out recently used songs
         unvisited = [s for s in raw_candidates if s["sound_name"].lower() not in history][:8]
         if not unvisited and raw_candidates:
             unvisited = raw_candidates[:5]
@@ -182,16 +200,17 @@ class ViralSoundRadar:
             name = sound["sound_name"]
             print(f"  • Probing anime adoption for: '{name}' ({sound.get('artist', 'Viral')})...")
             probe = self.probe_anime_velocity_for_sound(name)
-            # Velocity score weighted by number of authentic edits found
-            score = probe["velocity"] + (probe["edits_count"] * 2500)
-            print(f"    -> Edits found: {probe['edits_count']} | Velocity: {int(probe['velocity']):,} views | Score: {int(score):,}")
-
-            if probe["edits_count"] > 0:
+            # ONLY consider sounds that have authentic anime edits
+            if probe["edits_count"] >= 2:
+                score = probe["velocity"] + (probe["edits_count"] * 5000)
+                print(f"    -> Authentic anime edits found: {probe['edits_count']} | Velocity: {int(probe['velocity']):,} views | Score: {int(score):,}")
                 scored_sounds.append({
                     "sound": sound,
                     "metrics": probe,
                     "score": score
                 })
+            else:
+                print(f"    -> Skipped (insufficient authentic anime edits: {probe['edits_count']})")
 
         # Sort descending by score
         scored_sounds.sort(key=lambda x: x["score"], reverse=True)
@@ -209,7 +228,7 @@ class ViralSoundRadar:
                 "candidates": w_metrics["candidates"]
             }
 
-        print("[Sound Radar] Notice: No strong anime adoption found in current music charts; falling back to visual trend discovery.")
+        print("[Sound Radar] Notice: No trending music tracks passed strict anime verification; delegating to anime show discovery.")
         return None
 
 if __name__ == "__main__":

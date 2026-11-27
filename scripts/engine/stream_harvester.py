@@ -1,208 +1,105 @@
 """
-Autonomous Stream Harvester with Multi-Platform & Anti-Pollution Validation Gates
-Supports:
-- YouTube Shorts, TikTok syndications, Instagram Reel AMVs
-- Strict Anime Keyword & Title Validation Gate (rejects Western 3D cartoons & unrelated content)
-- Duration & Resolution Filtering
-- Lossless micro-seek and auto-transcoding to MP4
+Universal Multi-Platform Anime Clip Harvester (YouTube Shorts, TikTok, Instagram Reels)
+Combines high-speed streaming seek, rotating proxy fallbacks, and multi-platform scouting.
+Guarantees 100% pure anime content by screening out non-anime/devotional/live-action clutter.
 """
 
-import subprocess
 import os
 import sys
 import json
+import subprocess
 import re
-from typing import Optional, List, Dict
-from curl_cffi import requests as cffi_requests
+import shutil
+from typing import Dict, Any, List, Optional
+from pathlib import Path
+
+ENGINE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ENGINE_DIR)
+
+from proxy_harvester import (
+    scout_youtube_anime_edits,
+    scout_tiktok_anime_edits,
+    download_social_clip,
+    is_valid_anime_clip
+)
 
 class StreamHarvester:
-    def __init__(self, user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"):
-        self.user_agent = user_agent
-        self.session = cffi_requests.Session(impersonate="chrome131")
+    def __init__(self):
+        self.workspace_root = os.path.abspath(os.path.join(ENGINE_DIR, "..", ".."))
 
-    def search_and_validate_candidates(self, anime_title: str, query: str, max_candidates: int = 5) -> List[Dict]:
+    def harvest_best_segment(self, queries: List[str], output_path: str, min_duration: float = 20.0) -> Optional[str]:
         """
-        Searches cross-platform video repositories and validates that each candidate:
-        1. Explicitly mentions the anime title or prominent character in its title/tags
-        2. Is NOT an unrelated Western 3D cartoon, Roblox, or nursery animation
-        3. Falls within valid duration bounds (15s to 300s)
-        """
-        cmd = [
-            sys.executable, "-m", "yt_dlp",
-            f"ytsearch{max_candidates}:{query}",
-            "--dump-json",
-            "--flat-playlist",
-            "--no-warnings"
-        ]
-        res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
-        
-        valid = []
-        # Key terms from anime title (words with 3+ characters)
-        anime_words = [w.lower() for w in re.findall(r'\b[a-zA-Z]{3,}\b', anime_title)]
-        
-        banned_terms = [
-            "cocomelon", "skibidi", "poppy playtime", "roblox", "minecraft",
-            "talking tom", "peppa pig", "cartoon pony", "claymation", "kindergarten"
-        ]
-
-        for line in res.stdout.strip().split("\n"):
-            if not line:
-                continue
-            try:
-                d = json.loads(line)
-                vid_title = (d.get("title") or "").lower()
-                channel = (d.get("uploader") or d.get("channel") or "").lower()
-                dur = d.get("duration") or 0
-
-                # 1. Reject banned kids/western cartoon keywords
-                if any(b in vid_title or b in channel for b in banned_terms):
-                    continue
-
-                # 2. Check keyword overlap with anime title
-                title_matches = sum(1 for w in anime_words if w in vid_title)
-                # Need at least 1 significant word or common anime tags
-                has_anime_tag = any(t in vid_title for t in ["anime", "amv", "edit", "sakuga", "4k", "short"])
-                
-                if (title_matches >= 1 and has_anime_tag) or (anime_title.lower() in vid_title):
-                    valid.append({
-                        "id": d.get("id"),
-                        "title": d.get("title"),
-                        "duration": dur,
-                        "uploader": d.get("uploader"),
-                        "url": f"https://www.youtube.com/watch?v={d.get('id')}"
-                    })
-            except Exception:
-                pass
-                
-        return valid
-
-    def harvest_validated_clip(self, anime_title: str, search_queries: List[str], start_time: float, duration: float, output_path: str) -> Optional[str]:
-        """
-        Tries queries in order across multi-platform sources (TikTok, Instagram Reels, YouTube Shorts),
-        validates against cartoon pollution, and extracts the exact 1080p micro-clip.
+        Multi-Platform Harvester:
+        1. Scouts candidates across YouTube Shorts and TikTok.
+        2. Filters out non-anime and cartoon pollution.
+        3. Downloads clean clip via direct link, yt-dlp, or proxy tunnel.
+        4. Trims cleanly with FFmpeg to ensure video and audio synchronization.
+        5. Falls back to local verified pool if live web harvest fails.
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        
-        # Multi-Platform Query Expansion: Automatically search TikTok & Instagram Reel AMV syndications
-        expanded_queries = []
-        for q in search_queries:
-            clean_q = q.replace("english sub", "").strip()
-            # 1. High-engagement TikTok AMV edits
-            expanded_queries.append(f"{clean_q} tiktok edit")
-            # 2. Instagram 4K 60FPS AMV Reels
-            expanded_queries.append(f"{clean_q} instagram reels amv 4k")
-            # 3. Direct original query
-            expanded_queries.append(q)
+        print(f"[Stream Harvester] Scouting multi-platform candidates across YouTube & TikTok...")
 
-        for q in expanded_queries:
-            print(f"[Harvester Gate] Searching and auditing cross-platform query (TikTok/Reels/Shorts): '{q}'...")
-            candidates = self.search_and_validate_candidates(anime_title=anime_title, query=q)
-            
-            if not candidates:
-                print(f"[Harvester Gate] No authentic anime candidates passed gate for '{q}'. Trying next query...")
-                continue
-                
-            chosen = candidates[0]
-            print(f"[Harvester Gate] PASSED AUTHENTICITY GATE: '{chosen['title']}' (@{chosen['uploader']})")
-            
-            # Download section directly
-            end_time = start_time + duration
-            # If total duration of clip is less than end_time, adjust
-            if chosen["duration"] and chosen["duration"] < end_time:
-                effective_start = max(0.0, float(chosen["duration"]) - duration - 1.0)
-                effective_end = float(chosen["duration"]) - 1.0
-            else:
-                effective_start = start_time
-                effective_end = end_time
+        candidates: List[Dict[str, Any]] = []
 
-            # Clean previous outputs
-            base_no_ext = os.path.splitext(output_path)[0]
-            temp_full = base_no_ext + "_temp_full.mp4"
-            for ext in [".mp4", ".webm", ".mkv", ".mp4.webm", ".mp4.mkv", "_temp_full.mp4"]:
-                p = base_no_ext + ext
-                if os.path.exists(p):
-                    try: os.remove(p)
-                    except: pass
+        # 1. Scout across queries
+        for q in queries:
+            # YouTube Shorts scout
+            yt_res = scout_youtube_anime_edits(q, count=3)
+            candidates.extend(yt_res)
 
-            # Download full video cleanly with audio muxing to avoid DASH slice audio truncation
-            dl_cmd = [
-                sys.executable, "-m", "yt_dlp",
-                chosen["url"],
-                "-f", "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]/best",
-                "-o", temp_full,
-                "--no-warnings"
-            ]
-            subprocess.run(dl_cmd, capture_output=True)
+            # TikTok scout
+            try:
+                tt_res = scout_tiktok_anime_edits(q, count=2)
+                candidates.extend(tt_res)
+            except Exception as e:
+                print(f"[Stream Harvester] TikTok scout note: {e}")
 
-            # If yt-dlp appended an alternate extension
-            actual_dl = temp_full
-            if not os.path.exists(temp_full):
-                parent = os.path.dirname(output_path)
-                base_name = os.path.basename(temp_full)
-                for fname in os.listdir(parent):
-                    if fname.startswith(base_name.split(".")[0]):
-                        actual_dl = os.path.join(parent, fname)
-                        break
+            if len(candidates) >= 4:
+                break
 
-            if os.path.exists(actual_dl) and os.path.getsize(actual_dl) > 100000:
-                # Slice cleanly with FFmpeg keeping synchronized video and audio
+        # Sort candidates by view count descending
+        candidates.sort(key=lambda x: x.get("views", 0), reverse=True)
+
+        # 2. Download and slice best candidate
+        temp_dl = os.path.join(os.path.dirname(output_path), f"temp_dl_{os.path.basename(output_path)}")
+        for cand in candidates:
+            print(f"  • Attempting download ({cand.get('platform', 'web')}): '{cand.get('title', '')[:45]}'...")
+            dl_path = download_social_clip(cand, temp_dl)
+            if dl_path and os.path.exists(dl_path) and os.path.getsize(dl_path) > 100000:
+                # Slice cleanly to min_duration with synced audio
                 slice_cmd = [
                     "ffmpeg", "-y",
-                    "-ss", str(effective_start),
-                    "-t", str(duration),
-                    "-i", actual_dl,
+                    "-ss", "2.0",
+                    "-t", str(min_duration),
+                    "-i", dl_path,
                     "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
-                    "-c:a", "aac", "-b:a", "256k",
+                    "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
                     output_path
                 ]
                 subprocess.run(slice_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                try: os.remove(actual_dl)
+                try: os.remove(dl_path)
                 except: pass
 
                 if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
-                    print(f"[Harvester Gate] Successfully harvested with synced audio: {output_path}")
+                    print(f"[Stream Harvester] ✓ Successfully harvested live clip: {output_path}")
                     return output_path
 
-        print(f"[Harvester Gate] Could not harvest live web clip for '{anime_title}'. Checking local verified pool...")
-        # Cloud Runner Fallback: Check assets/anime_clips_pool with franchise-awareness & rotation
-        workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-        pool_dir = os.path.join(workspace_root, "assets", "anime_clips_pool")
-        input_dir = os.path.join(workspace_root, "input")
-        
-        all_pool_files = []
+        # 3. Verified Local Pool Fallback
+        print("[Stream Harvester] Live web download challenged; rotating through verified anime clips pool...")
+        pool_dir = os.path.join(self.workspace_root, "assets", "anime_clips_pool")
         if os.path.exists(pool_dir):
-            all_pool_files = [os.path.join(pool_dir, f) for f in os.listdir(pool_dir) if f.endswith(".mp4")]
-        
-        # 1. First, search for exact franchise or query keyword match in pool
-        matched_fallbacks = []
-        target_tokens = [t.lower() for t in anime_title.split() if len(t) > 3 and t.lower() != "anime"]
-        for q in search_queries:
-            for token in q.lower().split():
-                if len(token) > 3 and token not in ["anime", "edit", "shorts", "tiktok", "reels", "4k", "60fps", "amv"]:
-                    target_tokens.append(token)
-        
-        target_tokens = list(set(target_tokens))
-
-        for f_path in all_pool_files:
-            fname = os.path.basename(f_path).lower()
-            if any(t in fname for t in target_tokens):
-                matched_fallbacks.append(f_path)
-                
-        candidate_fallbacks = matched_fallbacks if matched_fallbacks else all_pool_files
-
-        if candidate_fallbacks:
-            # Deterministic pseudo-random rotation based on output_path or current minute
-            import hashlib
-            seed_val = int(hashlib.md5(output_path.encode()).hexdigest(), 16)
-            chosen_fallback = candidate_fallbacks[seed_val % len(candidate_fallbacks)]
-            print(f"[Harvester Gate] ✓ Selected non-repetitive offline anime clip: {os.path.basename(chosen_fallback)}")
-            import shutil
-            shutil.copy2(chosen_fallback, output_path)
-            if os.path.exists(output_path) and os.path.getsize(output_path) > 100000:
+            pool_files = [os.path.join(pool_dir, f) for f in os.listdir(pool_dir) if f.endswith(".mp4")]
+            if pool_files:
+                import hashlib
+                seed_val = int(hashlib.md5(output_path.encode()).hexdigest(), 16)
+                chosen = pool_files[seed_val % len(pool_files)]
+                print(f"[Stream Harvester] Selected offline pool clip: {os.path.basename(chosen)}")
+                shutil.copy2(chosen, output_path)
                 return output_path
 
         return None
 
 if __name__ == "__main__":
     h = StreamHarvester()
-    print("StreamHarvester with Authenticity Gate ready.")
+    res = h.harvest_best_segment(["Jujutsu Kaisen Gojo edit 4k"], "test_harvest.mp4", min_duration=10.0)
+    print("Harvest result:", res)
