@@ -43,8 +43,15 @@ class QAGatekeeper:
 class YouTubeScheduler:
     def __init__(self, token_path: str = "config/youtube_token.json"):
         self.token_path = token_path
-        with open(token_path) as f:
-            self.creds_data = json.load(f)
+        self.creds_data = {}
+        if os.path.exists(token_path):
+            try:
+                with open(token_path, "r", encoding="utf-8") as f:
+                    self.creds_data = json.load(f)
+            except Exception as e:
+                print(f"[YouTube Scheduler] Warning: Could not parse {token_path}: {e}")
+        else:
+            print(f"[YouTube Scheduler] Note: No credentials at '{token_path}'. Running in offline/testing mode (no upload).")
 
     def refresh_access_token(self) -> str:
         """Refreshes YouTube Data API access token via OAuth refresh_token."""

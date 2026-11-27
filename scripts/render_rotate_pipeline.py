@@ -244,6 +244,13 @@ def render_rotating_phone_amv(raw_amv_path="assets/rotate_raw/aWApEIyXUp4.mp4", 
         except:
             pass
 
+    if os.path.exists(output_video_path) and os.path.getsize(output_video_path) > 100000:
+        return output_video_path
+    return None
+
+def render_rotate_phone_master(input_video: str, output_video: str, target_sound_name: str = "", duration_sec: float = 30.0):
+    return render_rotating_phone_amv(raw_amv_path=input_video, output_video_path=output_video)
+
 if __name__ == "__main__":
     src = sys.argv[1] if len(sys.argv) > 1 else "assets/rotate_raw/aWApEIyXUp4.mp4"
     dest = sys.argv[2] if len(sys.argv) > 2 else "output/rotate_amv_mastered.mp4"

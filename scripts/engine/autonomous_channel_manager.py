@@ -227,6 +227,7 @@ class AutonomousChannelManager:
             print(f"[Vision AI] Group B Clip Intensity Score: {clip_eval.get('score', 8.0)}/10")
 
             sys.path.append(os.path.join(WORKSPACE_ROOT, "remotion"))
+            sys.path.append(os.path.join(WORKSPACE_ROOT, "scripts"))
             try:
                 from render_rotate_pipeline import render_rotate_phone_master
                 rendered = render_rotate_phone_master(
